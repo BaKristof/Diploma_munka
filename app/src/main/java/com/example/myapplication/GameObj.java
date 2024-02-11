@@ -7,21 +7,24 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.List;
 
 public class GameObj {
+    private float[] matrix = new float[16];
 
+    protected Animation animation;
     static float[] texCoords = {
             0.0f, 0.0f,
             0.0f, 1.0f,
             1.0f, 1.0f,
             1.0f, 0.0f
     };
-    private final float size =0.5f;
-    float[] squareCoords = {
-            -0.0f*size,  0.0f*size, 0.0f,   // left top
-            -0.0f*size, -0.3f*size, 0.0f,   // left bottom
-            0.3f*size, -0.3f*size, 0.0f,   // right bottom
-            0.3f*size,  0.0f*size, 0.0f }; // right top
+    private static final float size =0.5f;
+    static float[] squareCoords = {
+            -0.15f*size,  0.15f*size, 0.0f,   // left top
+            -0.15f*size, -0.15f*size, 0.0f,   // left bottom
+            0.15f*size, -0.15f*size, 0.0f,   // right bottom
+            0.15f*size,  0.15f*size, 0.0f }; // right top
 
     protected final int vertexStride = 3 * 4;
     protected final int vertexCount = squareCoords.length / 3;
@@ -36,10 +39,7 @@ public class GameObj {
     private FloatBuffer TexCoordBuffer;
     private int textureID;
     float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
-    public final float blocksize = squareCoords[1]-squareCoords[7];
-
-   /* vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);*/
+    public static final float blocksize = squareCoords[1]-squareCoords[7];
 
     private int vertexShader;
     private int fragmentShader;
@@ -128,12 +128,6 @@ public class GameObj {
         TexCoordBuffer.put(texCoords).position(0);
     }
 
-    public void setTextireID( int resourceId) {
-       textureID = MyGLRenderer.loadTexture(resourceId);
-    }
-    public int getTextureID() {
-        return textureID;
-    }
     public void setoffHandels(){
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
         GLES20.glDisableVertexAttribArray(positionHandle);
@@ -141,5 +135,19 @@ public class GameObj {
         GLES20.glUseProgram(0);
     }
 
+    public float[] getSquareCoords() {
+        return squareCoords;
+    }
 
+    public float[] getMatrix() {
+        return matrix;
+    }
+
+    public void setMatrix(float[] matrix) {
+        this.matrix = matrix;
+    }
+
+    public void setAnimation(int[] a) {
+        animation = new Animation(a);
+    }
 }

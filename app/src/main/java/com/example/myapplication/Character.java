@@ -5,9 +5,11 @@ import android.opengl.GLES20;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 public class Character extends GameObj{
 
+    private BoundingBox boundingBox ;
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -27,26 +29,31 @@ public class Character extends GameObj{
 
 
 
-    public Character( int resourceId) {
-
+    public Character(int[] a) {
+     //   boundingBox = new BoundingBox(this);
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
         setProg();
         setVertexBuffer();
         setDrawListBuffer();
         setTexCoordBuffer();
-        setTextireID(resourceId);
+        setAnimation(a);
+        //setTextireID(resourceId);
        // setColor(new float[]{1.0f, 1.0f, 1.0f, 1.0f});
     }
+
     public void draw(float[]mvpMatrix){
         GLES20.glUseProgram(Prog);
         setPositionHandle();
       //  setColorHandle();
         setvPMatrixHandle(mvpMatrix);
         setTextCord();
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, getTextureID());
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, animation.NextFrame());
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
+    }
+    public boolean hit(BoundingBox bb){
+       return boundingBox.intersects(bb);
     }
 
 }

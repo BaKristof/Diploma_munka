@@ -16,6 +16,7 @@ import java.util.Arrays;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
+    //TODO movement be constant by fps
     private Square sq;
     private final float[] vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];

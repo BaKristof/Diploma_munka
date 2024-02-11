@@ -4,6 +4,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,19 +57,25 @@ public class BG extends GameObj {
             R.drawable._t6,
             R.drawable._t7,
             R.drawable._t8,
-            R.drawable._t9,};
-    private Map<Integer,Integer>textura = new HashMap<>();
+            R.drawable._t9,
+            R.drawable._16,//25
+            R.drawable._17,
+            R.drawable._18,
+            R.drawable._19,
+    };
+    private final Map<Integer,Integer> texture = new HashMap<>();
     public int[][] completback;
     public BGBlock[][]  BG;
     public BG( int lenght, int hight) {
         Matrix.setIdentityM(foo,0);
         Matrix.setIdentityM(BGMove,0);
-    //    Matrix.translateM(BGMove,0,  blocksize *lenght*2.5f, blocksize*2.5f*hight,0.1f);
-      //  BG = new BGBlock[lenght*5][hight*5];
-     //   completback = MazeGenerater.generate(lenght,hight);
+        Log.e("adat","  "+blocksize);
+        //  Matrix.translateM(BGMove,0,  blocksize *lenght*2.5f, blocksize*2.5f*hight,0.1f);
+        //  BG = new BGBlock[lenght*5][hight*5];
+        //   completback = MazeGenerater.generate(lenght,hight);
         for (int i=0 ; i<listofblocks.length;i++){
             Integer a = MyGLRenderer.loadTexture( listofblocks[i]);
-            textura.put(i,a);
+            texture.put(i,a);
         }
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
@@ -77,11 +84,9 @@ public class BG extends GameObj {
         setDrawListBuffer();
         setTexCoordBuffer();
         setCompletback(new int[][] {{1,5},{2,8}});
-        setCompletback(MazeGenerater.generate(2,2));
-        //Matrix.translateM(BGMove,0,  blocksize *completback.length*2.5f, blocksize*completback[0].length*2.5f,0);
-        Matrix.translateM(BGMove,0,  -1.5f, 1.5f,0);
-        //Log.e("eredménykimutatás","eredméyn : "+blocksize*completback[0].length*2.5f);
-
+        setCompletback(Maze.generate(2,2));
+        float[] a = Maze.getStartingpoint();
+        Matrix.translateM(BGMove,0,  -a[0], a[1],0);
         LoadUpBG();
 
     }
@@ -107,7 +112,7 @@ public class BG extends GameObj {
         BGBlock vissza = new BGBlock();
        // Log.e("valami","bakosssss     "+blocksize);
         vissza.setMatrix( j* blocksize,i* blocksize*-1,0);
-        vissza.setTextureID(textura.get(id));
+        vissza.setTextureID(texture.get(id));
         return vissza;
 
     }
@@ -128,4 +133,18 @@ public class BG extends GameObj {
       //  MyGLRenderer.whereareyou(FinalMatrix,squareCoords);
         setoffHandels();
     }
+    public BGBlock[] foundnearblocks(float positionX,float positionY){
+        int x = (int)positionX;
+        int y = (int)positionY;
+        ArrayList<BGBlock> near = new ArrayList<BGBlock>();
+        for (int i = x-4; i < x+4; i++) {
+            for (int j = y-4; j < y+4; j++) {
+                near.add(BG[i][j]);
+            }
+        }
+        return near.toArray(new BGBlock[0]);
+    }
+
+
+
 }

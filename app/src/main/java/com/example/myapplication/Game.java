@@ -6,15 +6,21 @@ import android.opengl.Matrix;
 public final class Game {
     private static Game game;
     public GameObj gm;
-    public Character character;
+   // public Character character;
+    public Player player;
     public BG BackGround;
     private float[] move = new float[16];
     private float[] foo = new float[16];
+    private float moveX =0.0f;
+    private float moveY =0.0f;
+    private BoundingBox[] hitfield;//TODO
 
     private Game() {
 
-        character = new Character(R.drawable.karakter);
+        player = new Player();
+      //  character = new Character();
         BackGround = new BG(1,1);
+        hitfield = BoundingBox.valami(BackGround.foundnearblocks(moveX,moveY));
         Matrix.setIdentityM(move,0);
         Matrix.setIdentityM(foo,0);
      /*   gm = new GameObj();
@@ -37,12 +43,18 @@ public final class Game {
         BackGround.draw(move);
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        character.draw(mvpMatrix);
+       //  character.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
         MyGLRenderer.checkGLError("draw van e probléma");
 
     }
     public void move(float dx,float dy){
-        Matrix.translateM(foo,0,dx*-0.0005f,dy*0.0005f,0);
+        moveX+=dx*-0.000008f;
+        moveY+=dy* 0.000008f;
+        Matrix.translateM(foo,0,moveX,moveY,0);
+    }
+
+    public float[] getMatrix() {
+        return move;
     }
 }
