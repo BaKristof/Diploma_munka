@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,24 +50,30 @@ class MyGLSurfaceView extends GLSurfaceView {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float currentX = event.getX();
-        float currentY = event.getY();
+        int irany=0;
+        float currentX = 550.0f;
+        float currentY = 1100.0f;
+        //float currentX = event.getX();
+        //float currentY = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                previousX = currentX;
-                previousY = currentY;
-             //   Log.e("valami","touch");
+                Log.e("valami","courrenx:  "+ event.getX()+"    and y :  "+ event.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
-                float dx = currentX - previousX;
-                float dy = currentY - previousY;
 
-                Game.getInstance().move(dx, dy);
-
+                double foo =Math.atan2((double) event.getY() - currentY,(double) event.getX() - currentX);
+                float dx = (float) Math.cos(foo);
+                float dy = (float) Math.sin(foo*-1);
+                //0 =fel
+                //1=le
+                //2=jobb
+                //3=bal
+                //            android:screenOrientation="landscape"
+                if(Math.cos(Math.toRadians(45))<dx && Math.sin(Math.toRadians(225))<dy && dy<Math.sin(Math.toRadians(135))) irany=2;
+                else if(Math.cos(Math.toRadians(135))>dx && Math.sin(Math.toRadians(315))<dy && dy<Math.sin(Math.toRadians(45))) irany=3;
+                else if(Math.sin(Math.toRadians(315))>dy && Math.cos(Math.toRadians(225))<dx && dx<Math.cos(Math.toRadians(315))) irany=1;
+                Game.getInstance().move(dx, dy,irany);
                 requestRender();
-              //  Log.e("valami","move");
-                previousX = currentX;
-                previousY = currentY;
                 break;
         }
         return true;

@@ -25,7 +25,7 @@ public class Maze {
    static Random r = new Random();
    static List<int[]> unvisitedcell;
    public static int[] startingpoint;
-   public static ArrayList<Point> Movementpoints;
+   public static ArrayList<Point> Movementpoints = new ArrayList<>();
 
 
     public static int[][] generate(int lenght,int hight){
@@ -148,6 +148,9 @@ public class Maze {
 
     public static float[] getStartingpoint() {
         return new float[] {startingpoint[0]*GameObj.blocksize*2.5f,startingpoint[1]*GameObj.blocksize*2.5f};
+
+
+
     }
 }
 

@@ -29,7 +29,7 @@ public class Character extends GameObj{
 
 
 
-    public Character(int[] a) {
+    public Character() {
      //   boundingBox = new BoundingBox(this);
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
@@ -37,7 +37,6 @@ public class Character extends GameObj{
         setVertexBuffer();
         setDrawListBuffer();
         setTexCoordBuffer();
-        setAnimation(a);
         //setTextireID(resourceId);
        // setColor(new float[]{1.0f, 1.0f, 1.0f, 1.0f});
     }
@@ -48,7 +47,7 @@ public class Character extends GameObj{
       //  setColorHandle();
         setvPMatrixHandle(mvpMatrix);
         setTextCord();
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, animation.NextFrame());
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,R.drawable.karakter );
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }

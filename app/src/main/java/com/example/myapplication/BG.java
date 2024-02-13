@@ -83,8 +83,7 @@ public class BG extends GameObj {
         setVertexBuffer();
         setDrawListBuffer();
         setTexCoordBuffer();
-        setCompletback(new int[][] {{1,5},{2,8}});
-        setCompletback(Maze.generate(2,2));
+        setCompletback(Maze.generate(lenght,hight));
         float[] a = Maze.getStartingpoint();
         Matrix.translateM(BGMove,0,  -a[0], a[1],0);
         LoadUpBG();

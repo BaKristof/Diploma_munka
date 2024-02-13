@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.ArrayList;
 
 public class Square {
     private int positionHandle;
@@ -116,5 +117,6 @@ public class Square {
 
         GLES20.glDisableVertexAttribArray(positionHandle);
     }
+
 
 }

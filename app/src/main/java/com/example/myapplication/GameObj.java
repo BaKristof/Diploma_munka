@@ -1,13 +1,13 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
-import android.opengl.Matrix;
+
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-import java.util.List;
+
 
 public class GameObj {
     private float[] matrix = new float[16];
@@ -38,7 +38,7 @@ public class GameObj {
     private int TextCord;
     private FloatBuffer TexCoordBuffer;
     private int textureID;
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
+    float[] color = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
     public static final float blocksize = squareCoords[1]-squareCoords[7];
 
     private int vertexShader;
@@ -111,7 +111,7 @@ public class GameObj {
     public void setvPMatrixHandle(float[] mvpMatrix) {
 
         this.vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);;
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
     }
 
     public void setTextCord() {
@@ -149,5 +149,8 @@ public class GameObj {
 
     public void setAnimation(int[] a) {
         animation = new Animation(a);
+    }
+    public void setAnimation(int[] backward,int[] left,int[] forward,int[] right) {
+        animation = new Animation(backward,left,forward,right);
     }
 }
