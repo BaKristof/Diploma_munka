@@ -14,12 +14,12 @@ public final class Game {
     public Player player;
     public BG BackGround;
     private final float[] move = new float[16];
-    private final float[] foo = new float[16];
+
     ArrayList<EnemyCharacter> enemys;
 
     public int EnemyPlaceholder;
 
-    private BoundingBox[] hitfield;//TODO
+    private ArrayList<BoundingBox> hitfield;//TODO
 
     private Game() {
 
@@ -28,16 +28,9 @@ public final class Game {
         player = new Player();
         //character = new Character();
         BackGround = new BG(3,3);
-        enemyCharacter = new EnemyCharacter(Maze.getboxmidel(2,2));
+        enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(2,2));
      //   hitfield = BoundingBox.valami(BackGround.foundnearblocks(moveX,moveY));
         Matrix.setIdentityM(move,0);
-        Matrix.setIdentityM(foo,0);
-     /*   gm = new GameObj();
-        gm.setVertexShader();
-        gm.setFragmentShader();
-        gm.setProg();
-        gm.setVertexBuffer();
-        gm.setDrawListBuffer();*/
 
     }
     public static Game getInstance(){
@@ -49,7 +42,7 @@ public final class Game {
     public void draw(float[]mvpMatrix){
 
 
-        Matrix.multiplyMM(move, 0, mvpMatrix, 0, foo, 0);
+        Matrix.multiplyMM(move, 0, mvpMatrix, 0, move, 0);
         BackGround.draw(move);
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -65,7 +58,7 @@ public final class Game {
     }
     public void move(float dx,float dy){
 
-        Matrix.translateM(foo,0,(dx* -0.004f),(dy* -0.004f),0);
+        Matrix.translateM(move,0,(dx* -0.004f),(dy* -0.004f),0);
 
     }
     public void enemymovment(float dx,float dy){
@@ -81,10 +74,10 @@ public final class Game {
     public void addenemy(int type,float x,float y){
         enemys.add(new EnemyCharacter(new float[]{x,y}));
     }
-
     public float[] getMatrix() {
         return move;
     }
+
     public static int whatisirany(float dx,float dy){
         int irany =0;
         if(Math.cos(Math.toRadians(45))<dx && Math.sin(Math.toRadians(225))<dy && dy<Math.sin(Math.toRadians(135))) irany=2;
@@ -96,5 +89,15 @@ public final class Game {
 
     public int getEnemyPlaceholder() {
         return EnemyPlaceholder;
+    }
+    public void FillHitfield(){ //TODO nem biztos hogy jó (nem hiszem)
+        if(false){
+        BGBlock[] valami2 = BackGround.foundnearblocks(0,0);
+        ArrayList<BoundingBox> valami = new ArrayList<>();
+        for (BGBlock bgb : valami2) {
+            valami.add( new BoundingBox(BackGround,bgb.getMatrix()));
+        }
+        hitfield= BoundingBox.ConnectBoundingBox(valami);
+        }
     }
 }

@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BG extends GameObj {
-    private final float[] FinalMatrix = new float[16];
-    private final float[] BGMove = new float[16];
-    private final float[] foo = new float[16];
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -74,10 +71,8 @@ public class BG extends GameObj {
     public int[][] completback;
     public BGBlock[][]  BG;
     public BG( int lenght, int hight) {
-        Matrix.setIdentityM(foo,0);
-        Matrix.setIdentityM(BGMove,0);
+
         Log.e("adat","  "+blocksize);
-        //  Matrix.translateM(BGMove,0,  blocksize *lenght*2.5f, blocksize*2.5f*hight,0.1f);
         //  BG = new BGBlock[lenght*5][hight*5];
         //   completback = MazeGenerater.generate(lenght,hight);
         for (int i=0 ; i<listofblocks.length;i++){
@@ -127,15 +122,16 @@ public class BG extends GameObj {
 
     }
     public void draw(float[]moveMatrix){
+        float[] eredmeny = new float[16];
+        Matrix.setIdentityM(eredmeny,0);
         GLES20.glUseProgram(Prog);
         setPositionHandle();
         setTextCord();
         //  setColorHandle();
         for (BGBlock[] bc : BG) {
             for (BGBlock bg : bc) {
-                Matrix.multiplyMM(foo, 0, BGMove, 0, matrix, 0);
-                Matrix.multiplyMM(FinalMatrix, 0, moveMatrix, 0, foo, 0);
-                setvPMatrixHandle(FinalMatrix);
+                Matrix.multiplyMM(eredmeny, 0, moveMatrix, 0, bg.getMatrix(), 0);
+                setvPMatrixHandle(eredmeny);
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bg.getTextureID());
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
             }
@@ -159,6 +155,9 @@ public class BG extends GameObj {
             }
         }
         return near.toArray(new BGBlock[0]);
+    }
+    public float[] getboxmidel(int x,int y){
+        return BG[x*5][y*5].getMatrix();
     }
 
 

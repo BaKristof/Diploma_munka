@@ -146,9 +146,7 @@ public class Maze {
 
         return finale;
     }
-    public static float[] getboxmidel(int x,int y){
-        return new float[]{(GameObj.blocksize)*((float)size_up),(GameObj.blocksize)*((float)size_up)};
-    }
+
 
     public static float[] getStartingpoint() {
         return new float[] {startingpoint[0]*GameObj.blocksize*2.5f,startingpoint[1]*GameObj.blocksize*2.5f};

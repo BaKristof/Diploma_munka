@@ -21,6 +21,10 @@ public class BGBlock {
         Matrix.translateM(this.matrix,0,PositionX,PositionY,z);
     }
 
+    public float[] getMatrix() {
+        return matrix;
+    }
+
     public int getTextureID() {
         return textureID;
     }

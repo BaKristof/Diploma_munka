@@ -4,12 +4,9 @@ import android.opengl.Matrix;
 
 public class EnemyCharacter extends Character{
 
-    public EnemyCharacter(float[] point) {
+    public EnemyCharacter(float[] startingmatrix) {
         super();
-        Matrix.setIdentityM(matrix,0);
-        Matrix.translateM(matrix,0,GameObj.blocksize*2,GameObj.blocksize*2,0);
-        setMatrix(matrix);
-
+        matrix = startingmatrix;
     }
 
     @Override
@@ -22,6 +19,10 @@ public class EnemyCharacter extends Character{
     public void move(float dx,float dy){
         irany = Game.whatisirany(dx,dy);
         Matrix.translateM(matrix,0,dx*0.004f,dy*0.004f,0);
+    }
+    public void MovetoCordinat(float x, float y){
+        Matrix.translateM(matrix,0,x,y,0);
+
     }
     //TODO enemy characters
     // enemy movement by Pathfinding
