@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -39,9 +38,17 @@ public final class Game {
         }
         return game;
     }
+    public void befordraw(){
+
+        float[] PlayerPos = MyGLRenderer.whereareyou(player.getMatrix(),player);
+        float[] EnemyPos = MyGLRenderer.whereareyou(enemyCharacter.getMatrix(),enemyCharacter);
+        double foo =Math.atan2((double) EnemyPos[1] - PlayerPos[1],(double) EnemyPos[0] - PlayerPos[0]);
+        float dx = (float) Math.cos(foo);
+        float dy = (float) Math.sin(foo*-1);
+        enemymovment(dx,dy);
+
+    }
     public void draw(float[]mvpMatrix){
-
-
         Matrix.multiplyMM(move, 0, mvpMatrix, 0, move, 0);
         BackGround.draw(move);
         GLES20.glEnable(GLES20.GL_BLEND);
@@ -57,19 +64,19 @@ public final class Game {
 
     }
     public void move(float dx,float dy){
-
+        player.setIrany(whatisirany(dx,dy));
         Matrix.translateM(move,0,(dx* -0.004f),(dy* -0.004f),0);
 
     }
     public void enemymovment(float dx,float dy){
-        for (EnemyCharacter enemy :
+        /*for (EnemyCharacter enemy :
                 enemys) {
         //todo here need to calculate the path to the enemy and give each enemy they own different path
             enemy.move(dx,dy);
-        }
-    }
-    public void setPlayerirany(float dx, float dy){
-        player.setIrany(whatisirany(dx,dy));
+        }*/
+        enemyCharacter.move(dx,dy);
+
+
     }
     public void addenemy(int type,float x,float y){
         enemys.add(new EnemyCharacter(new float[]{x,y}));

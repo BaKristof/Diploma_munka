@@ -11,7 +11,6 @@ import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
@@ -34,6 +33,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
       //  sq.draw(vPMatrix);
+        gm.befordraw();
         gm.draw(vPMatrix);
     }
 
@@ -70,7 +70,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             throw new RuntimeException(operation + ": glError " + error);
         }
     }
-    public static float[] whereareyou(float[] matrix, float[] objectCoords) {
+    public static float[] whereareyou(float[] matrix,GameObj gameObj ) {
+        float[] objectCoords = gameObj.getSquareCoords();
         float[] transformedCoords = new float[objectCoords.length];
 
         // Copy the original coordinates to avoid modifying the original array

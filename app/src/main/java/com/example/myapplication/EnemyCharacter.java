@@ -6,6 +6,7 @@ public class EnemyCharacter extends Character{
 
     public EnemyCharacter(float[] startingmatrix) {
         super();
+        Matrix.translateM(startingmatrix,0,GameObj.blocksize*2,GameObj.blocksize*-2,0);
         matrix = startingmatrix;
     }
 
