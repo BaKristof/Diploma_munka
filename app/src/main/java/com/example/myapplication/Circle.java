@@ -10,9 +10,8 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
 public class Circle {
-    //TODO make it happen
     private float[] matrix = new float[16];
-    private float[] FinalMatrix = new float[16];
+
     private final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
             "attribute vec4 vPosition;" +
@@ -56,7 +55,8 @@ public class Circle {
 
 
         Matrix.setIdentityM(matrix,0);
-        Matrix.setIdentityM(FinalMatrix,0);
+        Matrix.translateM(matrix,0,positionx,positiony,0);
+
         int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
                 vertexShaderCode);
         int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
@@ -73,9 +73,9 @@ public class Circle {
 
 
 
-        Matrix.multiplyMM(FinalMatrix, 0, matrix, 0, mvpMatrix, 0);
+        Matrix.multiplyMM(matrix, 0, matrix, 0, mvpMatrix, 0);
         vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, FinalMatrix, 0);
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, matrix, 0);
 
 
 

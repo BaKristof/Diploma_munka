@@ -26,6 +26,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
        // sq = new Square();
         gm = Game.getInstance();
+
     }
 
     public void onDrawFrame(GL10 unused) {
@@ -69,7 +70,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             throw new RuntimeException(operation + ": glError " + error);
         }
     }
-    public static void whereareyou(float[] matrix, float[] objectCoords) {
+    public static float[] whereareyou(float[] matrix, float[] objectCoords) {
         float[] transformedCoords = new float[objectCoords.length];
 
         // Copy the original coordinates to avoid modifying the original array
@@ -85,6 +86,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             float[] inputPoint = {x, y, z, 1.0f};
 
             // Multiply the matrix by the point
+
+            Matrix.multiplyMM(matrix,0,matrix,0,Game.getInstance().getMatrix(), 0);
             Matrix.multiplyMV(inputPoint, 0, matrix, 0, inputPoint, 0);
 
             // Update the transformed coordinates
@@ -94,6 +97,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
 
         Log.println(Log.ERROR,"codinates find", Arrays.toString(transformedCoords));
+        return new float[]{transformedCoords[0],transformedCoords[1]};
     }
 
 

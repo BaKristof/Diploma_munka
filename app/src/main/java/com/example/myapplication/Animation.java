@@ -8,8 +8,7 @@ import java.util.Map;
 
 public class Animation {
 
-    //TODO movement in different direction
-    //TODO use animation by sprite sheet
+    //TODO use animation by sprite sheet ezt nem muszáj
     ArrayList<Integer> backward;
     ArrayList<Integer> left;
     ArrayList<Integer> right;
@@ -60,17 +59,22 @@ public class Animation {
         counter = 0;
     }
 
+    public Animation() {
+    }
+
     public int NextFrame(int irany){
-        int a = 0;
-        if (movement.get(irany)!=null){
-            if (movement.get(irany).size()<=counter) counter=0;
-            a = movement.get(irany).get(counter);
+        int a = Game.getInstance().getEnemyPlaceholder();
+        if(!movement.isEmpty()){
+            if (movement.get(irany)!=null){
+                if (movement.get(irany).size()<=counter) counter=0;
+                a = movement.get(irany).get(counter);
         }
         else {
             if (movement.get(0).size()<=counter) counter=0;
             a = movement.get(0).get(counter);
         }
         counter ++;
+        }
         return a;
     }
 }

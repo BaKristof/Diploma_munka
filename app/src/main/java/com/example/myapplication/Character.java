@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Character extends GameObj{
 
     private BoundingBox boundingBox ;
+    int irany =0;
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -47,7 +48,7 @@ public class Character extends GameObj{
       //  setColorHandle();
         setvPMatrixHandle(mvpMatrix);
         setTextCord();
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,R.drawable.karakter );
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,animation.NextFrame(irany) );
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }
@@ -55,4 +56,7 @@ public class Character extends GameObj{
        return boundingBox.intersects(bb);
     }
 
+    public void setIrany(int irany) {
+        this.irany = irany;
+    }
 }

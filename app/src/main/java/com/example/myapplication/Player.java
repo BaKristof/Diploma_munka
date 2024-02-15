@@ -12,7 +12,7 @@ public class Player extends  Character{
         super();
         setAnimation(forward,left,backward,right);
     }
-    public void draw(float[]mvpMatrix,int irany) {
+    public void draw(float[]mvpMatrix) {
         GLES20.glUseProgram(Prog);
         setPositionHandle();
         setvPMatrixHandle(mvpMatrix);
@@ -22,4 +22,6 @@ public class Player extends  Character{
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }
+
+
 }

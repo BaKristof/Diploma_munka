@@ -5,6 +5,8 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +65,12 @@ public class BG extends GameObj {
             R.drawable._18,
             R.drawable._19,
     };
+
+
+
+
     private final Map<Integer,Integer> texture = new HashMap<>();
+    private ArrayList<Integer> valami = new ArrayList<>();
     public int[][] completback;
     public BGBlock[][]  BG;
     public BG( int lenght, int hight) {
@@ -77,6 +84,10 @@ public class BG extends GameObj {
             Integer a = MyGLRenderer.loadTexture( listofblocks[i]);
             texture.put(i,a);
         }
+
+        for (int i = 15; i <25 ; i++) {
+            valami.add(texture.get(i));
+        }
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
         setProg();
@@ -85,7 +96,7 @@ public class BG extends GameObj {
         setTexCoordBuffer();
         setCompletback(Maze.generate(lenght,hight));
         float[] a = Maze.getStartingpoint();
-        Matrix.translateM(BGMove,0,  -a[0], a[1],0);
+       // Matrix.translateM(BGMove,0,  -a[0], a[1],0);
         LoadUpBG();
 
     }
@@ -122,7 +133,7 @@ public class BG extends GameObj {
         //  setColorHandle();
         for (BGBlock[] bc : BG) {
             for (BGBlock bg : bc) {
-                Matrix.multiplyMM(foo, 0, BGMove, 0, bg.getmatrix(), 0);
+                Matrix.multiplyMM(foo, 0, BGMove, 0, matrix, 0);
                 Matrix.multiplyMM(FinalMatrix, 0, moveMatrix, 0, foo, 0);
                 setvPMatrixHandle(FinalMatrix);
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bg.getTextureID());
@@ -135,10 +146,16 @@ public class BG extends GameObj {
     public BGBlock[] foundnearblocks(float positionX,float positionY){
         int x = (int)positionX;
         int y = (int)positionY;
-        ArrayList<BGBlock> near = new ArrayList<BGBlock>();
+        ArrayList<BGBlock> near = new ArrayList<>();
         for (int i = x-4; i < x+4; i++) {
             for (int j = y-4; j < y+4; j++) {
-                near.add(BG[i][j]);
+                if (i<BG.length || i>0){
+                    if (j<BG[0].length || j>0){
+                        if (!valami.contains(BG[i][j].getTextureID())){
+                            near.add(BG[i][j]);
+                        }
+                    }
+                }
             }
         }
         return near.toArray(new BGBlock[0]);

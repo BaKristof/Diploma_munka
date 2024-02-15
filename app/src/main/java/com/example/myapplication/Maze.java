@@ -25,6 +25,7 @@ public class Maze {
    static Random r = new Random();
    static List<int[]> unvisitedcell;
    public static int[] startingpoint;
+   public static final int size_up=5;
    public static ArrayList<Point> Movementpoints = new ArrayList<>();
 
 
@@ -87,7 +88,7 @@ public class Maze {
             }
 
         }
-        int[][] finale = new int[lenght*5][hight*5];
+        int[][] finale = new int[lenght*size_up][hight*size_up];
         for (int i = 0; i < lenght; i++) {
             for (int j = 0; j < hight; j++) {
                 finale[i*5][j*5] =4;    finale[i*5][j*5+1] =2;      finale[i*5][j*5+2] =10;     finale[i*5][j*5+3] =11;     finale[i*5][j*5+4] =12;
@@ -145,12 +146,29 @@ public class Maze {
 
         return finale;
     }
+    public static float[] getboxmidel(int x,int y){
+        return new float[]{(GameObj.blocksize)*((float)size_up),(GameObj.blocksize)*((float)size_up)};
+    }
 
     public static float[] getStartingpoint() {
         return new float[] {startingpoint[0]*GameObj.blocksize*2.5f,startingpoint[1]*GameObj.blocksize*2.5f};
-
-
-
     }
+    public float[] NearestMovmentPoint(float x, float y){
+        //todo check if needed the nearest movement point or just go to the player
+        Point newpoint = new Point(x,y);
+        float min = Float.MAX_VALUE;
+        Point save= new Point(0.0f,0.0f);
+        for (Point a : Movementpoints) {
+            if(newpoint.distance(a)<min){
+              save = a;
+              min = newpoint.distance(a);
+            }
+        }
+        return new float[]{save.x, save.y};
+    }
+
+
+
+
 }
 

@@ -10,9 +10,9 @@ import java.nio.ShortBuffer;
 
 
 public class GameObj {
-    private float[] matrix = new float[16];
+    protected float[] matrix = new float[16];
 
-    protected Animation animation;
+    protected Animation animation= new Animation();
     static float[] texCoords = {
             0.0f, 0.0f,
             0.0f, 1.0f,

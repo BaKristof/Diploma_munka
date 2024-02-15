@@ -69,10 +69,8 @@ class MyGLSurfaceView extends GLSurfaceView {
                 //2=jobb
                 //3=bal
                 //            android:screenOrientation="landscape"
-                if(Math.cos(Math.toRadians(45))<dx && Math.sin(Math.toRadians(225))<dy && dy<Math.sin(Math.toRadians(135))) irany=2;
-                else if(Math.cos(Math.toRadians(135))>dx && Math.sin(Math.toRadians(315))<dy && dy<Math.sin(Math.toRadians(45))) irany=3;
-                else if(Math.sin(Math.toRadians(315))>dy && Math.cos(Math.toRadians(225))<dx && dx<Math.cos(Math.toRadians(315))) irany=1;
-                Game.getInstance().move(dx, dy,irany);
+                Game.getInstance().move(dx, dy);
+                Game.getInstance().setPlayerirany(dx,dy);
                 requestRender();
                 break;
         }
