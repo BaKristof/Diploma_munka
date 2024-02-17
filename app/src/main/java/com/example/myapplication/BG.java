@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BG extends GameObj {
+public class BG {
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -30,7 +30,6 @@ public class BG extends GameObj {
                     "discard;}" +
                     "gl_FragColor = color;" +
                     "}";
-
     private final int[] listofblocks={
             R.drawable._1,
             R.drawable._2,
@@ -62,19 +61,11 @@ public class BG extends GameObj {
             R.drawable._18,
             R.drawable._19,
     };
-
-
-
-
     private final Map<Integer,Integer> texture = new HashMap<>();
-    private ArrayList<Integer> valami = new ArrayList<>();
+    private final ArrayList<Integer> valami = new ArrayList<>();
     public int[][] completback;
     public BGBlock[][]  BG;
-    public BG( int lenght, int hight) {
-
-        Log.e("adat","  "+blocksize);
-        //  BG = new BGBlock[lenght*5][hight*5];
-        //   completback = MazeGenerater.generate(lenght,hight);
+    public BG( int length, int height) {
         for (int i=0 ; i<listofblocks.length;i++){
             Integer a = MyGLRenderer.loadTexture( listofblocks[i]);
             texture.put(i,a);
@@ -83,13 +74,8 @@ public class BG extends GameObj {
         for (int i = 15; i <25 ; i++) {
             valami.add(texture.get(i));
         }
-        setVertexShader(vertexShaderCode);
-        setFragmentShader(fragmentShaderCode);
-        setProg();
-        setVertexBuffer();
-        setDrawListBuffer();
-        setTexCoordBuffer();
-        setCompletback(Maze.generate(lenght,hight));
+        construct(vertexShaderCode,fragmentShaderCode);
+        setCompletback(Maze.generate(length,height));
         float[] a = Maze.getStartingpoint();
        // Matrix.translateM(BGMove,0,  -a[0], a[1],0);
         LoadUpBG();
@@ -99,11 +85,6 @@ public class BG extends GameObj {
         this.BG = new BGBlock[completback.length][completback[0].length];
         this.completback = completback;
     }
-
-    public int[][] getCompletback() {
-        return completback;
-    }
-
     private void LoadUpBG() {
         int a = completback.length;
         for (int i=0; i<completback.length;i++){
@@ -115,9 +96,8 @@ public class BG extends GameObj {
 
     private BGBlock TextureFromInt(int id, int i, int j ) {
         BGBlock vissza = new BGBlock();
-       // Log.e("valami","bakosssss     "+blocksize);
-        vissza.setMatrix( j* blocksize,i* blocksize*-1,0);
-        vissza.setTextureID(texture.get(id));
+        vissza.setMatrix( j* GameObj.blocksize,i* GameObj.blocksize*-1,0);
+        vissza.setTextureID(texture.get(id),id);
         return vissza;
 
     }
@@ -127,16 +107,14 @@ public class BG extends GameObj {
         GLES20.glUseProgram(Prog);
         setPositionHandle();
         setTextCord();
-        //  setColorHandle();
         for (BGBlock[] bc : BG) {
             for (BGBlock bg : bc) {
                 Matrix.multiplyMM(eredmeny, 0, moveMatrix, 0, bg.getMatrix(), 0);
-                setvPMatrixHandle(eredmeny);
+                setvPMatrixHandle();
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bg.getTextureID());
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
             }
         }
-      //  MyGLRenderer.whereareyou(FinalMatrix,squareCoords);
         setoffHandels();
     }
     public BGBlock[] foundnearblocks(float positionX,float positionY){
@@ -159,7 +137,4 @@ public class BG extends GameObj {
     public float[] getboxmidel(int x,int y){
         return BG[x*5][y*5].getMatrix();
     }
-
-
-
 }

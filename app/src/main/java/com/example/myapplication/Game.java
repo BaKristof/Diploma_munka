@@ -40,22 +40,20 @@ public final class Game {
     }
     public void befordraw(){
 
-        float[] PlayerPos = MyGLRenderer.whereareyou(player.getMatrix(),player);
-        float[] EnemyPos = MyGLRenderer.whereareyou(enemyCharacter.getMatrix(),enemyCharacter);
+        float[] PlayerPos = MyGLRenderer.whereareyou(player);
+        float[] EnemyPos = MyGLRenderer.whereareyou(enemyCharacter);
         double foo =Math.atan2((double) EnemyPos[1] - PlayerPos[1],(double) EnemyPos[0] - PlayerPos[0]);
         float dx = (float) Math.cos(foo);
         float dy = (float) Math.sin(foo*-1);
         enemymovment(dx,dy);
 
     }
-    public void draw(float[]mvpMatrix){
-        Matrix.multiplyMM(move, 0, mvpMatrix, 0, move, 0);
-        BackGround.draw(move);
+    public void draw(){
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        enemyCharacter.draw(move);
+        enemyCharacter.draw();
         for (EnemyCharacter enemy : enemys) {
-            enemy.draw(move);
+            enemy.draw();
         }
         // character.draw(mvpMatrix);
         //player.draw(mvpMatrix,irany);

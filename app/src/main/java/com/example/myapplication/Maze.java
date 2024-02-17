@@ -9,17 +9,7 @@ import java.util.Random;
 
 
 public class Maze {
-    private static class Point{
-        public Point(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-        public float x;
-    public float y;
-    public float distance(Point other){
-        return (float) Math.sqrt(Math.pow(other.x-x,2)+Math.pow(other.y-y,2));
-        }
-    }
+
    static int[][] maze;
    static boolean[][] bitmaze;
    static Random r = new Random();

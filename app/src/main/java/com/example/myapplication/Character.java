@@ -8,8 +8,8 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 public class Character extends GameObj{
-
     private BoundingBox boundingBox ;
+    protected Animation animation= new Animation();
     int irany =0;
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
@@ -27,36 +27,29 @@ public class Character extends GameObj{
                     "void main() {" +
                     "  gl_FragColor = texture2D(uTexture, fTexCoord);" +
                     "}";
-
-
-
     public Character() {
-     //   boundingBox = new BoundingBox(this);
-        setVertexShader(vertexShaderCode);
-        setFragmentShader(fragmentShaderCode);
-        setProg();
-        setVertexBuffer();
-        setDrawListBuffer();
-        setTexCoordBuffer();
-        //setTextireID(resourceId);
-       // setColor(new float[]{1.0f, 1.0f, 1.0f, 1.0f});
-    }
+    construct(vertexShaderCode,fragmentShaderCode);
 
-    public void draw(float[]mvpMatrix){
+    }
+    public void draw(){
         GLES20.glUseProgram(Prog);
         setPositionHandle();
-      //  setColorHandle();
-        setvPMatrixHandle(mvpMatrix);
+        setvPMatrixHandle();
         setTextCord();
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,animation.NextFrame(irany) );
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }
-    public boolean hit(BoundingBox bb){
-       return boundingBox.intersects(bb);
+    public boolean hit(GameObj gameObj){
+       return new BoundingBox(this).intersects(new BoundingBox(gameObj));
     }
-
     public void setIrany(int irany) {
         this.irany = irany;
+    }
+    public void setAnimation(int[] a) {
+        animation = new Animation(a);
+    }
+    public void setAnimation(int[] backward,int[] left,int[] forward,int[] right) {
+        animation = new Animation(backward,left,forward,right);
     }
 }

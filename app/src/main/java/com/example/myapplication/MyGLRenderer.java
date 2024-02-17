@@ -18,7 +18,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     //TODO movement be constant by fps
     private Square sq;
     private final float[] vPMatrix = new float[16];
-    private final float[] projectionMatrix = new float[16];
+    private static final float[] projectionMatrix = new float[16];
+
+    public static float[] getProjectionMatrix() {
+        return projectionMatrix;
+    }
+
     private final float[] viewMatrix = new float[16];
     private Game gm;
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -34,7 +39,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
       //  sq.draw(vPMatrix);
         gm.befordraw();
-        gm.draw(vPMatrix);
+        gm.draw();
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
@@ -70,7 +75,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             throw new RuntimeException(operation + ": glError " + error);
         }
     }
-    public static float[] whereareyou(float[] matrix,GameObj gameObj ) {
+    public static float[] whereareyou(GameObj gameObj ) {
         float[] objectCoords = gameObj.getSquareCoords();
         float[] transformedCoords = new float[objectCoords.length];
 
@@ -83,15 +88,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             float y = objectCoords[i + 1];
             float z = objectCoords[i + 2];
 
-            // Set up the homogeneous coordinates
             float[] inputPoint = {x, y, z, 1.0f};
 
-            // Multiply the matrix by the point
+            Matrix.multiplyMV(inputPoint, 0, gameObj.getMatrix(), 0, inputPoint, 0);
 
-            Matrix.multiplyMM(matrix,0,matrix,0,Game.getInstance().getMatrix(), 0);
-            Matrix.multiplyMV(inputPoint, 0, matrix, 0, inputPoint, 0);
-
-            // Update the transformed coordinates
             transformedCoords[i] = inputPoint[0];
             transformedCoords[i + 1] = inputPoint[1];
             transformedCoords[i + 2] = inputPoint[2];

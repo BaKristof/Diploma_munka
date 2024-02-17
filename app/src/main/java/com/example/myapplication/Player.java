@@ -12,10 +12,10 @@ public class Player extends  Character{
         super();
         setAnimation(forward,left,backward,right);
     }
-    public void draw(float[]mvpMatrix) {
+    public void draw() {
         GLES20.glUseProgram(Prog);
         setPositionHandle();
-        setvPMatrixHandle(mvpMatrix);
+        setvPMatrixHandle();
         //  setColorHandle();
         setTextCord();
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, animation.NextFrame(irany));

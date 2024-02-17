@@ -7,17 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Animation {
-
-    //TODO use animation by sprite sheet ezt nem muszáj
     ArrayList<Integer> backward;
     ArrayList<Integer> left;
     ArrayList<Integer> right;
     ArrayList<Integer> forward;
     Map<Integer,ArrayList<Integer>> movement = new HashMap<>();
+    int FPS;
     int irany;
     int counter;
     public Animation(int[] backward,int[] left,int[] forward,int[] right) {
-
         //0 =fel
         //1=le
         //2=jobb
@@ -58,10 +56,7 @@ public class Animation {
         movement.put(0,backward);
         counter = 0;
     }
-
-    public Animation() {
-    }
-
+    public Animation() {}
     public int NextFrame(int irany){
         int a = Game.getInstance().getEnemyPlaceholder();
         if(!movement.isEmpty()){

@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 
 import java.nio.ByteBuffer;
@@ -8,39 +9,33 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-
 public class GameObj {
     protected float[] matrix = new float[16];
-
-    protected Animation animation= new Animation();
-    static float[] texCoords = {
+    protected static float[] texCoords = {
             0.0f, 0.0f,
             0.0f, 1.0f,
             1.0f, 1.0f,
             1.0f, 0.0f
     };
     private static final float size =0.5f;
-    static float[] squareCoords = {
+    protected static  float[] squareCoords = {
             -0.15f*size,  0.15f*size, 0.0f,   // left top
             -0.15f*size, -0.15f*size, 0.0f,   // left bottom
             0.15f*size, -0.15f*size, 0.0f,   // right bottom
             0.15f*size,  0.15f*size, 0.0f }; // right top
 
-    protected final int vertexStride = 3 * 4;
     protected final int vertexCount = squareCoords.length / 3;
     protected int positionHandle;
     protected int colorHandle;
     protected FloatBuffer vertexBuffer;
     protected ShortBuffer drawListBuffer;
     protected int Prog;
-    private final short[] drawOrder = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
-    private int vPMatrixHandle;
+    private static final short[] drawOrder = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
     private int TextCord;
     private FloatBuffer TexCoordBuffer;
     private int textureID;
     float[] color = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
     public static final float blocksize = squareCoords[1]-squareCoords[7];
-
     private int vertexShader;
     private int fragmentShader;
 
@@ -52,11 +47,11 @@ public class GameObj {
         this.vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
                 vertexShaderCode);
     }
-    public void setVertexShader(String VertexSahderCode) {
+    private void setVertexShader(String VertexSahderCode) {
         this.vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
                 VertexSahderCode);
     }
-    public void setFragmentShader(String FragmentShadeCode) {
+    private void setFragmentShader(String FragmentShadeCode) {
         this.fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
                 FragmentShadeCode);
     }
@@ -70,10 +65,10 @@ public class GameObj {
                 fragmentShaderCode);
     }
 
-    public void setPositionHandle() {
+    protected void setPositionHandle() {
         this.positionHandle = GLES20.glGetAttribLocation(Prog, "vPosition");
         GLES20.glEnableVertexAttribArray(positionHandle);
-        GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, vertexStride, vertexBuffer);
+        GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, 12, vertexBuffer);
     }
 
     public void setColorHandle() {
@@ -81,7 +76,7 @@ public class GameObj {
         GLES20.glUniform4fv(colorHandle, 1, color, 0);
     }
 
-    public void setVertexBuffer() {
+    private void setVertexBuffer() {
 
         ByteBuffer bb = ByteBuffer.allocateDirect(squareCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -90,14 +85,14 @@ public class GameObj {
         this.vertexBuffer.position(0);
     }
 
-    public void setDrawListBuffer() {
+    private void setDrawListBuffer() {
         ByteBuffer dlb = ByteBuffer.allocateDirect(drawOrder.length * 2);
         dlb.order(ByteOrder.nativeOrder());
         this.drawListBuffer = dlb.asShortBuffer();
         this.drawListBuffer.put(drawOrder);
         this.drawListBuffer.position(0);    }
 
-    public void setProg() {
+    private void setProg() {
         this.Prog =  GLES20.glCreateProgram();
         GLES20.glAttachShader(Prog, vertexShader);
         GLES20.glAttachShader(Prog, fragmentShader);
@@ -108,10 +103,12 @@ public class GameObj {
         this.color = color;
     }
 
-    public void setvPMatrixHandle(float[] mvpMatrix) {
+    public void setvPMatrixHandle() {
 
-        this.vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
+        int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
+        float[] foo = new float[16];
+        Matrix.multiplyMM(foo,0,matrix,0,MyGLRenderer.getProjectionMatrix(),0);
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
     }
 
     public void setTextCord() {
@@ -123,7 +120,7 @@ public class GameObj {
         TexCoordBuffer = ByteBuffer.allocateDirect(texCoords2.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         TexCoordBuffer.put(texCoords2).position(0);
     }
-    public void setTexCoordBuffer() {
+    private void setTexCoordBuffer() {
         TexCoordBuffer = ByteBuffer.allocateDirect(texCoords.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         TexCoordBuffer.put(texCoords).position(0);
     }
@@ -138,19 +135,18 @@ public class GameObj {
     public float[] getSquareCoords() {
         return squareCoords;
     }
-
     public float[] getMatrix() {
         return matrix;
     }
-
-    public void setMatrix(float[] matrix) {
-        this.matrix = matrix;
+    public  void construct(String VertexSahderCode,String FragmentShadeCode){
+        if(VertexSahderCode.isEmpty())setVertexShader();
+        else setVertexShader(VertexSahderCode);
+        if(FragmentShadeCode.isEmpty())setFragmentShader();
+        else setFragmentShader(FragmentShadeCode);
+        setProg();
+        setVertexBuffer();
+        setDrawListBuffer();
+        setTexCoordBuffer();
     }
 
-    public void setAnimation(int[] a) {
-        animation = new Animation(a);
-    }
-    public void setAnimation(int[] backward,int[] left,int[] forward,int[] right) {
-        animation = new Animation(backward,left,forward,right);
-    }
 }
