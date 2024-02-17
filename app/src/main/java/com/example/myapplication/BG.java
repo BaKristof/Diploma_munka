@@ -1,16 +1,11 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
-import android.opengl.Matrix;
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BG {
+public class BG extends GameObj {
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -70,7 +65,6 @@ public class BG {
             Integer a = MyGLRenderer.loadTexture( listofblocks[i]);
             texture.put(i,a);
         }
-
         for (int i = 15; i <25 ; i++) {
             valami.add(texture.get(i));
         }
@@ -102,15 +96,12 @@ public class BG {
 
     }
     public void draw(float[]moveMatrix){
-        float[] eredmeny = new float[16];
-        Matrix.setIdentityM(eredmeny,0);
         GLES20.glUseProgram(Prog);
         setPositionHandle();
         setTextCord();
         for (BGBlock[] bc : BG) {
             for (BGBlock bg : bc) {
-                Matrix.multiplyMM(eredmeny, 0, moveMatrix, 0, bg.getMatrix(), 0);
-                setvPMatrixHandle();
+                bg.setvPMatrixHandle(Prog);
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bg.getTextureID());
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
             }
