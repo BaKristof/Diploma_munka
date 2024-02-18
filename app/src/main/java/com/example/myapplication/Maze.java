@@ -9,27 +9,17 @@ import java.util.Random;
 
 
 public class Maze {
-    private static class Point{
-        public Point(float x, float y) {
-            this.x = x;
-            this.y = y;
-        }
-        public float x;
-    public float y;
-    public float distance(Point other){
-        return (float) Math.sqrt(Math.pow(other.x-x,2)+Math.pow(other.y-y,2));
-        }
-    }
+
    static int[][] maze;
    static boolean[][] bitmaze;
    static Random r = new Random();
    static List<int[]> unvisitedcell;
-   public static int[] startingpoint;
+   public  int[] startingpoint;
    public static final int size_up=5;
-   public static ArrayList<Point> Movementpoints = new ArrayList<>();
+   public ArrayList<Point> Movementpoints = new ArrayList<>();
 
 
-    public static int[][] generate(int lenght,int hight){
+    public int[][] generate(int lenght,int hight){
 
         unvisitedcell = new ArrayList<>();
         maze= new int[lenght][hight];
@@ -148,12 +138,12 @@ public class Maze {
     }
 
 
-    public static float[] getStartingpoint() {
+    public float[] getStartingpoint() {
         return new float[] {startingpoint[0]*GameObj.blocksize*2.5f,startingpoint[1]*GameObj.blocksize*2.5f};
     }
-    public float[] NearestMovmentPoint(float x, float y){
+    public void NearestMovmentPoint(EnemyCharacter enemy){
         //todo check if needed the nearest movement point or just go to the player
-        Point newpoint = new Point(x,y);
+        Point newpoint = new Point(enemy);
         float min = Float.MAX_VALUE;
         Point save= new Point(0.0f,0.0f);
         for (Point a : Movementpoints) {
@@ -162,7 +152,7 @@ public class Maze {
               min = newpoint.distance(a);
             }
         }
-        return new float[]{save.x, save.y};
+        enemy.setMovementPoint(save);
     }
 
 

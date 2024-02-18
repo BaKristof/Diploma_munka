@@ -55,7 +55,9 @@ public class Character extends GameObj{
     public boolean hit(BoundingBox bb){
        return boundingBox.intersects(bb);
     }
-
+    public void setAnimation(int[] a) {
+        animation = new Animation(a);
+    }
     public void setIrany(int irany) {
         this.irany = irany;
     }

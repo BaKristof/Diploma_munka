@@ -15,28 +15,21 @@ import java.util.Arrays;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    //TODO movement be constant by fps
-    private Square sq;
     private final float[] vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
     private final float[] viewMatrix = new float[16];
     private Game gm;
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-       // sq = new Square();
         gm = Game.getInstance();
-
     }
-
     public void onDrawFrame(GL10 unused) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
-      //  sq.draw(vPMatrix);
-        gm.befordraw();
+       // gm.befordraw();
         gm.draw(vPMatrix);
     }
-
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
@@ -70,35 +63,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             throw new RuntimeException(operation + ": glError " + error);
         }
     }
-    public static float[] whereareyou(float[] matrix,GameObj gameObj ) {
+    public static float[] whereisyourmidle(GameObj gameObj ) {
         float[] objectCoords = gameObj.getSquareCoords();
-        float[] transformedCoords = new float[objectCoords.length];
+        float[] transformedCoords = new float[2];
 
-        // Copy the original coordinates to avoid modifying the original array
-        System.arraycopy(objectCoords, 0, transformedCoords, 0, objectCoords.length);
+            float x = objectCoords[0];
+            float y = objectCoords[1];
+            float[] inputPoint = {x, y, 0.0f, 1.0f};
 
-        // Apply the transformation matrix to each vertex
-        for (int i = 0; i < objectCoords.length; i += 3) {
-            float x = objectCoords[i];
-            float y = objectCoords[i + 1];
-            float z = objectCoords[i + 2];
+            Matrix.multiplyMV(inputPoint, 0, gameObj.getMatrix(), 0, inputPoint, 0);
 
-            // Set up the homogeneous coordinates
-            float[] inputPoint = {x, y, z, 1.0f};
-
-            // Multiply the matrix by the point
-
-            Matrix.multiplyMM(matrix,0,matrix,0,Game.getInstance().getMatrix(), 0);
-            Matrix.multiplyMV(inputPoint, 0, matrix, 0, inputPoint, 0);
-
-            // Update the transformed coordinates
-            transformedCoords[i] = inputPoint[0];
-            transformedCoords[i + 1] = inputPoint[1];
-            transformedCoords[i + 2] = inputPoint[2];
-        }
+            transformedCoords[0] = inputPoint[0];
+            transformedCoords[1] = inputPoint[1];
 
         Log.println(Log.ERROR,"codinates find", Arrays.toString(transformedCoords));
-        return new float[]{transformedCoords[0],transformedCoords[1]};
+        return new float[]{transformedCoords[0]-(GameObj.blocksize/2),transformedCoords[1]-(GameObj.blocksize/2)};
     }
 
 

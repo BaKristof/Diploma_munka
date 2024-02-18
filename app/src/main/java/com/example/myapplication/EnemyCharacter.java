@@ -4,26 +4,28 @@ import android.opengl.Matrix;
 
 public class EnemyCharacter extends Character{
 
+    private Point MovementPoint;
     public EnemyCharacter(float[] startingmatrix) {
         super();
-        Matrix.translateM(startingmatrix,0,GameObj.blocksize*2,GameObj.blocksize*-2,0);
-        matrix = startingmatrix;
     }
 
     @Override
     public void draw(float[]mvpMatrix) {
-        float[] localmatrix = new float[16];
-        Matrix.multiplyMM(localmatrix,0,matrix,0,mvpMatrix,0);
-        super.draw(localmatrix);
+        super.draw(mvpMatrix);
     }
 
-    public void move(float dx,float dy){
-        irany = Game.whatisirany(dx,dy);
-        Matrix.translateM(matrix,0,dx*0.004f,dy*0.004f,0);
+    public void move(boolean a){
+        if(a) if(new Point(this).distance(MovementPoint)<0.005f) Game.getInstance().getBackGround().getMaze().NearestMovmentPoint(this);
+        else MovementPoint = Game.getInstance().getPlayerpoint();
+        Point me = new Point(this);
+        irany = Game.whatisirany(MovementPoint.x,MovementPoint.y);
+        double foo =Math.atan2((double) MovementPoint.y - me.y,(double) MovementPoint.x - me.x);
+        float dx = (float) Math.cos(foo);
+        float dy = (float) Math.sin(foo*-1);
+        Matrix.translateM(plsmove,0,dx*0.0004f,dy*0.0004f,0);
     }
-    public void MovetoCordinat(float x, float y){
-        Matrix.translateM(matrix,0,x,y,0);
-
+    public void setMovementPoint(Point movementPoint) {
+        MovementPoint = movementPoint;
     }
     //TODO enemy characters
     // enemy movement by Pathfinding

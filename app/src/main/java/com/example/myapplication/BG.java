@@ -70,6 +70,7 @@ public class BG extends GameObj {
     private ArrayList<Integer> valami = new ArrayList<>();
     public int[][] completback;
     public BGBlock[][]  BG;
+    Maze maze = new Maze();
     public BG( int lenght, int hight) {
 
         Log.e("adat","  "+blocksize);
@@ -89,8 +90,8 @@ public class BG extends GameObj {
         setVertexBuffer();
         setDrawListBuffer();
         setTexCoordBuffer();
-        setCompletback(Maze.generate(lenght,hight));
-        float[] a = Maze.getStartingpoint();
+        setCompletback(maze.generate(lenght,hight));
+        float[] a = maze.getStartingpoint();
        // Matrix.translateM(BGMove,0,  -a[0], a[1],0);
         LoadUpBG();
 
@@ -160,6 +161,7 @@ public class BG extends GameObj {
         return BG[x*5][y*5].getMatrix();
     }
 
-
-
+    public Maze getMaze() {
+        return maze;
+    }
 }

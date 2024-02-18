@@ -14,6 +14,7 @@ public class Animation {
     ArrayList<Integer> right;
     ArrayList<Integer> forward;
     Map<Integer,ArrayList<Integer>> movement = new HashMap<>();
+    private final int EnemyPlaceholder=MyGLRenderer.loadTexture(R.drawable.enemy_place_holder);;
     int irany;
     int counter;
     public Animation(int[] backward,int[] left,int[] forward,int[] right) {
@@ -63,7 +64,7 @@ public class Animation {
     }
 
     public int NextFrame(int irany){
-        int a = Game.getInstance().getEnemyPlaceholder();
+        int a = EnemyPlaceholder;
         if(!movement.isEmpty()){
             if (movement.get(irany)!=null){
                 if (movement.get(irany).size()<=counter) counter=0;

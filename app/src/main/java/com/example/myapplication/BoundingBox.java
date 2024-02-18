@@ -2,68 +2,64 @@ package com.example.myapplication;
 
 import android.opengl.Matrix;
 
-import java.util.ArrayList;
-
 public class BoundingBox {
-    private float xMin, xMax, yMin, yMax;
-
+    private float xMin= Float.MAX_VALUE, xMax = Float.MIN_VALUE, yMin =Float.MAX_VALUE, yMax= Float.MIN_VALUE;
     public BoundingBox(GameObj obj) {
-        this.xMin  = Float.MAX_VALUE;
-        this.yMin =Float.MAX_VALUE;
-        this.xMax = Float.MIN_VALUE;
-        this.yMax = Float.MIN_VALUE;
-        float[] realCoordinates = new float[4] ;
-        float[] objMatrix = obj.getMatrix();
+        float[] objMatrix;
+        if(obj instanceof Player) objMatrix = Game.getInstance().getPlayerMatrix();
+        else objMatrix = obj.getMatrix();
+        float[] realCoordinates =new float[ obj.getSquareCoords().length];
         float[] objSquareCords = obj.getSquareCoords();
-        for (int i= 0 ;i<3; i++){
-            realCoordinates[0] = objSquareCords[i];
-            realCoordinates[1] = objSquareCords[i+1];
-            realCoordinates[2] = objSquareCords[i+2];
-            realCoordinates[3] = 0.0f;
-            Matrix.multiplyMV(realCoordinates,0, objMatrix,0,objSquareCords,0);
-            if(realCoordinates[0]>xMax) this.xMax=realCoordinates[0];
-            if(realCoordinates[0]<xMin) this.xMin=realCoordinates[0];
-            if(realCoordinates[1]>yMax) this.yMax=realCoordinates[1];
-            if(realCoordinates[1]<yMin) this.yMin=realCoordinates[1];
+        Matrix.multiplyMV(realCoordinates,0, objMatrix,0,objSquareCords,0);
+
+        for (int i = 0; i < realCoordinates.length; i+=3) {
+            if(realCoordinates[i]>xMax) this.xMax=realCoordinates[i];
+            if(realCoordinates[i]<xMin) this.xMin=realCoordinates[i];
+            if(realCoordinates[i+1]>yMax) this.yMax=realCoordinates[i+1];
+            if(realCoordinates[i+1]<yMin) this.yMin=realCoordinates[i+1];
         }
-
     }
-    public BoundingBox(GameObj obj,float[] matrix) {
-        this.xMin  = Float.MAX_VALUE;
-        this.yMin =Float.MAX_VALUE;
-        this.xMax = Float.MIN_VALUE;
-        this.yMax = Float.MIN_VALUE;
-        float[] realCoordinates = new float[4] ;
-        float[] objMatrix = obj.getMatrix();
-        float[] objSquareCords = obj.getSquareCoords();
-        for (int i= 0 ;i<3; i++){
-            realCoordinates[0] = objSquareCords[i];
-            realCoordinates[1] = objSquareCords[i+1];
-            realCoordinates[2] = objSquareCords[i+2];
-            realCoordinates[3] = 0.0f;
-            Matrix.multiplyMM(objMatrix, 0,objMatrix,0,matrix,0);
-            Matrix.multiplyMV(realCoordinates,0, objMatrix,0,objSquareCords,0);
-            if(realCoordinates[0]>xMax) this.xMax=realCoordinates[0];
-            if(realCoordinates[0]<xMin) this.xMin=realCoordinates[0];
-            if(realCoordinates[1]>yMax) this.yMax=realCoordinates[1];
-            if(realCoordinates[1]<yMin) this.yMin=realCoordinates[1];
-        }
-
-    }
-
-    public static BoundingBox[] valami(BGBlock[] blocks) {
-        ArrayList<BoundingBox> playfield = new ArrayList<>();
-
-        return playfield.toArray(new BoundingBox[0]);
-    }
-
     public boolean intersects(BoundingBox other) {
         return !(xMax < other.xMin || xMin > other.xMax || yMax < other.yMin || yMin > other.yMax);
     }
 
-    public static ArrayList<BoundingBox> ConnectBoundingBox(ArrayList<BoundingBox> boundingBoxes){
+    public float[] getMin() {
+        return new float[]{xMin,yMin};
+    }
+    public float[] getMax() {
+        return new float[]{xMax,yMax};
+    }
+    public boolean Lineintersect( Point start, Point end) {
+        float[] lineStart = new float[]{start.x, start.y};
+        float[] lineEnd = new float[]{end.x, end.y};
 
-        //TODO this function to make smaler the boundingBoxes
-        return boundingBoxes;
+        float[] boxMin = this.getMin();
+        float[] boxMax = this.getMax();
+
+        float[] rayDirection = {lineEnd[0] - lineStart[0], lineEnd[1] - lineStart[1]};
+        float[] rayOrigin = {lineStart[0], lineStart[1]};
+
+        float tMin = Float.NEGATIVE_INFINITY;
+        float tMax = Float.POSITIVE_INFINITY;
+
+        for (int i = 0; i < 2; i++) {
+            float invDir = 1.0f / rayDirection[i];
+            float tNear = (boxMin[i] - rayOrigin[i]) * invDir;
+            float tFar = (boxMax[i] - rayOrigin[i]) * invDir;
+
+            if (tNear > tFar) {
+                float temp = tNear;
+                tNear = tFar;
+                tFar = temp;
+            }
+
+            tMin = Math.max(tNear, tMin);
+            tMax = Math.min(tFar, tMax);
+
+            if (tMin > tMax) {
+                return false;
+            }
+        }
+        return tMin <= 1.0f && tMax >= 0.0f;
     }
 }

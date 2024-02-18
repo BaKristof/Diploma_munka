@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 
 import java.nio.ByteBuffer;
@@ -10,8 +11,8 @@ import java.nio.ShortBuffer;
 
 
 public class GameObj {
-    protected float[] matrix = new float[16];
-
+    protected float[] plsmove = new float[16];
+    private final float[] foo = new float[16];
     protected Animation animation= new Animation();
     static float[] texCoords = {
             0.0f, 0.0f,
@@ -34,7 +35,6 @@ public class GameObj {
     protected ShortBuffer drawListBuffer;
     protected int Prog;
     private final short[] drawOrder = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
-    private int vPMatrixHandle;
     private int TextCord;
     private FloatBuffer TexCoordBuffer;
     private int textureID;
@@ -109,9 +109,11 @@ public class GameObj {
     }
 
     public void setvPMatrixHandle(float[] mvpMatrix) {
-
-        this.vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
+        Matrix.setIdentityM(plsmove,0);
+        Matrix.setIdentityM(foo,0);
+        Matrix.multiplyMM(foo,0,mvpMatrix,0,plsmove,0);
+        int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
     }
 
     public void setTextCord() {
@@ -127,28 +129,21 @@ public class GameObj {
         TexCoordBuffer = ByteBuffer.allocateDirect(texCoords.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         TexCoordBuffer.put(texCoords).position(0);
     }
-
     public void setoffHandels(){
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
         GLES20.glDisableVertexAttribArray(positionHandle);
         GLES20.glDisableVertexAttribArray(TextCord);
         GLES20.glUseProgram(0);
     }
-
     public float[] getSquareCoords() {
         return squareCoords;
     }
 
     public float[] getMatrix() {
-        return matrix;
+    return plsmove;
     }
-
-    public void setMatrix(float[] matrix) {
-        this.matrix = matrix;
-    }
-
-    public void setAnimation(int[] a) {
-        animation = new Animation(a);
+    public void setMatrix(float[] matrix){
+        System.arraycopy(matrix,0,plsmove,0,plsmove.length);
     }
     public void setAnimation(int[] backward,int[] left,int[] forward,int[] right) {
         animation = new Animation(backward,left,forward,right);

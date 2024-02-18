@@ -28,4 +28,9 @@ public class BGBlock {
     public int getTextureID() {
         return textureID;
     }
+    public GameObj toGameObj(){
+        GameObj gameObj= new GameObj();
+        gameObj.setMatrix(matrix);
+        return gameObj;
+    }
 }
