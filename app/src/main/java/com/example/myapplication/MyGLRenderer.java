@@ -27,7 +27,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
-       // gm.befordraw();
+        gm.befordraw();
         gm.draw(vPMatrix);
     }
     public void onSurfaceChanged(GL10 unused, int width, int height) {
@@ -76,7 +76,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             transformedCoords[0] = inputPoint[0];
             transformedCoords[1] = inputPoint[1];
 
-        Log.println(Log.ERROR,"codinates find", Arrays.toString(transformedCoords));
+        Log.println(Log.ERROR,gameObj.getName(), Arrays.toString(transformedCoords));
         return new float[]{transformedCoords[0]-(GameObj.blocksize/2),transformedCoords[1]-(GameObj.blocksize/2)};
     }
 

@@ -9,16 +9,13 @@ import java.util.Random;
 
 
 public class Maze {
-
    static int[][] maze;
    static boolean[][] bitmaze;
    static Random r = new Random();
    static List<int[]> unvisitedcell;
-   public  int[] startingpoint;
+   public int[] startingpoint;
    public static final int size_up=5;
    public ArrayList<Point> Movementpoints = new ArrayList<>();
-
-
     public int[][] generate(int lenght,int hight){
 
         unvisitedcell = new ArrayList<>();
@@ -136,11 +133,6 @@ public class Maze {
 
         return finale;
     }
-
-
-    public float[] getStartingpoint() {
-        return new float[] {startingpoint[0]*GameObj.blocksize*2.5f,startingpoint[1]*GameObj.blocksize*2.5f};
-    }
     public void NearestMovmentPoint(EnemyCharacter enemy){
         //todo check if needed the nearest movement point or just go to the player
         Point newpoint = new Point(enemy);
@@ -155,8 +147,8 @@ public class Maze {
         enemy.setMovementPoint(save);
     }
 
-
-
-
+    public int[] getStartingpoint() {
+        return startingpoint;
+    }
 }
 

@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -31,6 +32,7 @@ public class Character extends GameObj{
 
 
     public Character() {
+        Matrix.setIdentityM(plsmove,0);
      //   boundingBox = new BoundingBox(this);
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
@@ -61,4 +63,8 @@ public class Character extends GameObj{
     public void setIrany(int irany) {
         this.irany = irany;
     }
+
+
+
+    public String getName(){return "Charater";}
 }

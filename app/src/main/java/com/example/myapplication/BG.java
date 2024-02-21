@@ -70,8 +70,8 @@ public class BG extends GameObj {
     private ArrayList<Integer> valami = new ArrayList<>();
     public int[][] completback;
     public BGBlock[][]  BG;
-    Maze maze = new Maze();
-    public BG( int lenght, int hight) {
+
+    public BG( int[][] maze) {
 
         Log.e("adat","  "+blocksize);
         //  BG = new BGBlock[lenght*5][hight*5];
@@ -90,9 +90,7 @@ public class BG extends GameObj {
         setVertexBuffer();
         setDrawListBuffer();
         setTexCoordBuffer();
-        setCompletback(maze.generate(lenght,hight));
-        float[] a = maze.getStartingpoint();
-       // Matrix.translateM(BGMove,0,  -a[0], a[1],0);
+        setCompletback(maze);
         LoadUpBG();
 
     }
@@ -123,31 +121,31 @@ public class BG extends GameObj {
 
     }
     public void draw(float[]moveMatrix){
-        float[] eredmeny = new float[16];
-        Matrix.setIdentityM(eredmeny,0);
+
         GLES20.glUseProgram(Prog);
         setPositionHandle();
         setTextCord();
         //  setColorHandle();
         for (BGBlock[] bc : BG) {
-            for (BGBlock bg : bc) {
-                Matrix.multiplyMM(eredmeny, 0, moveMatrix, 0, bg.getMatrix(), 0);
-                setvPMatrixHandle(eredmeny);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bg.getTextureID());
+            for (BGBlock bgb : bc) {
+                System.arraycopy(bgb.getMatrix(),0,plsmove,0, plsmove.length);
+                setvPMatrixHandle(moveMatrix);
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bgb.getTextureID());
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
             }
         }
       //  MyGLRenderer.whereareyou(FinalMatrix,squareCoords);
         setoffHandels();
     }
-    public BGBlock[] foundnearblocks(float positionX,float positionY){
-        int x = (int)positionX;
-        int y = (int)positionY;
+    public BGBlock[] foundnearblocks(Point point){
+        Log.e("teszt","idáig eljutsz");
+        int x = point.getX();
+        int y = point.getY();
         ArrayList<BGBlock> near = new ArrayList<>();
         for (int i = x-4; i < x+4; i++) {
             for (int j = y-4; j < y+4; j++) {
-                if (i<BG.length || i>0){
-                    if (j<BG[0].length || j>0){
+                if (i<=BG.length && i>=0){
+                    if (j<=BG[0].length && j>=0){
                         if (!valami.contains(BG[i][j].getTextureID())){
                             near.add(BG[i][j]);
                         }
@@ -160,8 +158,9 @@ public class BG extends GameObj {
     public float[] getboxmidel(int x,int y){
         return BG[x*5][y*5].getMatrix();
     }
-
-    public Maze getMaze() {
-        return maze;
+    public float[] getboxmidel(int[] xy){
+        return BG[(xy[0]*5)+2][(xy[1]*5)+2].getMatrix();
     }
+
+
 }

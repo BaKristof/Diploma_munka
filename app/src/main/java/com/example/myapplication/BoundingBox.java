@@ -1,10 +1,12 @@
 package com.example.myapplication;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 public class BoundingBox {
     private float xMin= Float.MAX_VALUE, xMax = Float.MIN_VALUE, yMin =Float.MAX_VALUE, yMax= Float.MIN_VALUE;
     public BoundingBox(GameObj obj) {
+        Log.e("faszom","boundingbox const");
         float[] objMatrix;
         if(obj instanceof Player) objMatrix = Game.getInstance().getPlayerMatrix();
         else objMatrix = obj.getMatrix();

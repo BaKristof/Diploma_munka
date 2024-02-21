@@ -17,4 +17,7 @@ public class Player extends  Character{
     public float[] getMatrix() {
         return Game.getInstance().getPlayerMatrix();
     }
+
+    @Override
+    public String getName(){return "Playes";}
 }

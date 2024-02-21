@@ -12,7 +12,7 @@ import java.nio.ShortBuffer;
 
 public class GameObj {
     protected float[] plsmove = new float[16];
-    private final float[] foo = new float[16];
+    private float[] foo = new float[16];
     protected Animation animation= new Animation();
     static float[] texCoords = {
             0.0f, 0.0f,
@@ -20,7 +20,7 @@ public class GameObj {
             1.0f, 1.0f,
             1.0f, 0.0f
     };
-    private static final float size =0.5f;
+    private static final float size =0.25f;
     static float[] squareCoords = {
             -0.15f*size,  0.15f*size, 0.0f,   // left top
             -0.15f*size, -0.15f*size, 0.0f,   // left bottom
@@ -109,7 +109,6 @@ public class GameObj {
     }
 
     public void setvPMatrixHandle(float[] mvpMatrix) {
-        Matrix.setIdentityM(plsmove,0);
         Matrix.setIdentityM(foo,0);
         Matrix.multiplyMM(foo,0,mvpMatrix,0,plsmove,0);
         int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
@@ -147,5 +146,8 @@ public class GameObj {
     }
     public void setAnimation(int[] backward,int[] left,int[] forward,int[] right) {
         animation = new Animation(backward,left,forward,right);
+    }
+    public String getName() {
+        return "Gameobj";
     }
 }

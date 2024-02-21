@@ -2,28 +2,34 @@ package com.example.myapplication;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class Game {
+    private Maze maze = new Maze();
     private static Game game;
     public EnemyCharacter enemyCharacter;
+    public Character character;
     public Player player;
     public Point playerpoint;
     public BG BackGround;
-    private final float[] move = new float[16];
-    private final float[] foo = new float[16];
+    private float[] move = new float[16];
+    private float[] foo = new float[16];
     ArrayList<EnemyCharacter> enemys;
 
     public Point StartingPoint = new Point(365.0f,365.0f);
-    private ArrayList<BGBlock> hitfield;//TODO
+    private ArrayList<BGBlock> hitfield = new ArrayList<>();
 
     public ArrayList<BGBlock> getHitfield() {
         return hitfield;
     }
     public void addenemy(int type,float x,float y){
         enemys.add(new EnemyCharacter(new float[]{x,y}));
+    }
+    public void addenemy(EnemyCharacter enemy){
+        enemys.add(enemy);
     }
     public float[] getPlayerMatrix() {
         return foo;
@@ -33,14 +39,24 @@ public final class Game {
         return playerpoint;
     }
 
+    public Maze getMaze() {
+        return maze;
+    }
+
+
     private Game() {
+        Log.e("vajon innen jön a dolog","valami construktor");
         Matrix.setIdentityM(move,0);
+        maze = new Maze();
+        character = new Character();
+        BackGround = new BG(maze.generate(3,3));
         enemys = new ArrayList<>();
-        BackGround = new BG(3,3);
         player = new Player();
-        //character = new Character();
-        enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(2,2));
-     //   hitfield = BoundingBox.valami(BackGround.foundnearblocks(moveX,moveY));
+        enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,1}));
+        addenemy(enemyCharacter);
+        float[] check = BackGround.getboxmidel(maze.getStartingpoint()).clone();
+        Matrix.invertM(check,0,check,0);
+        System.arraycopy(check,0,move,0,move.length);
 
     }
     public static Game getInstance(){
@@ -49,10 +65,9 @@ public final class Game {
         }
         return game;
     }
-
-
     public void befordraw(){
         playerpoint = new Point(player);
+        FillHitfield();
         enemymovment();
 
     }
@@ -61,12 +76,10 @@ public final class Game {
         BackGround.draw(foo);
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        enemyCharacter.draw(foo);
-        for (EnemyCharacter enemy : enemys) {
-            enemy.draw(foo);
-        }
-        player.draw(mvpMatrix);
+        for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
+        //enemyCharacter.draw(foo);
         MyGLRenderer.checkGLError("draw van e probléma");
+        player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
 
     }
@@ -90,16 +103,17 @@ public final class Game {
     }
     public void FillHitfield() { //TODO nem biztos hogy jó (nem hiszem)
         Point kell = new Point(player);
-        if (kell.distance(StartingPoint) > GameObj.blocksize) hitfield.addAll(Arrays.asList(BackGround.foundnearblocks(kell.x, kell.y)));
+        //new Point(enemyCharacter);
+
+        if (kell.distance(StartingPoint) > GameObj.blocksize) {
+            hitfield.addAll(Arrays.asList(BackGround.foundnearblocks(kell)));
+            StartingPoint = kell;
+        }
     }
     public boolean CheckForWallHit(){
         for (BGBlock bgb: hitfield) {
             if(new BoundingBox(bgb.toGameObj()).intersects(new BoundingBox(player))) return true;
         }
         return false;
-    }
-
-    public BG getBackGround() {
-        return BackGround;
     }
 }
