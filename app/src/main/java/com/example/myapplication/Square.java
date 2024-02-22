@@ -93,6 +93,9 @@ public class Square {
 
         vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0);
+
+
+
         TextCord = GLES20.glGetAttribLocation(Prog, "vTexCoord");
         GLES20.glEnableVertexAttribArray(TextCord);
         GLES20.glVertexAttribPointer(TextCord, 4, GLES20.GL_FLOAT, false, 8, mTexCoordBuffer);

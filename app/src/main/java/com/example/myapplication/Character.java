@@ -3,12 +3,7 @@ package com.example.myapplication;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-
-public class Character extends GameObj{
+public class Character extends Drawable {
 
     private BoundingBox boundingBox ;
     int irany =0;
@@ -32,7 +27,8 @@ public class Character extends GameObj{
 
 
     public Character() {
-        Matrix.setIdentityM(plsmove,0);
+        boundingBox =new  BoundingBox();
+        Matrix.setIdentityM(matrix,0);
      //   boundingBox = new BoundingBox(this);
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
@@ -54,8 +50,8 @@ public class Character extends GameObj{
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }
-    public boolean hit(BoundingBox bb){
-       return boundingBox.intersects(bb);
+    public boolean hit(float[] matrix,BoundingBox bb){
+       return boundingBox.intersects(matrix,bb);
     }
     public void setAnimation(int[] a) {
         animation = new Animation(a);
@@ -64,7 +60,8 @@ public class Character extends GameObj{
         this.irany = irany;
     }
 
-
-
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
+    }
     public String getName(){return "Charater";}
 }

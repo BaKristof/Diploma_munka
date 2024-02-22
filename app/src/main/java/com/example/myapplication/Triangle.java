@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -8,11 +9,13 @@ import java.nio.FloatBuffer;
 
 public class Triangle {
 
+    private float[] matrix =new float[16];
     private FloatBuffer vertexBuffer;
     private final String vertexShaderCode =
-            "attribute vec4 vPosition;" +
+            "uniform mat4 uMVPMatrix;" +
+                    "attribute vec4 vPosition;" +
                     "void main() {" +
-                    "  gl_Position = vPosition;" +
+                    "gl_Position = uMVPMatrix * vPosition;" +
                     "}";
 
     private final String fragmentShaderCode =
@@ -23,17 +26,20 @@ public class Triangle {
                     "}";
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
-    static float triangleCoords[] = {   // in counterclockwise order:
-            0.0f,  0.622008459f, 0.0f, // top
-            -0.5f, -0.311004243f, 0.0f, // bottom left
-            0.5f, -0.311004243f, 0.0f  // bottom right
+    float size = 0.02f;
+    float triangleCoords[] = {   // in counterclockwise order:
+            0.0f*size,  0.622008459f*size, 0.0f, // top
+            -0.5f*size, -0.311004243f*size, 0.0f, // bottom left
+            0.5f*size, -0.311004243f*size, 0.0f  // bottom right
     };
 
     // Set color with red, green, blue and alpha (opacity) values
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
+    float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     private final int mProgram;
-    public Triangle() {
+    public Triangle(float[] smatrix) {
 
+        Matrix.setIdentityM(matrix,0);
+        System.arraycopy(smatrix,0,matrix,0,matrix.length);
         int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER,
                 vertexShaderCode);
         int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER,
@@ -66,31 +72,43 @@ public class Triangle {
     private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    public void draw() {
+    public void draw(float[] mvpMatrix) {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(mProgram);
-
+        float[] foo = new float[16];
+        Matrix.multiplyMM(foo,0,matrix,0,mvpMatrix,0);
         // get handle to vertex shader's vPosition member
         positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
-
         // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(positionHandle);
-
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
 
+
+        int vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
+
+
+
+
         // get handle to fragment shader's vColor member
         colorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
-
         // Set color for drawing the triangle
         GLES20.glUniform4fv(colorHandle, 1, color, 0);
 
+
+
+
         // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
-
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(positionHandle);
     }
+
+    public void setSize(float size) {
+        this.size = size;
+    }
+
 }

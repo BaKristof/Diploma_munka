@@ -36,14 +36,12 @@ public class Circle {
     private ShortBuffer drawListBuffer;
     private FloatBuffer mTexCoordBuffer;
     private  int TextCord;
-    private float[] circleCoords;
-
-    private final int vertexCount = circleCoords.length / COORDS_PER_VERTEX;
+    private final int vertexCount;
 
     public Circle(float positionx,float positiony,float radius) {
 
-        circleCoords = generateCircle(  positionx, positiony, radius, 50);
-
+        float[] circleCoords = generateCircle(0, 0, radius, 6);
+        vertexCount = circleCoords.length / COORDS_PER_VERTEX;
         // Initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (# of coordinate values * 4 bytes per float)
@@ -70,33 +68,24 @@ public class Circle {
     }
     public void draw(float[]mvpMatrix ) {
         GLES20.glUseProgram(Prog);
-
-
-
-        Matrix.multiplyMM(matrix, 0, matrix, 0, mvpMatrix, 0);
+        float[] foo = new float[16];
+        Matrix.multiplyMM(foo, 0, matrix, 0, mvpMatrix, 0);
         vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, matrix, 0);
-
-
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
 
         colorHandle = GLES20.glGetUniformLocation(Prog, "vColor");
         GLES20.glUniform4fv(colorHandle, 1, color, 0);
 
-
-
-        GLES20.glVertexAttribPointer(TextCord, 4, GLES20.GL_FLOAT, false, 8, mTexCoordBuffer);
+       // GLES20.glVertexAttribPointer(TextCord, 4, GLES20.GL_FLOAT, false, 8, mTexCoordBuffer);
         positionHandle = GLES20.glGetAttribLocation(Prog, "vPosition");
-
-
-
         GLES20.glEnableVertexAttribArray(positionHandle);
         GLES20.glVertexAttribPointer(positionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
 
 
-        /*colorHandle = GLES20.glGetUniformLocation(Prog, "vColor");
-        GLES20.glUniform4fv(colorHandle, 1, color, 0);*/
+        colorHandle = GLES20.glGetUniformLocation(Prog, "vColor");
+        GLES20.glUniform4fv(colorHandle, 1, color, 0);
 
         // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
@@ -120,6 +109,8 @@ public class Circle {
             // Add the coordinates to the list
             coordinates.add(x);
             coordinates.add(y);
+            coordinates.add(0.0f); //Z position
+            coordinates.add(0.0f); // alfa
         }
         float[] a = new float[coordinates.size()];
         int i=0;

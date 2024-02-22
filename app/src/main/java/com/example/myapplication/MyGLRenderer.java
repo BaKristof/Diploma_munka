@@ -63,21 +63,21 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             throw new RuntimeException(operation + ": glError " + error);
         }
     }
-    public static float[] whereisyourmidle(GameObj gameObj ) {
-        float[] objectCoords = gameObj.getSquareCoords();
+    public static float[] whereisyourmidle(Specifications specific ) {
+        float[] objectCoords = Specifications.getSquareCoords();
         float[] transformedCoords = new float[2];
 
             float x = objectCoords[0];
             float y = objectCoords[1];
             float[] inputPoint = {x, y, 0.0f, 1.0f};
 
-            Matrix.multiplyMV(inputPoint, 0, gameObj.getMatrix(), 0, inputPoint, 0);
+            Matrix.multiplyMV(inputPoint, 0, specific.getMatrix(), 0, inputPoint, 0);
 
             transformedCoords[0] = inputPoint[0];
             transformedCoords[1] = inputPoint[1];
 
-        Log.println(Log.ERROR,gameObj.getName(), Arrays.toString(transformedCoords));
-        return new float[]{transformedCoords[0]-(GameObj.blocksize/2),transformedCoords[1]-(GameObj.blocksize/2)};
+        Log.println(Log.ERROR,specific.getName(), Arrays.toString(transformedCoords));
+        return new float[]{transformedCoords[0]-(Drawable.blocksize/2),transformedCoords[1]-(Drawable.blocksize/2)};
     }
 
 

@@ -1,9 +1,7 @@
 package com.example.myapplication;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Animation {
@@ -14,7 +12,7 @@ public class Animation {
     ArrayList<Integer> right;
     ArrayList<Integer> forward;
     Map<Integer,ArrayList<Integer>> movement = new HashMap<>();
-    private final int EnemyPlaceholder=MyGLRenderer.loadTexture(R.drawable.enemy_place_holder);;
+    private int Singletextur =MyGLRenderer.loadTexture(R.drawable.place_holder);;
     int irany;
     int counter;
     public Animation(int[] backward,int[] left,int[] forward,int[] right) {
@@ -64,7 +62,7 @@ public class Animation {
     }
 
     public int NextFrame(int irany){
-        int a = EnemyPlaceholder;
+        int a = Singletextur;
         if(!movement.isEmpty()){
             if (movement.get(irany)!=null){
                 if (movement.get(irany).size()<=counter) counter=0;
@@ -77,5 +75,9 @@ public class Animation {
         counter ++;
         }
         return a;
+    }
+
+    public void setSingletextur(int singletextur) {
+        Singletextur = singletextur;
     }
 }

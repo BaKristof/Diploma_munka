@@ -49,7 +49,7 @@ public final class Game {
         Matrix.setIdentityM(move,0);
         maze = new Maze();
         character = new Character();
-        BackGround = new BG(maze.generate(3,3));
+        BackGround = new BG(maze);
         enemys = new ArrayList<>();
         player = new Player();
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,1}));
@@ -68,12 +68,13 @@ public final class Game {
     public void befordraw(){
         playerpoint = new Point(player);
         FillHitfield();
-        enemymovment();
+        //enemymovment();
 
     }
     public void draw(float[]mvpMatrix){
         Matrix.multiplyMM(foo, 0, mvpMatrix, 0, move, 0);
         BackGround.draw(foo);
+        BackGround.drawmovementpoints(foo);
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
@@ -81,7 +82,6 @@ public final class Game {
         MyGLRenderer.checkGLError("draw van e probléma");
         player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
-
     }
     public void move(float dx,float dy){
         player.setIrany(whatisirany(dx,dy));
@@ -90,7 +90,7 @@ public final class Game {
     public void enemymovment(){
             for (BGBlock bgb : hitfield) {
                 for (EnemyCharacter enemy: enemys) {
-                    enemyCharacter.move( new BoundingBox(bgb.toGameObj()).Lineintersect(new Point(player),new Point(enemy)));
+                    enemyCharacter.move( new BoundingBox().Lineintersect(new Point(player),new Point(enemy)));
                 }
             }
     }
@@ -103,17 +103,22 @@ public final class Game {
     }
     public void FillHitfield() { //TODO nem biztos hogy jó (nem hiszem)
         Point kell = new Point(player);
+        hitfield.clear();
         //new Point(enemyCharacter);
 
-        if (kell.distance(StartingPoint) > GameObj.blocksize) {
+        if (kell.distance(StartingPoint) > Drawable.blocksize) {
             hitfield.addAll(Arrays.asList(BackGround.foundnearblocks(kell)));
             StartingPoint = kell;
         }
     }
     public boolean CheckForWallHit(){
         for (BGBlock bgb: hitfield) {
-            if(new BoundingBox(bgb.toGameObj()).intersects(new BoundingBox(player))) return true;
+            if(new BoundingBox().intersects(getPlayerMatrix(),player.getBoundingBox())) return true;
         }
         return false;
+    }
+
+    public BG getBackGround() {
+        return BackGround;
     }
 }

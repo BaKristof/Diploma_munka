@@ -15,7 +15,7 @@ public class Maze {
    static List<int[]> unvisitedcell;
    public int[] startingpoint;
    public static final int size_up=5;
-   public ArrayList<Point> Movementpoints = new ArrayList<>();
+   public ArrayList<int[]> Movementpoints = new ArrayList<>();
     public int[][] generate(int lenght,int hight){
 
         unvisitedcell = new ArrayList<>();
@@ -95,30 +95,30 @@ public class Maze {
                        finale[i*5-1][j*5+1] =26;    finale[i*5-1][j*5+2] =19;   finale[i*5-1][j*5+3] =25;
                                                     finale[i*5][j*5+2] =19;
                                                     finale[i*5+1][j*5+2] =19;
-                       Movementpoints.add(new Point(i*5-1*GameObj.blocksize,j*5+2*GameObj.blocksize+(GameObj.blocksize/2)));
-                       Movementpoints.add(new Point(i*5+1*GameObj.blocksize,j*5+2*GameObj.blocksize+(GameObj.blocksize/2)));
+                       Movementpoints.add(new int[]{i*5-1,j*5+2});
+                       Movementpoints.add(new int[]{i*5,j*5+2});
                         break;
                     case 1://le
                                                         finale[i*5+3][j*5+2] =19;
                           finale[i*5+4][j*5+1] =26;     finale[i*5+4][j*5+2] =19;   finale[i*5+4][j*5+3] =25;
                                                         finale[i*5+5][j*5+2] =19;
                                                         finale[i*5+6][j*5+2] =19;
-                        Movementpoints.add(new Point(i*5+4*GameObj.blocksize,j*5+2*GameObj.blocksize+(GameObj.blocksize/2)));
-                        Movementpoints.add(new Point(i*5+6*GameObj.blocksize,j*5+2*GameObj.blocksize+(GameObj.blocksize/2)));
+                        Movementpoints.add(new int[]{i*5+4,j*5+2});
+                        Movementpoints.add(new int[]{i*5+5,j*5+2});
                         break;
                     case 2: //jobbra
                                                     finale[i*5+1][j*5+4] =10;   finale[i*5+1][j*5+5] =11;
                         finale[i*5+2][j*5+3] =19;   finale[i*5+2][j*5+4] =21;   finale[i*5+2][j*5+5] =21;   finale[i*5+2][j*5+6] =19;
                                                     finale[i*5+3][j*5+4] =27;   finale[i*5+3][j*5+5] =28;
-                        Movementpoints.add(new Point(i*5+2*GameObj.blocksize-(GameObj.blocksize/2),j*5+4*GameObj.blocksize));
-                        Movementpoints.add(new Point(i*5+1*GameObj.blocksize-(GameObj.blocksize/2),j*5+2*GameObj.blocksize));
+                        Movementpoints.add(new int[]{i*5+2,j*5+4});
+                        Movementpoints.add(new int[]{i*5+2,j*5+5});
                         break;
                     case 3://balra
                                                    finale[i*5+1][j*5-1] =11;  finale[i*5+1][j*5] =10;
                         finale[i*5+2][j*5-2] =19;  finale[i*5+2][j*5-1] =21;  finale[i*5+2][j*5] =21;  finale[i*5+2][j*5+1] =19;
                                                    finale[i*5+3][j*5-1] =27;  finale[i*5+3][j*5] =28;
-                        Movementpoints.add(new Point(i*5+2*GameObj.blocksize-(GameObj.blocksize/2),j*5-1*GameObj.blocksize));
-                        Movementpoints.add(new Point(i*5+2*GameObj.blocksize-(GameObj.blocksize/2),j*5+1*GameObj.blocksize));
+                        Movementpoints.add(new int[]{i*5+2,j*5-1});
+                        Movementpoints.add(new int[]{i*5+2,j*5+1});
                         break;
                 }
             }
@@ -133,20 +133,10 @@ public class Maze {
 
         return finale;
     }
-    public void NearestMovmentPoint(EnemyCharacter enemy){
-        //todo check if needed the nearest movement point or just go to the player
-        Point newpoint = new Point(enemy);
-        float min = Float.MAX_VALUE;
-        Point save= new Point(0.0f,0.0f);
-        for (Point a : Movementpoints) {
-            if(newpoint.distance(a)<min){
-              save = a;
-              min = newpoint.distance(a);
-            }
-        }
-        enemy.setMovementPoint(save);
-    }
 
+    public ArrayList<int[]> getMovementpoints() {
+        return Movementpoints;
+    }
     public int[] getStartingpoint() {
         return startingpoint;
     }

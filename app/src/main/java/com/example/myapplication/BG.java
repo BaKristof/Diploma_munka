@@ -1,16 +1,14 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BG extends GameObj {
+public class BG extends Drawable {
+    private ArrayList<int[]> Movementpoints = new ArrayList<>();
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -62,16 +60,12 @@ public class BG extends GameObj {
             R.drawable._18,
             R.drawable._19,
     };
-
-
-
-
     private final Map<Integer,Integer> texture = new HashMap<>();
     private ArrayList<Integer> valami = new ArrayList<>();
     public int[][] completback;
     public BGBlock[][]  BG;
 
-    public BG( int[][] maze) {
+    public BG( Maze maze) {
 
         Log.e("adat","  "+blocksize);
         //  BG = new BGBlock[lenght*5][hight*5];
@@ -90,7 +84,8 @@ public class BG extends GameObj {
         setVertexBuffer();
         setDrawListBuffer();
         setTexCoordBuffer();
-        setCompletback(maze);
+        setCompletback(maze.generate(2,2));
+        Movementpoints = maze.getMovementpoints();
         LoadUpBG();
 
     }
@@ -115,8 +110,8 @@ public class BG extends GameObj {
     private BGBlock TextureFromInt(int id, int i, int j ) {
         BGBlock vissza = new BGBlock();
        // Log.e("valami","bakosssss     "+blocksize);
-        vissza.setMatrix( j* blocksize,i* blocksize*-1,0);
-        vissza.setTextureID(texture.get(id));
+        vissza.setMatrix( j* blocksize,i* blocksize*-1);
+        vissza.setSingleTexture(texture.get(id));
         return vissza;
 
     }
@@ -128,9 +123,9 @@ public class BG extends GameObj {
         //  setColorHandle();
         for (BGBlock[] bc : BG) {
             for (BGBlock bgb : bc) {
-                System.arraycopy(bgb.getMatrix(),0,plsmove,0, plsmove.length);
+                System.arraycopy(bgb.getMatrix(),0, matrix,0, matrix.length);
                 setvPMatrixHandle(moveMatrix);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bgb.getTextureID());
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bgb.getAnimation());
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
             }
         }
@@ -146,7 +141,7 @@ public class BG extends GameObj {
             for (int j = y-4; j < y+4; j++) {
                 if (i<=BG.length && i>=0){
                     if (j<=BG[0].length && j>=0){
-                        if (!valami.contains(BG[i][j].getTextureID())){
+                        if (!valami.contains(BG[i][j].getAnimation())){
                             near.add(BG[i][j]);
                         }
                     }
@@ -161,6 +156,23 @@ public class BG extends GameObj {
     public float[] getboxmidel(int[] xy){
         return BG[(xy[0]*5)+2][(xy[1]*5)+2].getMatrix();
     }
-
-
+    public void drawmovementpoints(float[] matrix){
+        for (int[] a : Movementpoints) {
+            new Triangle( BG[a[0]][a[1]].getMatrix()).draw(matrix);
+        }
+    }
+    public void NearestMovmentPoint(EnemyCharacter enemy){
+        //todo check if needed the nearest movement point or just go to the player
+        Point newpoint = new Point(enemy);
+        float min = Float.MAX_VALUE;
+        Point save= new Point(0.0f,0.0f);
+        for (int[] a : Movementpoints) {
+            Point foo = new Point(BG[a[0]][a[1]]);
+            if(newpoint.distance(foo)<min){
+              save = foo;
+              min = newpoint.distance(foo);
+            }
+        }
+        enemy.setMovementPoint(save);
+    }
 }
