@@ -64,7 +64,6 @@ public class BG extends Drawable {
     private ArrayList<Integer> valami = new ArrayList<>();
     public int[][] completback;
     public BGBlock[][]  BG;
-
     public BG( Maze maze) {
 
         Log.e("adat","  "+blocksize);
