@@ -118,7 +118,7 @@ public class Maze {
                         finale[i*5+2][j*5-2] =19;  finale[i*5+2][j*5-1] =21;  finale[i*5+2][j*5] =21;  finale[i*5+2][j*5+1] =19;
                                                    finale[i*5+3][j*5-1] =27;  finale[i*5+3][j*5] =28;
                         Movementpoints.add(new int[]{i*5+2,j*5-1});
-                        Movementpoints.add(new int[]{i*5+2,j*5+1});
+                        Movementpoints.add(new int[]{i*5+2,j*5});
                         break;
                 }
             }

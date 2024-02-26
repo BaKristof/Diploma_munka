@@ -4,6 +4,7 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -120,6 +121,8 @@ public class BG extends Drawable {
         setPositionHandle();
         setTextCord();
         //  setColorHandle();
+
+
         for (BGBlock[] bc : BG) {
             for (BGBlock bgb : bc) {
                 System.arraycopy(bgb.getMatrix(),0, matrix,0, matrix.length);
@@ -156,8 +159,11 @@ public class BG extends Drawable {
         return BG[(xy[0]*5)+2][(xy[1]*5)+2].getMatrix();
     }
     public void drawmovementpoints(float[] matrix){
+        int i = 0;
+        //new Triangle(BG[0][1].getMatrix()).draw(matrix);
         for (int[] a : Movementpoints) {
             new Triangle( BG[a[0]][a[1]].getMatrix()).draw(matrix);
+            Log.e("movement points "+i++, Arrays.toString(a));
         }
     }
     public void NearestMovmentPoint(EnemyCharacter enemy){

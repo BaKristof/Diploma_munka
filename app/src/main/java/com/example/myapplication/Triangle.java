@@ -76,7 +76,7 @@ public class Triangle {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(mProgram);
         float[] foo = new float[16];
-        Matrix.multiplyMM(foo,0,matrix,0,mvpMatrix,0);
+        Matrix.multiplyMM(foo,0,mvpMatrix,0,this.matrix,0);
         // get handle to vertex shader's vPosition member
         positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         // Enable a handle to the triangle vertices

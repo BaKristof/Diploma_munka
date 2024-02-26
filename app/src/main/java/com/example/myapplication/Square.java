@@ -10,6 +10,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
 public class Square {
+    float[] matrix = new float[16];
     private int positionHandle;
     private int colorHandle;
     private int vPMatrixHandle;
@@ -20,13 +21,14 @@ public class Square {
             1.0f, 0.0f
     };
 
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
+    float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 
     private final String vertexShaderCode =
-            "attribute vec4 vPosition;" +
+            "uniform mat4 uMVPMatrix;" +
+                    "attribute vec4 vPosition;" +
                     "void main() {" +
-                    "  gl_Position = vPosition;" +
+                    "  gl_Position = uMVPMatrix * vPosition;" +
                     "}";
 
     private final String fragmentShaderCode =
@@ -44,11 +46,13 @@ public class Square {
 
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
-    static float squareCoords[] = {
-            -0.5f,  0.5f, 0.0f,   // top left
-            -0.5f, -0.5f, 0.0f,   // bottom left
-            0.5f, -0.5f, 0.0f,   // bottom right
-            0.5f,  0.5f, 0.0f }; // top right
+    final float size =0.25f;
+    float[] squareCoords = {
+            -0.15f * size, 0.15f * size, 0.0f,   // left top
+            -0.15f * size, -0.15f * size, 0.0f,   // left bottom
+            0.15f * size, -0.15f * size, 0.0f,    // right bottom
+            0.15f * size, 0.15f * size, 0.0f        // right top
+    };
 
     private short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
 

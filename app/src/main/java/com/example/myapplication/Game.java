@@ -73,10 +73,18 @@ public final class Game {
     }
     public void draw(float[]mvpMatrix){
         Matrix.multiplyMM(foo, 0, mvpMatrix, 0, move, 0);
-        BackGround.draw(foo);
-        BackGround.drawmovementpoints(foo);
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+
+        BackGround.draw(foo);
+        BackGround.drawmovementpoints(foo);
+
+        /*
+        for (BGBlock bgb : hitfield) {
+            new Triangle(bgb.getMatrix()).draw(foo);
+        }*/
+
+
         for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
         //enemyCharacter.draw(foo);
         MyGLRenderer.checkGLError("draw van e probléma");
@@ -110,6 +118,10 @@ public final class Game {
         if (kell.distance(StartingPoint) > Drawable.blocksize) {
             hitfield.addAll(Arrays.asList(BackGround.foundnearblocks(kell)));
             StartingPoint = kell;
+        }
+        for (BGBlock bg : hitfield) {
+        //Log.e("hitfield",bg.toString());
+
         }
     }
 
