@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import android.opengl.Matrix;
 
+import java.util.ArrayList;
+
 public class BoundingBox {
     private float[] MaxMin = new float[]{Float.MIN_VALUE,Float.MIN_VALUE,0,Float.MAX_VALUE,Float.MAX_VALUE,0};
 
@@ -19,11 +21,27 @@ public class BoundingBox {
      if(obj instanceof Player) objMatrix = Game.getInstance().getPlayerMatrix();
      else objMatrix = obj.getMatrix();*/
     public boolean intersects(float[] matrix,BoundingBox other) {
-        float[] foo = new float[MaxMin.length];
-        Matrix.multiplyMV(foo,0,matrix,0,MaxMin,0);
+        float[] thisMinMax = new float[MaxMin.length];
+        Matrix.multiplyMV(thisMinMax,0,matrix,0,MaxMin,0);
         float[] other2 = other.getMaxMin(matrix);
-        return !(foo[0] < other2[3] || foo[3] > other2[0] || foo[1] < other2[4] || foo[4] > other2[1]);
+        return !(thisMinMax[0] < other2[3] || thisMinMax[3] > other2[0] || thisMinMax[1] < other2[4] || thisMinMax[4] > other2[1]);
     }
+
+    public int[] intersectwithwall(ArrayList<BGBlock> bgBlocks){
+        int[] direction = new int[]{1,1};
+        float[] thisMinMax = new float[MaxMin.length];
+        float[] matrix = Game.getInstance().player.getMatrix();
+        Matrix.multiplyMV(thisMinMax,0,matrix,0,MaxMin,0);
+        for (BGBlock bg : bgBlocks) {
+            float[] other2 = new BoundingBox().getMaxMin(bg.getMatrix());
+            if (!(thisMinMax[0] < other2[3] || thisMinMax[3] > other2[0])) direction[0]=0;
+            if (!(thisMinMax[1] < other2[4] || thisMinMax[4] > other2[1])) direction[0]=0;
+        }
+        return direction;
+    }
+
+
+
     private float[] getMaxMin(float[] matrix) {
         float[] soulution = new float[MaxMin.length];
         Matrix.multiplyMV(soulution,0,matrix,0,MaxMin,0);

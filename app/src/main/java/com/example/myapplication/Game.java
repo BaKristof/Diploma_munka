@@ -84,8 +84,9 @@ public final class Game {
         GLES20.glDisable(GLES20.GL_BLEND);
     }
     public void move(float dx,float dy){
+        int[] directions = player.getBoundingBox().intersectwithwall(hitfield);
         player.setIrany(whatisirany(dx,dy));
-        Matrix.translateM(move,0,(dx* -0.004f),(dy* -0.004f),0);
+        Matrix.translateM(move,0,(dx* -0.004f)*directions[0],(dy* -0.004f)*directions[1],0);
     }
     public void enemymovment(){
             for (BGBlock bgb : hitfield) {
@@ -111,6 +112,7 @@ public final class Game {
             StartingPoint = kell;
         }
     }
+
     public boolean CheckForWallHit(){
         for (BGBlock bgb: hitfield) {
             if(new BoundingBox().intersects(getPlayerMatrix(),player.getBoundingBox())) return true;
