@@ -29,6 +29,8 @@ public class Specifications {
         animation = new Animation(backward,left,forward,right);
     }
     public float[] getMatrix() {
+        float[] foo = new float[16];
+        Matrix.multiplyMM(foo,0,matrix,0,Game.getMove(), 0);
         return matrix;
     }
     public void setMatrix(float x, float y) {

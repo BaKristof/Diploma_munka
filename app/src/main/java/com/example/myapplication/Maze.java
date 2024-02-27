@@ -16,6 +16,7 @@ public class Maze {
    public int[] startingpoint;
    public static final int size_up=5;
    public ArrayList<int[]> Movementpoints = new ArrayList<>();
+   public ArrayList<int[]>LodingPoints = new ArrayList<>();
     public int[][] generate(int lenght,int hight){
 
         unvisitedcell = new ArrayList<>();
@@ -83,6 +84,7 @@ public class Maze {
                 finale[i*5+2][j*5] =5;  finale[i*5+2][j*5+1] =18;   finale[i*5+2][j*5+2] =19;   finale[i*5+2][j*5+3] =22;   finale[i*5+2][j*5+4] =14;
                 finale[i*5+3][j*5] =3;  finale[i*5+3][j*5+1] =15;   finale[i*5+3][j*5+2] =17;   finale[i*5+3][j*5+3] =23;   finale[i*5+3][j*5+4] =13;
                 finale[i*5+4][j*5] =6;  finale[i*5+4][j*5+1] =7;    finale[i*5+4][j*5+2] =8;    finale[i*5+4][j*5+3] =7;    finale[i*5+4][j*5+4] =0;
+                LodingPoints.add(new int[]{i*5+2,j*5+2});
             }
         }
 
@@ -139,6 +141,10 @@ public class Maze {
     }
     public int[] getStartingpoint() {
         return startingpoint;
+    }
+
+    public ArrayList<int[]> getLodingPoints() {
+        return LodingPoints;
     }
 }
 

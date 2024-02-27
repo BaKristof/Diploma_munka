@@ -4,12 +4,12 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BG extends Drawable {
     private ArrayList<int[]> Movementpoints = new ArrayList<>();
+    private ArrayList<int[]> Lodingpoints = new ArrayList<>();
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -86,6 +86,7 @@ public class BG extends Drawable {
         setTexCoordBuffer();
         setCompletback(maze.generate(2,2));
         Movementpoints = maze.getMovementpoints();
+        Lodingpoints = maze.getLodingPoints();
         LoadUpBG();
 
     }
@@ -134,17 +135,19 @@ public class BG extends Drawable {
       //  MyGLRenderer.whereareyou(FinalMatrix,squareCoords);
         setoffHandels();
     }
-    public BGBlock[] foundnearblocks(Point point){
-        Log.e("teszt","idáig eljutsz");
-        int x = point.getX();
-        int y = point.getY();
+    public BGBlock[] loadablechunks(Point point){
         ArrayList<BGBlock> near = new ArrayList<>();
-        for (int i = x-4; i < x+4; i++) {
-            for (int j = y-4; j < y+4; j++) {
-                if (i<=BG.length && i>=0){
-                    if (j<=BG[0].length && j>=0){
-                        if (!valami.contains(BG[i][j].getAnimation())){
-                            near.add(BG[i][j]);
+        for (int[] a : Lodingpoints) {
+            float b = MyGLRenderer.whereisyourmidle(BG[a[0]][a[1]]).distance(point);
+            if(b < Specifications.blocksize*3.5f){
+                for (int i = a[0]-4; i < a[0]+4; i++) {
+                    for (int j = a[1]-4; j < a[1]+4; j++) {
+                        if (i<=BG.length && i>=0){
+                            if (j<=BG[0].length && j>=0){
+                                if (!valami.contains(BG[i][j].getAnimation())){
+                                    near.add(BG[i][j]);
+                                }
+                            }
                         }
                     }
                 }
@@ -163,7 +166,7 @@ public class BG extends Drawable {
         //new Triangle(BG[0][1].getMatrix()).draw(matrix);
         for (int[] a : Movementpoints) {
             new Triangle( BG[a[0]][a[1]].getMatrix()).draw(matrix);
-            Log.e("movement points "+i++, Arrays.toString(a));
+            //Log.e("movement points "+i++, Arrays.toString(a));
         }
     }
     public void NearestMovmentPoint(EnemyCharacter enemy){

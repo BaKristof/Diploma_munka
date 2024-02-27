@@ -6,9 +6,9 @@ public class Point{
         this.y = y;
     }
     public Point(Specifications specific) {
-        float[] foo = MyGLRenderer.whereisyourmidle(specific);
-        this.x = foo[0];
-        this.y = foo[1];
+        Point a =  MyGLRenderer.whereisyourmidle(specific);
+        this.x = a.x;
+        this.y = a.y;
     }
     public float x;
     public float y;

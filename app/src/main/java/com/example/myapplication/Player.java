@@ -15,7 +15,7 @@ public class Player extends  Character{
 
     @Override
     public float[] getMatrix() {
-        return Game.getInstance().getPlayerMatrix();
+        return MyGLRenderer.vPMatrix;
     }
 
     @Override

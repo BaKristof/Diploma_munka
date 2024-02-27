@@ -69,8 +69,8 @@ class MyGLSurfaceView extends GLSurfaceView {
                 //2=jobb
                 //3=bal
                 //            android:screenOrientation="landscape"
-                Game.getInstance().move(dx, dy);
-                requestRender();
+                // Game.getInstance().move(dx, dy);
+                // requestRender();
                 break;
         }
         return true;

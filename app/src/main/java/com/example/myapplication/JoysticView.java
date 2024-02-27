@@ -15,11 +15,11 @@ import androidx.annotation.NonNull;
 
 
 public class JoysticView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
+    private float displace;
+    private double angle;
     float centerX=(float) getWidth() / 2;
     float centerY=(float) getHeight() / 2;
-
     float baseRadius=(float) Math.min(getWidth(), getHeight()) / 3;
-
     float hatRadius =(float) Math.min(getWidth(), getHeight()) / 5;
     private JoystickListener joysticlistenerCallback;
     public JoysticView(Context context) {
@@ -78,22 +78,21 @@ public class JoysticView extends SurfaceView implements SurfaceHolder.Callback, 
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        double foo;
         if(v.equals(this)){
 
             if(event.getAction() != MotionEvent.ACTION_UP ) {
                 drawJoystick(event.getX(), event.getY());
-                float displace = (float) Math.sqrt(Math.pow(event.getX()-centerX,2)+Math.pow(event.getY()-centerY,2));
+                displace = (float) Math.sqrt(Math.pow(event.getX()-centerX,2)+Math.pow(event.getY()-centerY,2));
                 if(displace<baseRadius){
                     drawJoystick(event.getX(), event.getY());
                     joysticlistenerCallback.onJoystickMoved((event.getX()-centerX)/baseRadius,(event.getY()-centerY)/baseRadius,getId());
-                    foo =Math.atan2((double) event.getX() - centerX,(double) event.getY() - centerY);
+                    angle =Math.atan2((double) event.getX() - centerX,(double) event.getY() - centerY);
                 }
                 else {
                     float ratio =baseRadius/displace;
                     float constrainX =centerX+(event.getX()-centerX)*ratio;
                     float constrainY =centerY+(event.getY()-centerY)*ratio;
-                    foo =Math.atan2((double) constrainX - centerX,(double) constrainY - centerY);
+                    angle =Math.atan2((double) constrainX - centerX,(double) constrainY - centerY);
                     drawJoystick(constrainX,constrainY);
 
                     joysticlistenerCallback.onJoystickMoved((constrainX-centerX)/baseRadius,(constrainY-centerY)/baseRadius,getId());

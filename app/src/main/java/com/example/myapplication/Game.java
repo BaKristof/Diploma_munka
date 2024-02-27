@@ -15,35 +15,27 @@ public final class Game {
     public Player player;
     public Point playerpoint;
     public BG BackGround;
-    private float[] move = new float[16];
-    private float[] foo = new float[16];
+    private static float[] move = new float[16];
+
     ArrayList<EnemyCharacter> enemys;
 
-    public Point StartingPoint = new Point(365.0f,365.0f);
+    public Point StartingPoint;
     private ArrayList<BGBlock> hitfield = new ArrayList<>();
 
-    public ArrayList<BGBlock> getHitfield() {
-        return hitfield;
-    }
     public void addenemy(int type,float x,float y){
         enemys.add(new EnemyCharacter(new float[]{x,y}));
     }
     public void addenemy(EnemyCharacter enemy){
         enemys.add(enemy);
     }
-    public float[] getPlayerMatrix() {
-        return foo;
+
+    public static float[] getMove() {
+        return move;
     }
 
     public Point getPlayerpoint() {
         return playerpoint;
     }
-
-    public Maze getMaze() {
-        return maze;
-    }
-
-
     private Game() {
         Log.e("vajon innen jön a dolog","valami construktor");
         Matrix.setIdentityM(move,0);
@@ -52,12 +44,12 @@ public final class Game {
         BackGround = new BG(maze);
         enemys = new ArrayList<>();
         player = new Player();
+        StartingPoint = new Point(player);
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,1}));
         addenemy(enemyCharacter);
         float[] check = BackGround.getboxmidel(maze.getStartingpoint()).clone();
         Matrix.invertM(check,0,check,0);
         System.arraycopy(check,0,move,0,move.length);
-
     }
     public static Game getInstance(){
         if (game== null){
@@ -72,6 +64,7 @@ public final class Game {
 
     }
     public void draw(float[]mvpMatrix){
+        float[] foo = new float[16];
         Matrix.multiplyMM(foo, 0, mvpMatrix, 0, move, 0);
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -79,20 +72,17 @@ public final class Game {
         BackGround.draw(foo);
         BackGround.drawmovementpoints(foo);
 
-        /*
-        for (BGBlock bgb : hitfield) {
-            new Triangle(bgb.getMatrix()).draw(foo);
-        }*/
-
-
+        for (BGBlock bg : hitfield) {
+            new Triangle(bg.getMatrix());
+        }
         for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
-        //enemyCharacter.draw(foo);
-        MyGLRenderer.checkGLError("draw van e probléma");
+
         player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
+        MyGLRenderer.checkGLError("draw van e probléma");
     }
     public void move(float dx,float dy){
-        int[] directions = player.getBoundingBox().intersectwithwall(hitfield);
+        int[] directions = new int[]{1,1};//player.getBoundingBox().intersectwithwall(hitfield);
         player.setIrany(whatisirany(dx,dy));
         Matrix.translateM(move,0,(dx* -0.004f)*directions[0],(dy* -0.004f)*directions[1],0);
     }
@@ -111,26 +101,16 @@ public final class Game {
         return irany;
     }
     public void FillHitfield() { //TODO nem biztos hogy jó (nem hiszem)
-        Point kell = new Point(player);
-        hitfield.clear();
-        //new Point(enemyCharacter);
-
-        if (kell.distance(StartingPoint) > Drawable.blocksize) {
-            hitfield.addAll(Arrays.asList(BackGround.foundnearblocks(kell)));
-            StartingPoint = kell;
-        }
-        for (BGBlock bg : hitfield) {
-        //Log.e("hitfield",bg.toString());
-
-        }
+            hitfield.clear();
+            hitfield.addAll(Arrays.asList(BackGround.loadablechunks(new Point(player))));
     }
 
-    public boolean CheckForWallHit(){
+   /* public boolean CheckForWallHit(){
         for (BGBlock bgb: hitfield) {
             if(new BoundingBox().intersects(getPlayerMatrix(),player.getBoundingBox())) return true;
         }
         return false;
-    }
+    }*/
 
     public BG getBackGround() {
         return BackGround;

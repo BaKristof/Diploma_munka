@@ -15,21 +15,27 @@ import java.util.Arrays;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
-    private final float[] vPMatrix = new float[16];
+    public final static float[]  vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
     private final float[] viewMatrix = new float[16];
     private Game gm;
+
+    public MyGLRenderer() {
+        Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+    }
+
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         gm = Game.getInstance();
     }
+
     public void onDrawFrame(GL10 unused) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
         gm.befordraw();
         gm.draw(vPMatrix);
     }
+
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
@@ -42,6 +48,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glCompileShader(shader);
 
         return shader;
+    }
+    public static void checkGLError(String operation) {
+        int error;
+        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
+            throw new RuntimeException(operation + ": glError " + error);
+        }
     }
     public static int loadTexture(int resourceId) {
         final int[] textureId = new int[1];
@@ -57,27 +69,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         bitmap.recycle();
         return textureId[0];
     }
-    public static void checkGLError(String operation) {
-        int error;
-        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
-            throw new RuntimeException(operation + ": glError " + error);
-        }
-    }
-    public static float[] whereisyourmidle(Specifications specific ) {
-        float[] objectCoords = Specifications.getSquareCoords();
-        float[] transformedCoords = new float[2];
+    public static Point whereisyourmidle(Specifications specific ) {
+            float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
+            float[] TESZT= specific.getMatrix();
 
-            float x = objectCoords[0];
-            float y = objectCoords[1];
-            float[] inputPoint = {x, y, 0.0f, 1.0f};
 
-            Matrix.multiplyMV(inputPoint, 0, specific.getMatrix(), 0, inputPoint, 0);
-
-            transformedCoords[0] = inputPoint[0];
-            transformedCoords[1] = inputPoint[1];
-
-        Log.println(Log.ERROR,specific.getName(), Arrays.toString(transformedCoords));
-        return new float[]{transformedCoords[0]-(Drawable.blocksize/2),transformedCoords[1]-(Drawable.blocksize/2)};
+            Matrix.multiplyMV(inputPoint, 0,TESZT , 0, inputPoint, 0);
+        Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
+        return new Point( inputPoint[0],inputPoint[1]);
     }
 
 

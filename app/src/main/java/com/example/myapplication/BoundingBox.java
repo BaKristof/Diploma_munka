@@ -39,9 +39,6 @@ public class BoundingBox {
         }
         return direction;
     }
-
-
-
     private float[] getMaxMin(float[] matrix) {
         float[] soulution = new float[MaxMin.length];
         Matrix.multiplyMV(soulution,0,matrix,0,MaxMin,0);
