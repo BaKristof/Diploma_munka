@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 public class JoysticView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
     private float displace;
     private double angle;
+    private JoystickListener joystickListener;
+
     float centerX=(float) getWidth() / 2;
     float centerY=(float) getHeight() / 2;
     float baseRadius=(float) Math.min(getWidth(), getHeight()) / 3;
@@ -60,6 +62,9 @@ public class JoysticView extends SurfaceView implements SurfaceHolder.Callback, 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
 
+    }
+    public void setJoystickListener(JoystickListener listener) {
+        this.joystickListener = listener;
     }
     private void drawJoystick(float newX,float newY){
         if(getHolder().getSurface().isValid()){
