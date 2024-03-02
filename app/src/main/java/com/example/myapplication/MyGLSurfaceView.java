@@ -3,7 +3,7 @@ package com.example.myapplication;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 
-class MyGLSurfaceView extends GLSurfaceView {
+public class MyGLSurfaceView extends GLSurfaceView {
     private final MyGLRenderer renderer;
     private float angle;
     private float percent;

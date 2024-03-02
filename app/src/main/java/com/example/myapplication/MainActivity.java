@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MainActivity.context = getApplicationContext();
+
         // Find references to views in the layout
         myGLSurfaceView = findViewById(R.id.gameView);
         leftJoystickView = findViewById(R.id.leftJoystickView);
