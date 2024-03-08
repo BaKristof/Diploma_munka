@@ -9,15 +9,19 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.util.Arrays;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
+    private long lastFrameTime;
+    private static final long targetElapsedTime = 1000000000 / 60;
     public final static float[]  vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
-    private final float[] viewMatrix = new float[16];
+    private final float[] viewMatrix = new float[16];;
     private Game gm;
 
     public MyGLRenderer() {
@@ -27,13 +31,30 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         gm = Game.getInstance();
+        lastFrameTime = System.nanoTime();
     }
 
     public void onDrawFrame(GL10 unused) {
+        long currentTime = System.nanoTime();
+        long elapsedTime = currentTime - lastFrameTime;
+
+
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
+
         gm.befordraw();
+
         gm.draw(vPMatrix);
+
+        lastFrameTime = currentTime;
+        if (elapsedTime < targetElapsedTime) {
+            try {
+                Thread.sleep((targetElapsedTime - elapsedTime) / 1000000); // Convert nanoseconds to milliseconds
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        else Log.e("frametimer","tulfotottunk");
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {

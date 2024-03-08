@@ -16,6 +16,7 @@ public final class Game {
     public Point playerpoint;
     public BG BackGround;
     private static float[] move = new float[16];
+    
 
     ArrayList<EnemyCharacter> enemys;
 
@@ -58,10 +59,20 @@ public final class Game {
         return game;
     }
     public void befordraw(){
+        readininput();
         playerpoint = new Point(player);
         FillHitfield();
         //enemymovment();
 
+    }
+    public void readininput(){
+        float a = (float) MainActivity.getLeft().getAngle();
+        float percent = MainActivity.getLeft().getDisplace();
+        float dx =(float) Math.cos(a);
+        float dy =(float) Math.sin(a);
+        int[] directions = new int[]{1,1};//player.getBoundingBox().intersectwithwall(hitfield);
+        player.setIrany(whatisirany(dx,dy));
+        Matrix.translateM(move,0,(dx* -0.004f)*directions[0]*percent,(dy* -0.004f)*directions[1]*percent,0);
     }
     public void draw(float[]mvpMatrix){
         float[] foo = new float[16];
@@ -80,11 +91,6 @@ public final class Game {
         player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
         MyGLRenderer.checkGLError("draw van e probléma");
-    }
-    public void move(float dx,float dy){
-        int[] directions = new int[]{1,1};//player.getBoundingBox().intersectwithwall(hitfield);
-        player.setIrany(whatisirany(dx,dy));
-        Matrix.translateM(move,0,(dx* -0.004f)*directions[0],(dy* -0.004f)*directions[1],0);
     }
     public void enemymovment(){
             for (BGBlock bgb : hitfield) {
@@ -111,7 +117,6 @@ public final class Game {
         }
         return false;
     }*/
-
     public BG getBackGround() {
         return BackGround;
     }

@@ -30,45 +30,72 @@ public class MainActivity extends AppCompatActivity {
 package com.example.myapplication;
 
         import androidx.appcompat.app.AppCompatActivity;
+
         import android.os.Bundle;
         import android.content.Context;
+        import android.util.DisplayMetrics;
+        import android.util.TypedValue;
+        import android.view.Gravity;
+        import android.widget.FrameLayout;
+
 public class MainActivity extends AppCompatActivity implements JoystickListener {
 
     private static Context context ;
     private MyGLSurfaceView myGLSurfaceView;
-    private JoysticView leftJoystickView;
-    private JoysticView rightJoystickView;
-
-
+    private static Joystick right;
+    private static Joystick left;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        myGLSurfaceView = new MyGLSurfaceView(this);
+
+        right = new Joystick(this);
+        right.setCenter(dpToPx(this,75), dpToPx(this,75));
+        right.setBaseRadius(dpToPx(this,150));
+        right.setJoystickListener(this);
+
+        left = new Joystick(this);
+        left.setCenter(dpToPx(this,75), dpToPx(this,75));
+        left.setBaseRadius(dpToPx(this,150));
+        left.setJoystickListener(this);
+
+
+        FrameLayout frameLayout = new FrameLayout(this);
+        frameLayout.addView(myGLSurfaceView);
+
+
+        int sizeInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
+
+        FrameLayout.LayoutParams rightjoystickParams = new FrameLayout.LayoutParams(sizeInDp, sizeInDp, Gravity.BOTTOM | Gravity.END);
+        frameLayout.addView(right, rightjoystickParams);
+
+        FrameLayout.LayoutParams leftjoystickParams = new FrameLayout.LayoutParams(sizeInDp, sizeInDp, Gravity.BOTTOM | Gravity.START);
+        frameLayout.addView(left, leftjoystickParams);
+
+        setContentView(frameLayout);
         MainActivity.context = getApplicationContext();
+        //myGLSurfaceView =findViewById(R.id.glSurfaceView); ezt soha a faszomba nem akarom használni szétbasz mindent
 
-        // Find references to views in the layout
-        myGLSurfaceView = findViewById(R.id.gameView);
-        leftJoystickView = findViewById(R.id.leftJoystickView);
-        rightJoystickView = findViewById(R.id.rightJoystickView);
-
-        // Set JoystickListeners
-        leftJoystickView.setJoystickListener(this);
-        rightJoystickView.setJoystickListener(this);
     }
 
-    // Implement JoystickListener methods
+
     @Override
-    public void onJoystickMoved(float xPercent, float yPercent, int source) {
+    public void onJoystickMoved(float xPercent, float yPercent) {
         // Handle joystick movement events here
-        if (source == leftJoystickView.getId()) {
-            // Left joystick moved
-            // Example: gameView.movePlayer(xPercent, yPercent);
-        } else if (source == rightJoystickView.getId()) {
-            // Right joystick moved
-            // Example: gameView.rotateCamera(xPercent, yPercent);
-        }
     }
     public static Context getContext() {
         return MainActivity.context;
+    }
+    public static float dpToPx(Context context, float dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return dp * (displayMetrics.densityDpi / 160f);
+    }
+
+    public static Joystick getRight() {
+        return right;
+    }
+
+    public static Joystick getLeft() {
+        return left;
     }
 }
