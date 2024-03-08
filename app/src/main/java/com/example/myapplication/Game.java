@@ -16,7 +16,8 @@ public final class Game {
     public Point playerpoint;
     public BG BackGround;
     private static float[] move = new float[16];
-    
+    private final float[] foo = new float[16];
+
 
     ArrayList<EnemyCharacter> enemys;
 
@@ -72,20 +73,18 @@ public final class Game {
         float dy =(float) Math.sin(a);
         int[] directions = new int[]{1,1};//player.getBoundingBox().intersectwithwall(hitfield);
         player.setIrany(whatisirany(dx,dy));
-        Matrix.translateM(move,0,(dx* -0.004f)*directions[0]*percent,(dy* -0.004f)*directions[1]*percent,0);
+        Matrix.translateM(move,0,(dx* -0.004f)*directions[0],(dy* -0.004f)*directions[1],0);
     }
     public void draw(float[]mvpMatrix){
-        float[] foo = new float[16];
         Matrix.multiplyMM(foo, 0, mvpMatrix, 0, move, 0);
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
         BackGround.draw(foo);
-        BackGround.drawmovementpoints(foo);
 
-        for (BGBlock bg : hitfield) {
+        /*for (BGBlock bg : hitfield) {
             new Triangle(bg.getMatrix());
-        }
+        }*/
         for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
 
         player.draw(mvpMatrix);

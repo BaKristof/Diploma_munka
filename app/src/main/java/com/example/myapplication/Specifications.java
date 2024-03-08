@@ -6,6 +6,7 @@ public class Specifications {
     protected float[] matrix = new float[16];
     protected Animation animation= new Animation();
     protected static final float size =0.25f;
+    private final float[] foo = new float[16];
     protected static float[] squareCoords = {
             -0.15f*size,  0.15f*size, 0.0f,   // left top
             -0.15f*size, -0.15f*size, 0.0f,   // left bottom
@@ -29,7 +30,6 @@ public class Specifications {
         animation = new Animation(backward,left,forward,right);
     }
     public float[] getMatrix() {
-        float[] foo = new float[16];
         Matrix.multiplyMM(foo,0,matrix,0,Game.getMove(), 0);
         return matrix;
     }

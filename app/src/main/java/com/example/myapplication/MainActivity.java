@@ -34,9 +34,12 @@ package com.example.myapplication;
         import android.os.Bundle;
         import android.content.Context;
         import android.util.DisplayMetrics;
+        import android.util.Log;
         import android.util.TypedValue;
         import android.view.Gravity;
         import android.widget.FrameLayout;
+
+        import java.time.Instant;
 
 public class MainActivity extends AppCompatActivity implements JoystickListener {
 
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         myGLSurfaceView = new MyGLSurfaceView(this);
 
         right = new Joystick(this);
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
         left.setCenter(dpToPx(this,75), dpToPx(this,75));
         left.setBaseRadius(dpToPx(this,150));
         left.setJoystickListener(this);
+
 
 
         FrameLayout frameLayout = new FrameLayout(this);

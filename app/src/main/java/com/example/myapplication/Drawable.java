@@ -25,6 +25,7 @@ public class Drawable extends Specifications {
 
     private int vertexShader;
     private int fragmentShader;
+    private final float[] foo = new float[16];
 
     public void setVertexShader() {
         String vertexShaderCode = "attribute vec4 vPosition;" +
@@ -91,7 +92,6 @@ public class Drawable extends Specifications {
     }
 
     public void setvPMatrixHandle(float[] mvpMatrix) {
-        float[] foo = new float[16];
         Matrix.setIdentityM(foo,0);
         Matrix.multiplyMM(foo,0,mvpMatrix,0, matrix,0);
         int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");

@@ -93,6 +93,7 @@ public class Joystick extends View {
             invalidate();
             joystickListener.onJoystickMoved(0, 0);
         }
+
         return true;
     }
 

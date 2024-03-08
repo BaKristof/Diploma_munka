@@ -9,7 +9,8 @@ import java.nio.FloatBuffer;
 
 public class Triangle {
 
-    private float[] matrix =new float[16];
+    private final float[] matrix =new float[16];
+    private final float[] foo = new float[16];
     private FloatBuffer vertexBuffer;
     private final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
@@ -47,7 +48,6 @@ public class Triangle {
 
         // create empty OpenGL ES Program
         mProgram = GLES20.glCreateProgram();
-
         // add the vertex shader to program
         GLES20.glAttachShader(mProgram, vertexShader);
 
@@ -56,9 +56,6 @@ public class Triangle {
 
         // creates OpenGL ES program executables
         GLES20.glLinkProgram(mProgram);
-
-
-
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 triangleCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -75,7 +72,7 @@ public class Triangle {
     public void draw(float[] mvpMatrix) {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(mProgram);
-        float[] foo = new float[16];
+
         Matrix.multiplyMM(foo,0,mvpMatrix,0,this.matrix,0);
         // get handle to vertex shader's vPosition member
         positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");

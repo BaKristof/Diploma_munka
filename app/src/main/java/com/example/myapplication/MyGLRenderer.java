@@ -23,9 +23,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] projectionMatrix = new float[16];
     private final float[] viewMatrix = new float[16];;
     private Game gm;
+    MyGLSurfaceView glsw;
+    boolean stoprender = true;
 
-    public MyGLRenderer() {
+    public MyGLRenderer(MyGLSurfaceView glSurfaceView) {
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        this.glsw =glSurfaceView;
     }
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -43,10 +46,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
         gm.befordraw();
-
         gm.draw(vPMatrix);
-
-        lastFrameTime = currentTime;
+       /* lastFrameTime = currentTime;
         if (elapsedTime < targetElapsedTime) {
             try {
                 Thread.sleep((targetElapsedTime - elapsedTime) / 1000000); // Convert nanoseconds to milliseconds
@@ -54,7 +55,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                 e.printStackTrace();
             }
         }
-        else Log.e("frametimer","tulfotottunk");
+        else Log.e("frametimer","tulfotottunk");*/
+        if (stoprender) glsw.requestRender();
+        Log.e("time","time: "+ elapsedTime);
+
     }
 
     public void onSurfaceChanged(GL10 unused, int width, int height) {
