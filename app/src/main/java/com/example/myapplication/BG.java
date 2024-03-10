@@ -126,7 +126,7 @@ public class BG extends Drawable {
 
         for (BGBlock[] bc : BG) {
             for (BGBlock bgb : bc) {
-                System.arraycopy(bgb.getMatrix(),0, matrix,0, matrix.length);
+                System.arraycopy(bgb.getOwnPositionM(),0, ownPositionM,0, ownPositionM.length);
                 setvPMatrixHandle(moveMatrix);
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bgb.getAnimation());
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
@@ -135,17 +135,19 @@ public class BG extends Drawable {
       //  MyGLRenderer.whereareyou(FinalMatrix,squareCoords);
         setoffHandels();
     }
-    public BGBlock[] loadablechunks(Point point){
+    public BGBlock[] loadablechunks(){
         ArrayList<BGBlock> near = new ArrayList<>();
         for (int[] a : Lodingpoints) {
-            float b = MyGLRenderer.whereisyourmidle(BG[a[0]][a[1]]).distance(point);
+            float b = MyGLRenderer.whereisyourmidle(BG[a[0]][a[1]]).distance(new Point(Game.getInstance().getPlayer()));
+            Log.e("distance","index"+a[0]+","+a[1]+"  distance:  "+b);
             if(b < Specifications.blocksize*3.5f){
                 for (int i = a[0]-4; i < a[0]+4; i++) {
                     for (int j = a[1]-4; j < a[1]+4; j++) {
-                        if (i<=BG.length && i>=0){
-                            if (j<=BG[0].length && j>=0){
+                        if (i<=BG.length-1 && i>=0){
+                            if (j<=BG[0].length-1 && j>=0){
                                 if (!valami.contains(BG[i][j].getAnimation())){
                                     near.add(BG[i][j]);
+                                    BG[i][j].setSingleTexture(MyGLRenderer.loadTexture(R.drawable._t9));
                                 }
                             }
                         }
@@ -155,17 +157,14 @@ public class BG extends Drawable {
         }
         return near.toArray(new BGBlock[0]);
     }
-    public float[] getboxmidel(int x,int y){
-        return BG[x*5][y*5].getMatrix();
-    }
     public float[] getboxmidel(int[] xy){
-        return BG[(xy[0]*5)+2][(xy[1]*5)+2].getMatrix();
+        return BG[(xy[0]*5)+2][(xy[1]*5)+2].getScreenPositionM();
     }
     public void drawmovementpoints(float[] matrix){
         int i = 0;
         //new Triangle(BG[0][1].getMatrix()).draw(matrix);
         for (int[] a : Movementpoints) {
-            new Triangle( BG[a[0]][a[1]].getMatrix()).draw(matrix);
+            new Triangle( BG[a[0]][a[1]].getScreenPositionM()).draw(matrix);
             //Log.e("movement points "+i++, Arrays.toString(a));
         }
     }
@@ -182,5 +181,18 @@ public class BG extends Drawable {
             }
         }
         enemy.setMovementPoint(save);
+    }
+
+    @Override
+    public String getName() {
+        return "BG";
+    }
+
+    public ArrayList<BGBlock> getLodingpoints() {
+        ArrayList<BGBlock> valami= new ArrayList<>();
+        for (int[] a : Lodingpoints) {
+            valami.add(BG[a[0]][a[1]]);
+        }
+        return valami;
     }
 }

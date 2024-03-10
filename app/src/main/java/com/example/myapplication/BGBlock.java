@@ -4,14 +4,13 @@ import android.opengl.Matrix;
 
 import androidx.annotation.NonNull;
 
-import java.util.Arrays;
-
 public class BGBlock extends Specifications {
+
     public BGBlock() {
-        Matrix.setIdentityM(matrix,0);
+        Matrix.setIdentityM(ownPositionM,0);
     }
     public void sizechnage(float valami){
-        Matrix.scaleM(matrix,0,valami,valami,0);
+        Matrix.scaleM(ownPositionM,0,valami,valami,0);
     }
 
     @NonNull
@@ -21,4 +20,10 @@ public class BGBlock extends Specifications {
                 "position=" + MyGLRenderer.whereisyourmidle(this) +
                 '}';
     }
+
+    @Override
+    public String getName() {
+        return "BGBlock";
+    }
+
 }

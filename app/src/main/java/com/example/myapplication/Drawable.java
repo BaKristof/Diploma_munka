@@ -93,7 +93,7 @@ public class Drawable extends Specifications {
 
     public void setvPMatrixHandle(float[] mvpMatrix) {
         Matrix.setIdentityM(foo,0);
-        Matrix.multiplyMM(foo,0,mvpMatrix,0, matrix,0);
+        Matrix.multiplyMM(foo,0,mvpMatrix,0, ownPositionM,0);
         int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
     }

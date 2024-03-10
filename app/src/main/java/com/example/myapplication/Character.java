@@ -28,7 +28,7 @@ public class Character extends Drawable {
 
     public Character() {
         boundingBox =new  BoundingBox();
-        Matrix.setIdentityM(matrix,0);
+        Matrix.setIdentityM(ownPositionM,0);
      //   boundingBox = new BoundingBox(this);
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);

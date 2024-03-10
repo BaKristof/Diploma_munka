@@ -9,8 +9,6 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -19,15 +17,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private long lastFrameTime;
     private static final long targetElapsedTime = 1000000000 / 60;
-    public final static float[]  vPMatrix = new float[16];
+    private final static float[]  vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
     private final float[] viewMatrix = new float[16];;
     private Game gm;
     MyGLSurfaceView glsw;
-    boolean stoprender = true;
+    private static boolean stoprender = false;
 
     public MyGLRenderer(MyGLSurfaceView glSurfaceView) {
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
         this.glsw =glSurfaceView;
     }
 
@@ -57,7 +56,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
         else Log.e("frametimer","tulfotottunk");*/
         if (stoprender) glsw.requestRender();
-        Log.e("time","time: "+ elapsedTime);
+        //Log.e("time","time: "+ elapsedTime);
 
     }
 
@@ -96,13 +95,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
     public static Point whereisyourmidle(Specifications specific ) {
             float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
-            float[] TESZT= specific.getMatrix();
-
-
+            float[] TESZT;
+            if (specific instanceof Player) TESZT =specific.getOwnPositionM();
+            else TESZT = specific.getScreenPositionM();
             Matrix.multiplyMV(inputPoint, 0,TESZT , 0, inputPoint, 0);
         Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
         return new Point( inputPoint[0],inputPoint[1]);
     }
 
-
+    public static void setStoprender() {
+        MyGLRenderer.stoprender = false;
+    }
+    public static float[] getvPMatrix() {return vPMatrix;}
 }

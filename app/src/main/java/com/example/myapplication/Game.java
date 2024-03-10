@@ -8,21 +8,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class Game {
-    private Maze maze = new Maze();
-    private static Game game;
-    public EnemyCharacter enemyCharacter;
-    public Character character;
-    public Player player;
-    public Point playerpoint;
-    public BG BackGround;
     private static float[] move = new float[16];
     private final float[] foo = new float[16];
-
-
-    ArrayList<EnemyCharacter> enemys;
-
+    private Maze maze ;
+    public BG BackGround;
+    private static Game game;
+    public EnemyCharacter enemyCharacter;
+    public Player player;
     public Point StartingPoint;
+    public Point playerpoint;
+    private ArrayList<EnemyCharacter> enemys;
     private ArrayList<BGBlock> hitfield = new ArrayList<>();
+    private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
+
+    private byte[] direction = new byte[2];
 
     public void addenemy(int type,float x,float y){
         enemys.add(new EnemyCharacter(new float[]{x,y}));
@@ -38,20 +37,27 @@ public final class Game {
     public Point getPlayerpoint() {
         return playerpoint;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     private Game() {
         Log.e("vajon innen jön a dolog","valami construktor");
         Matrix.setIdentityM(move,0);
         maze = new Maze();
-        character = new Character();
+
         BackGround = new BG(maze);
         enemys = new ArrayList<>();
         player = new Player();
-        StartingPoint = new Point(player);
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,1}));
-        addenemy(enemyCharacter);
+      //  addenemy(enemyCharacter);
         float[] check = BackGround.getboxmidel(maze.getStartingpoint()).clone();
+
         Matrix.invertM(check,0,check,0);
         System.arraycopy(check,0,move,0,move.length);
+       // Matrix.translateM(move,0,(Specifications.blocksize/2)*-1*9,0,0);
+
     }
     public static Game getInstance(){
         if (game== null){
@@ -60,20 +66,25 @@ public final class Game {
         return game;
     }
     public void befordraw(){
+        fillinvis();
         readininput();
+
         playerpoint = new Point(player);
+
         FillHitfield();
         //enemymovment();
 
     }
     public void readininput(){
-        float a = (float) MainActivity.getLeft().getAngle();
-        float percent = MainActivity.getLeft().getDisplace();
-        float dx =(float) Math.cos(a);
-        float dy =(float) Math.sin(a);
-        int[] directions = new int[]{1,1};//player.getBoundingBox().intersectwithwall(hitfield);
-        player.setIrany(whatisirany(dx,dy));
-        Matrix.translateM(move,0,(dx* -0.004f)*directions[0],(dy* -0.004f)*directions[1],0);
+        if(MainActivity.getLeft().isWorking()) {
+            float a = (float) MainActivity.getLeft().getAngle();
+            float percent = MainActivity.getLeft().getDisplace();
+            float dx = (float) Math.cos(a);
+            float dy = (float) Math.sin(a);
+            direction = player.getBoundingBox().intersectwithwall(hitfield);
+            player.setIrany(whatisirany(dx, dy));
+            Matrix.translateM(move, 0, (dx * -0.004f)*direction[0], (dy * 0.004f)*direction[1], 0);
+        }
     }
     public void draw(float[]mvpMatrix){
         Matrix.multiplyMM(foo, 0, mvpMatrix, 0, move, 0);
@@ -81,15 +92,16 @@ public final class Game {
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
         BackGround.draw(foo);
+        for (Triangle a : invisible_pooints) {
+            a.draw(foo);
+        }
 
-        /*for (BGBlock bg : hitfield) {
-            new Triangle(bg.getMatrix());
-        }*/
         for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
 
         player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
         MyGLRenderer.checkGLError("draw van e probléma");
+       // MyGLRenderer.setStoprender();
     }
     public void enemymovment(){
             for (BGBlock bgb : hitfield) {
@@ -107,7 +119,7 @@ public final class Game {
     }
     public void FillHitfield() { //TODO nem biztos hogy jó (nem hiszem)
             hitfield.clear();
-            hitfield.addAll(Arrays.asList(BackGround.loadablechunks(new Point(player))));
+            hitfield.addAll(Arrays.asList(BackGround.loadablechunks()));
     }
 
    /* public boolean CheckForWallHit(){
@@ -119,4 +131,19 @@ public final class Game {
     public BG getBackGround() {
         return BackGround;
     }
+
+    public void setDirection(byte[] direction) {
+        this.direction = direction;
+    }
+
+    public float[] getMatrix() {
+        Matrix.multiplyMM(foo,0,MyGLRenderer.getvPMatrix(),0,move,0);
+        return foo;
+    }
+    public void fillinvis(){
+        for (Specifications a: BackGround.getLodingpoints()) {
+            invisible_pooints.add(new Triangle(a.getOwnPositionM()));
+        }
+    }
+    
 }

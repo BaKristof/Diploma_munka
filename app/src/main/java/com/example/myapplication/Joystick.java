@@ -29,6 +29,7 @@ public class Joystick extends View {
     private float centerY;
     private float displace;
     private double angle;
+    private boolean working = false;
 
     public Joystick(Context context) {
         super(context);
@@ -85,13 +86,14 @@ public class Joystick extends View {
             }
             invalidate();
             joystickListener.onJoystickMoved((newX - centerX) / baseRadius, (newY - centerY) / baseRadius);
-
+            working = true;
         } else {
 
             this.newX = centerX;
             this.newY = centerY;
             invalidate();
             joystickListener.onJoystickMoved(0, 0);
+            working= false;
         }
 
         return true;
@@ -107,5 +109,9 @@ public class Joystick extends View {
 
     public float getDisplace() {
         return displace;
+    }
+
+    public boolean isWorking() {
+        return working;
     }
 }

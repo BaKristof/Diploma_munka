@@ -12,12 +12,6 @@ public class Player extends  Character{
         super();
         setAnimation(forward,left,backward,right);
     }
-
-    @Override
-    public float[] getMatrix() {
-        return MyGLRenderer.vPMatrix;
-    }
-
     @Override
     public String getName(){return "Playes";}
 }

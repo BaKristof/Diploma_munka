@@ -27,13 +27,13 @@ public class BoundingBox {
         return !(thisMinMax[0] < other2[3] || thisMinMax[3] > other2[0] || thisMinMax[1] < other2[4] || thisMinMax[4] > other2[1]);
     }
 
-    public int[] intersectwithwall(ArrayList<BGBlock> bgBlocks){
-        int[] direction = new int[]{1,1};
+    public byte[] intersectwithwall(ArrayList<BGBlock> bgBlocks){
+        byte[] direction = new byte[]{1,1};
         float[] thisMinMax = new float[MaxMin.length];
-        float[] matrix = Game.getInstance().player.getMatrix();
+        float[] matrix = Game.getInstance().player.getScreenPositionM();
         Matrix.multiplyMV(thisMinMax,0,matrix,0,MaxMin,0);
         for (BGBlock bg : bgBlocks) {
-            float[] other2 = new BoundingBox().getMaxMin(bg.getMatrix());
+            float[] other2 = new BoundingBox().getMaxMin(bg.getScreenPositionM());
             if (!(thisMinMax[0] < other2[3] || thisMinMax[3] > other2[0])) direction[0]=0;
             if (!(thisMinMax[1] < other2[4] || thisMinMax[4] > other2[1])) direction[0]=0;
         }

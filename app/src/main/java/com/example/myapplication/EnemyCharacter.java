@@ -8,7 +8,7 @@ public class EnemyCharacter extends Character{
     public EnemyCharacter(float[] startingmatrix) {
         super();
         float[] check = startingmatrix.clone();
-        Matrix.multiplyMM(matrix,0,check,0, matrix,0);
+        Matrix.multiplyMM(ownPositionM,0,check,0, ownPositionM,0);
     }
     @Override
     public String getName() {
@@ -29,7 +29,7 @@ public class EnemyCharacter extends Character{
         double foo =Math.atan2((double) MovementPoint.y - me.y,(double) MovementPoint.x - me.x);
         float dx = (float) Math.cos(foo);
         float dy = (float) Math.sin(foo*-1);
-        Matrix.translateM(matrix,0,dx*0.0004f,dy*0.0004f,0);
+        Matrix.translateM(ownPositionM,0,dx*0.0004f,dy*0.0004f,0);
     }
     public void setMovementPoint(Point movementPoint) {
         MovementPoint = movementPoint;

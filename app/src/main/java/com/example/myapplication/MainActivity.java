@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent) {
         // Handle joystick movement events here
+
     }
     public static Context getContext() {
         return MainActivity.context;
