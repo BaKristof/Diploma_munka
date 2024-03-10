@@ -5,52 +5,44 @@ import android.opengl.Matrix;
 import java.util.ArrayList;
 
 public class BoundingBox {
-    private float[] MaxMin = new float[]{Float.MIN_VALUE,Float.MIN_VALUE,0,Float.MAX_VALUE,Float.MAX_VALUE,0};
+    private float[] cordinates = Specifications.getSquareCoords();
+    public float xMax=Float.NEGATIVE_INFINITY,yMax=Float.NEGATIVE_INFINITY;
+    public float xMin=Float.POSITIVE_INFINITY,yMin=Float.POSITIVE_INFINITY;
 
-    public BoundingBox() {
-        float[] realCoordinates = Specifications.getSquareCoords();
 
-        for (int i = 0; i < realCoordinates.length; i+=3) {
-            if(realCoordinates[i]>MaxMin[0]) this.MaxMin[0]=realCoordinates[i];      //xMax
-            if(realCoordinates[i]<MaxMin[3]) this.MaxMin[3]=realCoordinates[i];      //xMin
-            if(realCoordinates[i+1]>MaxMin[1]) this.MaxMin[1]=realCoordinates[i+1];  //yMax
-            if(realCoordinates[i+1]<MaxMin[4]) this.MaxMin[4]=realCoordinates[i+1];  //yMin
-        }
+    public BoundingBox(Specifications specific) {
+        Point p = MyGLRenderer.whereisyourmidle(specific);
+        float[] valami = p.pointToCordinates();
+
+        xMax=valami[0];
+        xMin=valami[1];
+        yMax=valami[2];
+        yMin=valami[3];
+
+        // Log.e("BoundingBox2",specific.getName()+"     xmax: "+xMax+" ymax: "+yMax+" xmin: "+xMin+" ymin: "+yMin);
     }
-    /*
-     if(obj instanceof Player) objMatrix = Game.getInstance().getPlayerMatrix();
-     else objMatrix = obj.getMatrix();*/
-    public boolean intersects(float[] matrix,BoundingBox other) {
-        float[] thisMinMax = new float[MaxMin.length];
-        Matrix.multiplyMV(thisMinMax,0,matrix,0,MaxMin,0);
-        float[] other2 = other.getMaxMin(matrix);
-        return !(thisMinMax[0] < other2[3] || thisMinMax[3] > other2[0] || thisMinMax[1] < other2[4] || thisMinMax[4] > other2[1]);
+    public boolean intersects(BoundingBox other) {
+        return !(other.xMax < this.xMin || other.xMin > this.xMax || other.yMax < this.yMin || other.yMin > this.yMax);
     }
 
-    public byte[] intersectwithwall(ArrayList<BGBlock> bgBlocks){
-        byte[] direction = new byte[]{1,1};
-        float[] thisMinMax = new float[MaxMin.length];
-        float[] matrix = Game.getInstance().player.getScreenPositionM();
-        Matrix.multiplyMV(thisMinMax,0,matrix,0,MaxMin,0);
-        for (BGBlock bg : bgBlocks) {
-            float[] other2 = new BoundingBox().getMaxMin(bg.getScreenPositionM());
-            if (!(thisMinMax[0] < other2[3] || thisMinMax[3] > other2[0])) direction[0]=0;
-            if (!(thisMinMax[1] < other2[4] || thisMinMax[4] > other2[1])) direction[0]=0;
-        }
-        return direction;
-    }
-    private float[] getMaxMin(float[] matrix) {
-        float[] soulution = new float[MaxMin.length];
-        Matrix.multiplyMV(soulution,0,matrix,0,MaxMin,0);
-        return soulution;
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("BoundingBox2{");
+        sb.append("xMax=").append(xMax);
+        sb.append(", yMax=").append(yMax);
+        sb.append(", xMin=").append(xMin);
+        sb.append(", yMin=").append(yMin);
+        sb.append('}');
+        return sb.toString();
     }
 
     public boolean Lineintersect(Point start, Point end) {
         float[] lineStart = new float[]{start.x, start.y};
         float[] lineEnd = new float[]{end.x, end.y};
 
-        float[] boxMin = new float[]{MaxMin[3],MaxMin[4]};
-        float[] boxMax = new float[]{MaxMin[0],MaxMin[1]};
+        float[] boxMin = new float[]{xMin,yMin};
+        float[] boxMax = new float[]{xMax,yMax};
 
         float[] rayDirection = {lineEnd[0] - lineStart[0], lineEnd[1] - lineStart[1]};
         float[] rayOrigin = {lineStart[0], lineStart[1]};

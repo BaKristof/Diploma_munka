@@ -18,8 +18,11 @@ public final class Game {
     public Point StartingPoint;
     public Point playerpoint;
     private ArrayList<EnemyCharacter> enemys;
-    private ArrayList<BGBlock> hitfield = new ArrayList<>();
+    private ArrayList<BGBlock> hitField = new ArrayList<>();
     private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
+
+
+    private boolean valami = true;
 
     private byte[] direction = new byte[2];
 
@@ -58,6 +61,7 @@ public final class Game {
         System.arraycopy(check,0,move,0,move.length);
        // Matrix.translateM(move,0,(Specifications.blocksize/2)*-1*9,0,0);
 
+
     }
     public static Game getInstance(){
         if (game== null){
@@ -66,24 +70,45 @@ public final class Game {
         return game;
     }
     public void befordraw(){
-        fillinvis();
+
         readininput();
 
         playerpoint = new Point(player);
 
         FillHitfield();
+        //fillinvis();
         //enemymovment();
 
     }
     public void readininput(){
         if(MainActivity.getLeft().isWorking()) {
-            float a = (float) MainActivity.getLeft().getAngle();
+            direction=new byte[]{1,1};
+            float joystick = (float) MainActivity.getLeft().getAngle();
+            float dx = (float) Math.cos(joystick);
+            float dy = (float) Math.sin(joystick);
+
+            //x tengelyen való hit
+
+            Matrix.translateM(move, 0, (dx * -0.004f), 0, 0);
+            for (BGBlock a : hitField) {
+                if (new BoundingBox(player).intersects(new BoundingBox(a))){
+                    Log.e("hit","hit Y tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
+                    Matrix.translateM(move, 0, (dx * 0.004f), 0, 0);
+                }
+            }
+
+            //y tengelyen való hit
+            Matrix.translateM(move, 0, 0, (dy * 0.004f), 0);
+            for (BGBlock a : hitField) {
+                if (new BoundingBox(player).intersects(new BoundingBox(a))){
+                    Log.e("hit","hit x tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
+                    Matrix.translateM(move, 0, 0, (dy * -0.004f), 0);
+                };
+            }
+
             float percent = MainActivity.getLeft().getDisplace();
-            float dx = (float) Math.cos(a);
-            float dy = (float) Math.sin(a);
-            direction = player.getBoundingBox().intersectwithwall(hitfield);
             player.setIrany(whatisirany(dx, dy));
-            Matrix.translateM(move, 0, (dx * -0.004f)*direction[0], (dy * 0.004f)*direction[1], 0);
+
         }
     }
     public void draw(float[]mvpMatrix){
@@ -104,9 +129,9 @@ public final class Game {
        // MyGLRenderer.setStoprender();
     }
     public void enemymovment(){
-            for (BGBlock bgb : hitfield) {
+            for (BGBlock bgb : hitField) {
                 for (EnemyCharacter enemy: enemys) {
-                    enemyCharacter.move( new BoundingBox().Lineintersect(new Point(player),new Point(enemy)));
+                    enemy.move( new BoundingBox(enemy).Lineintersect(new Point(player),new Point(enemy)));
                 }
             }
     }
@@ -118,16 +143,11 @@ public final class Game {
         return irany;
     }
     public void FillHitfield() { //TODO nem biztos hogy jó (nem hiszem)
-            hitfield.clear();
-            hitfield.addAll(Arrays.asList(BackGround.loadablechunks()));
+            hitField.clear();
+            hitField.addAll(Arrays.asList(BackGround.loadablechunks()));
+           // Log.e("hitfild size","   "+hitField.size());
     }
 
-   /* public boolean CheckForWallHit(){
-        for (BGBlock bgb: hitfield) {
-            if(new BoundingBox().intersects(getPlayerMatrix(),player.getBoundingBox())) return true;
-        }
-        return false;
-    }*/
     public BG getBackGround() {
         return BackGround;
     }
@@ -141,9 +161,12 @@ public final class Game {
         return foo;
     }
     public void fillinvis(){
+        invisible_pooints.clear();
         for (Specifications a: BackGround.getLodingpoints()) {
             invisible_pooints.add(new Triangle(a.getOwnPositionM()));
         }
+        Log.e("valami","hitfiledsize "+ hitField.size());
+
     }
     
 }

@@ -139,7 +139,7 @@ public class BG extends Drawable {
         ArrayList<BGBlock> near = new ArrayList<>();
         for (int[] a : Lodingpoints) {
             float b = MyGLRenderer.whereisyourmidle(BG[a[0]][a[1]]).distance(new Point(Game.getInstance().getPlayer()));
-            Log.e("distance","index"+a[0]+","+a[1]+"  distance:  "+b);
+            //Log.e("distance","index"+a[0]+","+a[1]+"  distance:  "+b);
             if(b < Specifications.blocksize*3.5f){
                 for (int i = a[0]-4; i < a[0]+4; i++) {
                     for (int j = a[1]-4; j < a[1]+4; j++) {
@@ -147,7 +147,7 @@ public class BG extends Drawable {
                             if (j<=BG[0].length-1 && j>=0){
                                 if (!valami.contains(BG[i][j].getAnimation())){
                                     near.add(BG[i][j]);
-                                    BG[i][j].setSingleTexture(MyGLRenderer.loadTexture(R.drawable._t9));
+                                    //BG[i][j].setSingleTexture(MyGLRenderer.loadTexture(R.drawable._t9));
                                 }
                             }
                         }

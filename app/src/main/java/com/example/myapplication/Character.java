@@ -5,7 +5,7 @@ import android.opengl.Matrix;
 
 public class Character extends Drawable {
 
-    private BoundingBox boundingBox ;
+
     int irany =0;
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
@@ -27,7 +27,6 @@ public class Character extends Drawable {
 
 
     public Character() {
-        boundingBox =new  BoundingBox();
         Matrix.setIdentityM(ownPositionM,0);
      //   boundingBox = new BoundingBox(this);
         setVertexShader(vertexShaderCode);
@@ -50,8 +49,8 @@ public class Character extends Drawable {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }
-    public boolean hit(float[] matrix,BoundingBox bb){
-       return boundingBox.intersects(matrix,bb);
+    public boolean hit(BoundingBox bb){
+       return new BoundingBox(this).intersects(bb);
     }
     public void setAnimation(int[] a) {
         animation = new Animation(a);
@@ -60,8 +59,5 @@ public class Character extends Drawable {
         this.irany = irany;
     }
 
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
-    }
     public String getName(){return "Charater";}
 }

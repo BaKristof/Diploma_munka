@@ -22,7 +22,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] viewMatrix = new float[16];;
     private Game gm;
     MyGLSurfaceView glsw;
-    private static boolean stoprender = false;
+    private static boolean stoprender = true;
 
     public MyGLRenderer(MyGLSurfaceView glSurfaceView) {
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
@@ -95,11 +95,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
     public static Point whereisyourmidle(Specifications specific ) {
             float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
-            float[] TESZT;
-            if (specific instanceof Player) TESZT =specific.getOwnPositionM();
-            else TESZT = specific.getScreenPositionM();
+            float[] TESZT = specific.getScreenPositionM();
             Matrix.multiplyMV(inputPoint, 0,TESZT , 0, inputPoint, 0);
-        Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
+        //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
         return new Point( inputPoint[0],inputPoint[1]);
     }
 

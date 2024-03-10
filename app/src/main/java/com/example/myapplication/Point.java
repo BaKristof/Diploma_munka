@@ -18,6 +18,13 @@ public class Point{
         return (float) Math.sqrt(Math.pow(other.x-x,2)+Math.pow(other.y-y,2));
 
     }
+    public float[] pointToCordinates(){
+        float top =y+Specifications.blocksize/2;
+        float botom=y-Specifications.blocksize/2;
+        float left=x-Specifications.blocksize/2;
+        float right=x+Specifications.blocksize/2;
+        return new float[]{top,botom,right,left};
+    }
     public int getX() {
         return Math.round(x);
     }

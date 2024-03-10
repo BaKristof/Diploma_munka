@@ -14,4 +14,9 @@ public class Player extends  Character{
     }
     @Override
     public String getName(){return "Playes";}
+
+    @Override
+    public float[] getScreenPositionM() {
+        return ownPositionM;
+    }
 }
