@@ -5,7 +5,7 @@ import android.opengl.Matrix;
 public class Specifications {
     protected float[] ownPositionM = new float[16];
     protected Animation animation= new Animation();
-    protected static final float size =0.25f;
+    protected static final float size =0.5f;
     protected final float[] screenPositionM = new float[16];
     protected static float[] squareCoords = {
             -0.15f*size,  0.15f*size, 0.0f,   // left top
