@@ -5,6 +5,7 @@ import android.opengl.Matrix;
 import androidx.annotation.NonNull;
 
 public class BGBlock extends Specifications {
+    BlockTypes texture = new BlockTypes();
 
     public BGBlock() {
         Matrix.setIdentityM(ownPositionM,0);
@@ -26,4 +27,13 @@ public class BGBlock extends Specifications {
         return "BGBlock";
     }
 
+    public void setTexture(Tiles tile) {
+        this.texture.setTexture(tile);
+    }
+    public int getTexture() {
+        return texture.getTexture();
+    }
+    public boolean isHitable(){
+        return texture.isHitable();
+    }
 }

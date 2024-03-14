@@ -39,7 +39,10 @@ package com.example.myapplication;
         import android.view.Gravity;
         import android.widget.FrameLayout;
 
+        import java.lang.reflect.Field;
         import java.time.Instant;
+        import java.util.ArrayList;
+        import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements JoystickListener {
 
@@ -103,5 +106,20 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
 
     public static Joystick getLeft() {
         return left;
+    }
+    public static List<Integer> getAllDrawables(Class<?> clazz) {
+        List<Integer> drawables = new ArrayList<>();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                if (field.getType() == int.class && field.getName().startsWith("drawable")) {
+                    int drawableId = field.getInt(null);
+                    drawables.add(drawableId);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return drawables;
     }
 }

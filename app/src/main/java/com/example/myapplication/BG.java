@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
+import android.service.quicksettings.Tile;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class BG extends Drawable {
     };
     private final Map<Integer,Integer> texture = new HashMap<>();
     private ArrayList<Integer> valami = new ArrayList<>();
-    public int[][] completback;
+    public Tiles[][] completback;
     public BGBlock[][]  BG;
     public BG( Maze maze) {
 
@@ -90,12 +91,12 @@ public class BG extends Drawable {
         LoadUpBG();
 
     }
-    public void setCompletback(int[][] completback) {
+    public void setCompletback(Tiles[][] completback) {
         this.BG = new BGBlock[completback.length][completback[0].length];
         this.completback = completback;
     }
 
-    public int[][] getCompletback() {
+    public Tiles[][] getCompletback() {
         return completback;
     }
 
@@ -108,11 +109,10 @@ public class BG extends Drawable {
         }
     }
 
-    private BGBlock TextureFromInt(int id, int i, int j ) {
+    private BGBlock TextureFromInt(Tiles tiles, int i, int j ) {
         BGBlock vissza = new BGBlock();
-       // Log.e("valami","bakosssss     "+blocksize);
         vissza.setMatrix( j* blocksize,i* blocksize*-1);
-        vissza.setSingleTexture(texture.get(id));
+        vissza.setTexture(tiles);
         return vissza;
 
     }
@@ -128,7 +128,7 @@ public class BG extends Drawable {
             for (BGBlock bgb : bc) {
                 System.arraycopy(bgb.getOwnPositionM(),0, ownPositionM,0, ownPositionM.length);
                 setvPMatrixHandle(moveMatrix);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bgb.getAnimation());
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, bgb.getTexture());
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
             }
         }
@@ -145,7 +145,7 @@ public class BG extends Drawable {
                     for (int j = a[1]-4; j < a[1]+4; j++) {
                         if (i<=BG.length-1 && i>=0){
                             if (j<=BG[0].length-1 && j>=0){
-                                if (!valami.contains(BG[i][j].getAnimation())){
+                                if (BG[i][j].isHitable()){
                                     near.add(BG[i][j]);
                                     //BG[i][j].setSingleTexture(MyGLRenderer.loadTexture(R.drawable._t9));
                                 }

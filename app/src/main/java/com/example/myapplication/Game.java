@@ -45,10 +45,12 @@ public final class Game {
         return player;
     }
 
+
     private Game() {
         Log.e("vajon innen jön a dolog","valami construktor");
         Matrix.setIdentityM(move,0);
         maze = new Maze();
+
 
         BackGround = new BG(maze);
         enemys = new ArrayList<>();
