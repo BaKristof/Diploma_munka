@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import android.service.quicksettings.Tile;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -21,7 +19,7 @@ public class BlockTypes {
                     {R.drawable._17,R.drawable._19},
             }
     ));
-    private static final int[] names = new int[]{
+    private static final int[] namesForSingelTexture = new int[]{
             R.drawable._5,
             R.drawable._7,
             R.drawable._13,
@@ -37,7 +35,7 @@ public class BlockTypes {
             R.drawable._t4,
             R.drawable._t9,
     };
-    private static final Tiles[] namesForMultitexture = new Tiles[]{
+    private static final Tiles[] namesForMultiTexture = new Tiles[]{
             Tiles.Left_Wall,
             Tiles.Right_Wall,
             Tiles.Top_Wall,
@@ -73,7 +71,7 @@ public class BlockTypes {
         if(singelitem.isEmpty()){
 
             int i=0;
-            for (int name : names) {
+            for (int name : namesForSingelTexture) {
                 singelitem.put(namesSingelTexture[i++],MyGLRenderer.loadTexture(name));
             }
         }
@@ -85,7 +83,7 @@ public class BlockTypes {
                 for (Integer integer : a) {
                     foo.add(MyGLRenderer.loadTexture(integer));
                 }
-                walls.put(namesForMultitexture[j++],foo.toArray(new Integer[0]));
+                walls.put(namesForMultiTexture[j++],foo.toArray(new Integer[0]));
 
             }
         }
@@ -97,6 +95,8 @@ public class BlockTypes {
             case Left_Wall:
             case Top_Wall:
             case Bottom_Wall:
+            case Connection_Left:
+            case Connection_Right:
                 texture = getRandomNumberFromArray(Objects.requireNonNull(walls.get(tiles)));
                 isHitable = true;
                 break;

@@ -4,13 +4,20 @@ import android.opengl.GLES20;
 import android.service.quicksettings.Tile;
 import android.util.Log;
 
+import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.AStarShortestPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class BG extends Drawable {
-    private ArrayList<int[]> Movementpoints = new ArrayList<>();
-    private ArrayList<int[]> Lodingpoints = new ArrayList<>();
+    private final ArrayList<Integer[]> Movementpoints;
+    private final ArrayList<Integer[]> Lodingpoints;
+    private ArrayList<Point> points;
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -31,54 +38,15 @@ public class BG extends Drawable {
                     "gl_FragColor = color;" +
                     "}";
 
-    private final int[] listofblocks={
-            R.drawable._1,
-            R.drawable._2,
-            R.drawable._3,
-            R.drawable._4,
-            R.drawable._5,// bal sarokelem
-            R.drawable._6,
-            R.drawable._7,
-            R.drawable._8,
-            R.drawable._9,
-            R.drawable._10,
-            R.drawable._11,
-            R.drawable._12,
-            R.drawable._13,//jobb sarokelem
-            R.drawable._14,
-            R.drawable._15,
-            R.drawable._t0,//15
-            R.drawable._t1,
-            R.drawable._t2,
-            R.drawable._t3,
-            R.drawable._t4,
-            R.drawable._t5, //20
-            R.drawable._t6,
-            R.drawable._t7,
-            R.drawable._t8,
-            R.drawable._t9,
-            R.drawable._16,//25
-            R.drawable._17,
-            R.drawable._18,
-            R.drawable._19,
-    };
-    private final Map<Integer,Integer> texture = new HashMap<>();
-    private ArrayList<Integer> valami = new ArrayList<>();
     public Tiles[][] completback;
     public BGBlock[][]  BG;
+    private float loadingDistance;
+    private Graph<Point, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+    private int sizeUp;
     public BG( Maze maze) {
-
         Log.e("adat","  "+blocksize);
         //  BG = new BGBlock[lenght*5][hight*5];
         //   completback = MazeGenerater.generate(lenght,hight);
-        for (int i=0 ; i<listofblocks.length;i++){
-            Integer a = MyGLRenderer.loadTexture( listofblocks[i]);
-            texture.put(i,a);
-        }
-
-        for (int i = 15; i <25 ; i++) {
-            valami.add(texture.get(i));
-        }
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
         setProg();
@@ -88,28 +56,54 @@ public class BG extends Drawable {
         setCompletback(maze.generate(2,2));
         Movementpoints = maze.getMovementpoints();
         Lodingpoints = maze.getLodingPoints();
+        this.loadingDistance= maze.getLoadingDistance();
+        this.sizeUp = maze.getSize_up();
         LoadUpBG();
+        LoadUpGraph();
 
     }
     public void setCompletback(Tiles[][] completback) {
         this.BG = new BGBlock[completback.length][completback[0].length];
         this.completback = completback;
     }
-
-    public Tiles[][] getCompletback() {
-        return completback;
-    }
-
     private void LoadUpBG() {
         int a = completback.length;
         for (int i=0; i<completback.length;i++){
             for(int j=0;j< completback[0].length; j++){
-                BG[i][j] = TextureFromInt(completback[i][j],i,j);
+                BG[i][j] = setTexture(completback[i][j],i,j);
+            }
+        }
+    }
+    private void LoadUpGraph(){
+        ArrayList<BoundingBox> hitfield = new ArrayList<>();
+        points = new ArrayList<>();
+        int fasz =0;
+        for (Integer[] movementpoint : Movementpoints) {
+            points.add(new Point(BG[movementpoint[0]][movementpoint[1]]));
+            graph.addVertex(points.get(fasz++));
+        }
+        for (BGBlock[] bgBlocks : BG) {
+            for (BGBlock bgBlock : bgBlocks) {
+                if (bgBlock.isHitable()){
+                hitfield.add(new BoundingBox(bgBlock));
+                }
+            }
+        }
+        for (int i = 0; i < points.size(); i++) {
+            for (int j = i+1; j < points.size(); j++) {
+                for (BoundingBox boundingBox : hitfield) {
+                    if (boundingBox.Lineintersect(points.get(i),points.get(j)))break;
+                    else{
+                    graph.addEdge(points.get(i),points.get(j));
+                    graph.setEdgeWeight(points.get(i),points.get(j),points.get(i).distance(points.get(j)));
+                    }
+                }
             }
         }
     }
 
-    private BGBlock TextureFromInt(Tiles tiles, int i, int j ) {
+
+    private BGBlock setTexture(Tiles tiles, int i, int j ) {
         BGBlock vissza = new BGBlock();
         vissza.setMatrix( j* blocksize,i* blocksize*-1);
         vissza.setTexture(tiles);
@@ -136,18 +130,19 @@ public class BG extends Drawable {
         setoffHandels();
     }
     public BGBlock[] loadablechunks(){
+        int valami =(int)Math.ceil((float) sizeUp/2);
         ArrayList<BGBlock> near = new ArrayList<>();
-        for (int[] a : Lodingpoints) {
+        for (Integer[] a : Lodingpoints) {
             float b = MyGLRenderer.whereisyourmidle(BG[a[0]][a[1]]).distance(new Point(Game.getInstance().getPlayer()));
             //Log.e("distance","index"+a[0]+","+a[1]+"  distance:  "+b);
-            if(b < Specifications.blocksize*3.5f){
-                for (int i = a[0]-4; i < a[0]+4; i++) {
-                    for (int j = a[1]-4; j < a[1]+4; j++) {
+            if(b < loadingDistance){
+                for (int i = a[0]-valami; i < a[0]+valami; i++) {
+                    for (int j = a[1]-valami; j < a[1]+valami; j++) {
                         if (i<=BG.length-1 && i>=0){
                             if (j<=BG[0].length-1 && j>=0){
                                 if (BG[i][j].isHitable()){
                                     near.add(BG[i][j]);
-                                    //BG[i][j].setSingleTexture(MyGLRenderer.loadTexture(R.drawable._t9));
+                                    //BG[i][j].setTexture(Tiles.Black_Back_Ground);
                                 }
                             }
                         }
@@ -158,29 +153,29 @@ public class BG extends Drawable {
         return near.toArray(new BGBlock[0]);
     }
     public float[] getboxmidel(int[] xy){
-        return BG[(xy[0]*5)+2][(xy[1]*5)+2].getScreenPositionM();
+        return BG[(xy[0]*sizeUp)+(int)Math.floor((float)sizeUp/2)][(xy[1]*sizeUp)+(int)Math.floor((float)sizeUp/2)].getOwnPositionM();
     }
     public void drawmovementpoints(float[] matrix){
         int i = 0;
         //new Triangle(BG[0][1].getMatrix()).draw(matrix);
-        for (int[] a : Movementpoints) {
+        for (Integer[] a : Movementpoints) {
             new Triangle( BG[a[0]][a[1]].getScreenPositionM()).draw(matrix);
             //Log.e("movement points "+i++, Arrays.toString(a));
         }
     }
-    public void NearestMovmentPoint(EnemyCharacter enemy){
+    public Point NearestMovmentPoint(Character character){
         //todo check if needed the nearest movement point or just go to the player
-        Point newpoint = new Point(enemy);
+        Point charcterPoint = new Point(character);
         float min = Float.MAX_VALUE;
-        Point save= new Point(0.0f,0.0f);
-        for (int[] a : Movementpoints) {
-            Point foo = new Point(BG[a[0]][a[1]]);
-            if(newpoint.distance(foo)<min){
-              save = foo;
-              min = newpoint.distance(foo);
+        int i=0,index = 0;
+        for (Point point : points) {
+            i++ ;
+            if (point.distance(charcterPoint)<min){
+                index=i;
+                min= point.distance(charcterPoint);
             }
         }
-        enemy.setMovementPoint(save);
+        return points.get(index);
     }
 
     @Override
@@ -190,9 +185,13 @@ public class BG extends Drawable {
 
     public ArrayList<BGBlock> getLodingpoints() {
         ArrayList<BGBlock> valami= new ArrayList<>();
-        for (int[] a : Lodingpoints) {
+        for (Integer[] a : Lodingpoints) {
             valami.add(BG[a[0]][a[1]]);
         }
         return valami;
+    }
+
+    public Graph<Point, DefaultWeightedEdge> getGraph() {
+        return graph;
     }
 }

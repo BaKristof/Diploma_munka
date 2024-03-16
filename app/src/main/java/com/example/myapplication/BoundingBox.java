@@ -1,9 +1,5 @@
 package com.example.myapplication;
 
-import android.opengl.Matrix;
-
-import java.util.ArrayList;
-
 public class BoundingBox {
     private float[] cordinates = Specifications.getSquareCoords();
     public float xMax=Float.NEGATIVE_INFINITY,yMax=Float.NEGATIVE_INFINITY;

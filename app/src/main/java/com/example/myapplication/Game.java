@@ -4,58 +4,37 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class Game {
     private static float[] move = new float[16];
     private final float[] foo = new float[16];
-    private Maze maze ;
     public BG BackGround;
     private static Game game;
     public EnemyCharacter enemyCharacter;
     public Player player;
-    public Point StartingPoint;
     public Point playerpoint;
-    private ArrayList<EnemyCharacter> enemys;
-    private ArrayList<BGBlock> hitField = new ArrayList<>();
-    private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
-
-
-    private boolean valami = true;
-
-    private byte[] direction = new byte[2];
-
-    public void addenemy(int type,float x,float y){
-        enemys.add(new EnemyCharacter(new float[]{x,y}));
-    }
-    public void addenemy(EnemyCharacter enemy){
-        enemys.add(enemy);
-    }
-
-    public static float[] getMove() {
-        return move;
-    }
-
-    public Point getPlayerpoint() {
-        return playerpoint;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
+    private final ArrayList<EnemyCharacter> enemys;
+    private final ArrayList<BGBlock> hitField = new ArrayList<>();
+    private final ArrayList<Triangle> invisible_pooints =new ArrayList<>();
 
 
     private Game() {
         Log.e("vajon innen jön a dolog","valami construktor");
         Matrix.setIdentityM(move,0);
-        maze = new Maze();
+        Maze maze = new Maze();
 
-
+        maze = new Maze(7);
         BackGround = new BG(maze);
         enemys = new ArrayList<>();
         player = new Player();
-        enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,1}));
+        enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,0}));
+       // enemyCharacter.findPath(BackGround.getGraph(),player);
       //  addenemy(enemyCharacter);
         float[] check = BackGround.getboxmidel(maze.getStartingpoint()).clone();
 
@@ -74,7 +53,7 @@ public final class Game {
     public void befordraw(){
 
         readininput();
-
+        enemyCharacter.findPath(BackGround.getGraph(), player);
         playerpoint = new Point(player);
 
         FillHitfield();
@@ -84,7 +63,6 @@ public final class Game {
     }
     public void readininput(){
         if(MainActivity.getLeft().isWorking()) {
-            direction=new byte[]{1,1};
             float joystick = (float) MainActivity.getLeft().getAngle();
             float dx = (float) Math.cos(joystick);
             float dy = (float) Math.sin(joystick);
@@ -94,7 +72,7 @@ public final class Game {
             Matrix.translateM(move, 0, (dx * -0.004f), 0, 0);
             for (BGBlock a : hitField) {
                 if (new BoundingBox(player).intersects(new BoundingBox(a))){
-                    Log.e("hit","hit Y tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
+                  //  Log.e("hit","hit Y tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
                     Matrix.translateM(move, 0, (dx * 0.004f), 0, 0);
                 }
             }
@@ -103,7 +81,7 @@ public final class Game {
             Matrix.translateM(move, 0, 0, (dy * 0.004f), 0);
             for (BGBlock a : hitField) {
                 if (new BoundingBox(player).intersects(new BoundingBox(a))){
-                    Log.e("hit","hit x tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
+                  //  Log.e("hit","hit x tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
                     Matrix.translateM(move, 0, 0, (dy * -0.004f), 0);
                 };
             }
@@ -117,14 +95,9 @@ public final class Game {
         Matrix.multiplyMM(foo, 0, mvpMatrix, 0, move, 0);
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-
         BackGround.draw(foo);
-        for (Triangle a : invisible_pooints) {
-            a.draw(foo);
-        }
-
-        for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
-
+        //for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
+        enemyCharacter.draw(foo);
         player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
         MyGLRenderer.checkGLError("draw van e probléma");
@@ -149,19 +122,6 @@ public final class Game {
             hitField.addAll(Arrays.asList(BackGround.loadablechunks()));
            // Log.e("hitfild size","   "+hitField.size());
     }
-
-    public BG getBackGround() {
-        return BackGround;
-    }
-
-    public void setDirection(byte[] direction) {
-        this.direction = direction;
-    }
-
-    public float[] getMatrix() {
-        Matrix.multiplyMM(foo,0,MyGLRenderer.getvPMatrix(),0,move,0);
-        return foo;
-    }
     public void fillinvis(){
         invisible_pooints.clear();
         for (Specifications a: BackGround.getLodingpoints()) {
@@ -169,6 +129,29 @@ public final class Game {
         }
         Log.e("valami","hitfiledsize "+ hitField.size());
 
+    }
+
+    public BG getBackGround() {
+        return BackGround;
+    }
+    public float[] getMatrix() {
+        Matrix.multiplyMM(foo,0,MyGLRenderer.getvPMatrix(),0,move,0);
+        return foo;
+    }
+    public void addEnemy(EnemyCharacter enemyCharacter,float[] xy){
+        enemys.add(new EnemyCharacter(xy));
+    }
+    public static float[] getMove() {
+        return move;
+    }
+    public Point getPlayerpoint() {
+        return playerpoint;
+    }
+    public Player getPlayer() {
+        return player;
+    }
+    public Point getnearpoint(Character character){
+        return BackGround.NearestMovmentPoint(character);
     }
     
 }

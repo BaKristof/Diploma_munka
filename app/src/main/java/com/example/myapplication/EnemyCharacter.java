@@ -1,14 +1,28 @@
 package com.example.myapplication;
 
 import android.opengl.Matrix;
+import android.util.Log;
+
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class EnemyCharacter extends Character{
 
     private Point MovementPoint;
+    List<Point> utvonal;
+
     public EnemyCharacter(float[] startingmatrix) {
         super();
-        float[] check = startingmatrix.clone();
-        Matrix.multiplyMM(ownPositionM,0,check,0, ownPositionM,0);
+        //Matrix.multiplyMM(ownPositionM,0,check,0, ownPositionM,0);
+        System.arraycopy(startingmatrix,0,ownPositionM,0,startingmatrix.length);
+        setSingleTexture(R.drawable.enemy_place_holder);
+
     }
     @Override
     public String getName() {
@@ -35,9 +49,31 @@ public class EnemyCharacter extends Character{
         MovementPoint = movementPoint;
     }
     //TODO enemy characters
-    // enemy movement by Pathfinding (pipa)
+    // enemy movement by Pathfinding (pipa+++++++++)
     // attacks
     // Damage
+    public void findPath(Graph<Point, DefaultWeightedEdge> graph, Player playerObj){
+        Point enemy = new Point(this);
+        Point player = new Point(playerObj);
+        Point nearestToEnemy = Game.getInstance().getnearpoint(this);
+        Point nearestToPlayer = Game.getInstance().getnearpoint(playerObj);
+        graph.addVertex(enemy);
+        graph.addVertex(player);
+        graph.addEdge(enemy,nearestToEnemy);
+        graph.setEdgeWeight(enemy,nearestToEnemy,nearestToEnemy.distance(enemy));
+        graph.addEdge(player,nearestToPlayer);
+        graph.setEdgeWeight(player,nearestToPlayer,nearestToPlayer.distance(player));
+
+        DijkstraShortestPath<Point, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
+        ShortestPathAlgorithm.SingleSourcePaths<Point, DefaultWeightedEdge> Paths = dijkstraAlg.getPaths(enemy);
+        //System.out.println(Paths.getPath(player) + "\n");
+        this.utvonal = Paths.getPath(player).getVertexList();
+        graph.removeVertex(enemy);
+        graph.removeVertex(player);
+        Log.e("valami", Arrays.toString(utvonal.toArray()));
+
+    }
+
 
 
 }

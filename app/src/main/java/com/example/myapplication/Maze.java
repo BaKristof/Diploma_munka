@@ -12,17 +12,11 @@ import java.util.Random;
 public class Maze {
    static int[][] maze;
    static boolean[][] bitmaze;
-   static Random r = new Random();
    static List<int[]> unvisitedcell;
    public int[] startingpoint;
    public int size_up;
-   public ArrayList<int[]> Movementpoints = new ArrayList<>();
-   public ArrayList<int[]>LodingPoints = new ArrayList<>();
-
-   int[] leftwall = new int[]{3,4,5};
-    int[] rightwall = new int[]{12,13,14};
-    int[] topwall = new int[]{10,11,2};
-    int[] bottomwall = new int[]{7,8,9};
+   public ArrayList<Integer[]> Movementpoints = new ArrayList<>();
+   public ArrayList<Integer[]> LodingPoints = new ArrayList<>();
     ArrayList<Tiles[]> horizontalConnection = new ArrayList<>(Arrays.asList(
            new Tiles[][]{
                    {Tiles.Right_Top_Floor_Corner,Tiles.Top_Wall,Tiles.Top_Wall,Tiles.Left_Top_Floor_Corner},
@@ -37,47 +31,81 @@ public class Maze {
                     {Tiles.Right_Bottom_Floor_Corner,Tiles.Connection_Left,Tiles.Top_Wall,Tiles.Right_Top_Floor_Corner},
             }
     ));
-    Tiles[][] Room = new Tiles[size_up][size_up];
+
+    Tiles[][] Room;
     Tiles[][] finale;
     private void insterHorozontal(int i, int j){
-        int l=0;
-        for (Tiles[] tiles : horizontalConnection) {
-            int k=0;
-            for (Tiles tile : tiles) {
-                finale[i+k][l+j]= tile;
-                k++;
+        for (int k = 0; k < size_up-2; k++) {
+            int l=0;
+            if(k==0){
+                Movementpoints.add(new Integer[]{k+i+1,l+j});
+                for (Tiles tiles : horizontalConnection.get(0)) {
+                        finale[k+i][l+j]= tiles;
+                        l++;
+                }
+                Movementpoints.add(new Integer[]{k+i-1,l+j});
             }
-            l++;
-        }
+            else if (k==(size_up-3)){
+                Movementpoints.add(new Integer[]{k+i+1,l+j});//itt van elsős az alagutban
+                for (Tiles tiles : horizontalConnection.get(2)) {
+                        finale[k+i][l+j]= tiles;
+                        l++;
+                }
+                Movementpoints.add(new Integer[]{k+i-1,l+j});//ez pedig az alagut vége mintösszekötési pontok
 
+
+            }
+            else {
+                for (Tiles tiles : horizontalConnection.get(1)) {
+                        finale[k+i][l+j]= tiles;
+                        l++;
+                }
+            }
+        }
     }
     private void insterVertical(int i, int j){
-        int k =0;
-        for (Tiles[] tiles : verticalConnection) {
+        for (int k = 0; k < size_up-2; k++) {
             int l=0;
-            for (Tiles tile : tiles) {
-                finale[i+k][l+j]= tile;
-                l++;
-            }
-            k++;
-        }
+            if(k==0){
+                Movementpoints.add(new Integer[]{l+i,k+j+1});
+                for (Tiles tiles : verticalConnection.get(0)) {
+                    finale[l+i][k+j]= tiles;
+                    l++;
+                }
+                Movementpoints.add(new Integer[]{l+i,k+j+1});
 
+            }
+            else if (k==(size_up-3)){
+                Movementpoints.add(new Integer[]{l+i,k+j+1});
+                for (Tiles tiles : verticalConnection.get(2)) {
+                    finale[l+i][k+j]= tiles;
+                    l++;
+                }
+                Movementpoints.add(new Integer[]{l+i,k+j+1});
+            }
+            else {
+                for (Tiles tiles : verticalConnection.get(1)) {
+                    finale[l+i][k+j]= tiles;
+                    l++;
+                }
+            }
+        }
     }
     private void roomfill(int i, int j){
-        int k =0,l=0;
+        int l=0;
         for (Tiles[] tiles : Room) {
+            int k =0;
             for (Tiles tile : tiles) {
-                finale[i+k][l+j]= tile;
+                finale[i+l][j+k]= tile;
                 k++;
             }
             l++;
         }
+        LodingPoints.add(new Integer[]{i+(int)Math.floor((float)size_up/2),j+(int)Math.floor((float)size_up/2)});
     }
-
-
     public Maze(int size_up) {
         this.size_up = size_up;
-
+        Room = new Tiles[size_up][size_up];
         int mod =(int) Math.pow(size_up,2);
         int number =0;
         for (int k = 0; k <size_up; k++) {
@@ -86,7 +114,7 @@ public class Maze {
 
                 Room[k][l]=Tiles.Floor;
 
-                if (number%mod==(mod-size_up)-(size_up-1))              Room[k][l]=Tiles.Right_Bottom_Floor_Corner  ;//jobbalsó belső
+                if (number%mod==(mod-size_up)-(size_up-1))              Room[k][l]=Tiles.Right_Bottom_Floor_Corner  ;//jobbalsó belső Todo: nem jó meg az alső sem
                 if (number%mod==(mod-(size_up*2)+1))                    Room[k][l]=Tiles.Left_Bottom_Floor_Corner;//balalsó belső
                 if (number%mod==((size_up*2)-1))                        Room[k][l]=Tiles.Right_Top_Floor_Corner;//jobbfelső belső
                 if (number%mod==size_up+1)                              Room[k][l]=Tiles.Left_Top_Floor_Corner;//balfelső belső
@@ -105,15 +133,18 @@ public class Maze {
                 number++;
             }
         }
+        for (Tiles[] tiles : Room) {
+            Log.e("valami",Arrays.toString(tiles));
+        }
     }
-
-
     public Maze() {
         this.size_up = 5;
     }
 
     public Tiles[][] generate(int lenght, int hight){
-        finale = new Tiles[lenght*size_up][hight*size_up];
+
+        Random r = new Random();
+        this.finale = new Tiles[lenght*size_up][hight*size_up];
 
         unvisitedcell = new ArrayList<>();
         maze= new int[lenght][hight];
@@ -182,23 +213,16 @@ public class Maze {
             for (int j = 0; j < hight; j++) {
                 switch (maze[i][j]){
                     case 0: //fel
-                        insterVertical((i*size_up)-1,(j*size_up)+1);
+                        insterVertical((i*size_up)-2,(j*size_up)+1);
                         break;
                     case 1://le
-
-                        insterVertical((i*size_up)-(size_up-1),(j*size_up)+1);
-                        Movementpoints.add(new int[]{i*5+4,j*5+2});
-                        Movementpoints.add(new int[]{i*5+5,j*5+2});
+                        insterVertical((i*size_up)+(size_up-2),(j*size_up)+1);
                         break;
                     case 2: //jobbra
-                        insterHorozontal((i*size_up)+1,(j*size_up)+size_up);
-                        Movementpoints.add(new int[]{i*5+2,j*5+4});
-                        Movementpoints.add(new int[]{i*5+2,j*5+5});
+                        insterHorozontal((i*size_up)+1,(j*size_up)+(size_up-2));
                         break;
                     case 3://balra
-                        insterHorozontal((i*size_up)+1,j*size_up-2);
-                        Movementpoints.add(new int[]{i*5+2,j*5-1});
-                        Movementpoints.add(new int[]{i*5+2,j*5});
+                        insterHorozontal((i*size_up)+1,(j*size_up)-2);
                         break;
                 }
             }
@@ -214,19 +238,27 @@ public class Maze {
         return finale;
     }
 
-    public ArrayList<int[]> getMovementpoints() {
+    public ArrayList<Integer[]> getMovementpoints() {
         return Movementpoints;
     }
     public int[] getStartingpoint() {
         return startingpoint;
     }
 
-    public ArrayList<int[]> getLodingPoints() {
+    public ArrayList<Integer[]> getLodingPoints() {
         return LodingPoints;
     }
     private int getRandomNumberFromArray(int[] a){
         Random r = new Random();
         return a[r.nextInt(a.length)];
     }
+    public float getLoadingDistance(){
+        return (float)Math.ceil( Math.sqrt(Math.pow(size_up/2,2)*2))*Specifications.blocksize;
+    }
+
+    public int getSize_up() {
+        return size_up;
+    }
+
 }
 
