@@ -3,19 +3,15 @@ package com.example.myapplication;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
-
-import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.Queue;
 
 public class EnemyCharacter extends Character{
 
     private Point MovementPoint;
-    List<Point> utvonal;
+    Queue<Point> utvonal = new LinkedList<>();
+    Point nextpoint ;
 
     public EnemyCharacter(float[] startingmatrix) {
         super();
@@ -30,29 +26,40 @@ public class EnemyCharacter extends Character{
     }
 
 
-    public void move(boolean a){
-        //Log.e("faszom","enemy move");
-        if(a) {
-            if (new Point(this).distance(MovementPoint) < 0.005f){
-                Game.getInstance().getBackGround().NearestMovmentPoint(this);
+    public void move() {
+        boolean valami = true;
+        for (BGBlock bgBlock : Game.getInstance().getHitField()) {
+            if (new BoundingBox(bgBlock).Lineintersect(new Point(Game.getInstance().getPlayer()), new Point(this))) {
+                valami = false;
+                Log.e("break","break");
+                break;
             }
         }
-        else MovementPoint = Game.getInstance().getPlayerpoint();
-        Point me = new Point(this);
-        irany = Game.whatisirany(MovementPoint.x,MovementPoint.y);
-        double foo =Math.atan2((double) MovementPoint.y - me.y,(double) MovementPoint.x - me.x);
-        float dx = (float) Math.cos(foo);
-        float dy = (float) Math.sin(foo*-1);
-        Matrix.translateM(ownPositionM,0,dx*0.0004f,dy*0.0004f,0);
+        if (valami) {
+            Log.e("egyensen","egynes lehet itt csuzsik el");
+            float[] dxdy = new Point(this).dxdy(new Point(Game.getInstance().getPlayer()));
+            Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0); //Player felé mozdul
+        }
+        else {
+            Log.e("ez itt jó ","vagy ez nem jó");
+            if (utvonal.isEmpty()){
+            utvonal.addAll( Game.findPath(Game.getInstance().getPlayer(), this));
+            nextpoint = utvonal.element();
+            }
+            if (nextpoint.near(new Point(this),0.005f)){
+                Log.e("iode belép","????????");
+                nextpoint = utvonal.element();
+            }
+            float[] dxdy = new Point(this).dxdy(nextpoint);
+            irany = Game.whatisirany(dxdy[0], dxdy[1]);
+            Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0);
+        }
     }
-    public void setMovementPoint(Point movementPoint) {
-        MovementPoint = movementPoint;
-    }
-    //TODO enemy characters
-    // enemy movement by Pathfinding (pipa+++++++++)
-    // attacks
-    // Damage
-    public void findPath(Graph<Point, DefaultWeightedEdge> graph, Player playerObj){
+        //TODO enemy characters
+        // enemy movement by Pathfinding (pipa+++++++++)
+        // attacks
+        // Damage
+   /* public void findPath(Graph<Point, DefaultWeightedEdge> graph, Player playerObj){
         Point enemy = new Point(this);
         Point player = new Point(playerObj);
         Point nearestToEnemy = Game.getInstance().getnearpoint(this);
@@ -72,7 +79,7 @@ public class EnemyCharacter extends Character{
         graph.removeVertex(player);
         Log.e("valami", Arrays.toString(utvonal.toArray()));
 
-    }
+    }*/
 
 
 

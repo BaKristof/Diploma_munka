@@ -66,4 +66,31 @@ public class BoundingBox {
         }
         return tMin <= 1.0f && tMax >= 0.0f;
     }
+
+    public boolean doesLineIntersect(Point p1, Point p2) {
+        // Check if the line is vertical
+        if (p1.x == p2.x) {
+            // The line is vertical, check if it intersects the bounding box horizontally
+            return p1.x >= xMin && p1.x <= xMax;
+        }
+
+        // Calculate the slope and y-intercept of the line
+        float slope = (p2.y - p1.y) / (p2.x - p1.x);
+        float yIntercept = p1.y - slope * p1.x;
+
+        // Calculate the intersection points of the line with the bounding box
+        float x1 = xMin, x2 = xMax;
+        float y1 = slope * x1 + yIntercept, y2 = slope * x2 + yIntercept;
+
+        // Check if the intersection points are within the bounding box
+        if (y1 >= yMin && y1 <= yMax) {
+            return true;
+        }
+        if (y2 >= yMin && y2 <= yMax) {
+            return true;
+        }
+
+        // The line does not intersect the bounding box
+        return false;
+    }
 }

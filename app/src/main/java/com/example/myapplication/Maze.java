@@ -38,20 +38,21 @@ public class Maze {
         for (int k = 0; k < size_up-2; k++) {
             int l=0;
             if(k==0){
-                Movementpoints.add(new Integer[]{k+i+1,l+j});
+                Movementpoints.add(new Integer[]{k+i+1,l+j+1});
                 for (Tiles tiles : horizontalConnection.get(0)) {
                         finale[k+i][l+j]= tiles;
                         l++;
                 }
-                Movementpoints.add(new Integer[]{k+i-1,l+j});
+                Movementpoints.add(new Integer[]{k+i+1,l+j-2});
             }
             else if (k==(size_up-3)){
-                Movementpoints.add(new Integer[]{k+i+1,l+j});//itt van elsős az alagutban
+
+                Movementpoints.add(new Integer[]{k+i-1,l+j+1});//itt van elsős az alagutban
                 for (Tiles tiles : horizontalConnection.get(2)) {
                         finale[k+i][l+j]= tiles;
                         l++;
                 }
-                Movementpoints.add(new Integer[]{k+i-1,l+j});//ez pedig az alagut vége mintösszekötési pontok
+                Movementpoints.add(new Integer[]{k+i-1,l+j-2});//ez pedig az alagut vége mintösszekötési pontok
 
 
             }
@@ -67,21 +68,21 @@ public class Maze {
         for (int k = 0; k < size_up-2; k++) {
             int l=0;
             if(k==0){
-                Movementpoints.add(new Integer[]{l+i,k+j+1});
+                Movementpoints.add(new Integer[]{l+i+1,k+j+1});
                 for (Tiles tiles : verticalConnection.get(0)) {
                     finale[l+i][k+j]= tiles;
                     l++;
                 }
-                Movementpoints.add(new Integer[]{l+i,k+j+1});
+                Movementpoints.add(new Integer[]{l+i-2,k+j+1});
 
             }
             else if (k==(size_up-3)){
-                Movementpoints.add(new Integer[]{l+i,k+j+1});
+                Movementpoints.add(new Integer[]{l+i+1,k+j-1});
                 for (Tiles tiles : verticalConnection.get(2)) {
                     finale[l+i][k+j]= tiles;
                     l++;
                 }
-                Movementpoints.add(new Integer[]{l+i,k+j+1});
+                Movementpoints.add(new Integer[]{l+i-2,k+j-1});
             }
             else {
                 for (Tiles tiles : verticalConnection.get(1)) {

@@ -62,6 +62,9 @@ public class BG extends Drawable {
         LoadUpGraph();
 
     }
+
+
+
     public void setCompletback(Tiles[][] completback) {
         this.BG = new BGBlock[completback.length][completback[0].length];
         this.completback = completback;
@@ -89,6 +92,7 @@ public class BG extends Drawable {
                 }
             }
         }
+        Log.e("hitfield","hitfield size :"+hitfield.size());
         for (int i = 0; i < points.size(); i++) {
             for (int j = i+1; j < points.size(); j++) {
                 for (BoundingBox boundingBox : hitfield) {
@@ -186,6 +190,13 @@ public class BG extends Drawable {
     public ArrayList<BGBlock> getLodingpoints() {
         ArrayList<BGBlock> valami= new ArrayList<>();
         for (Integer[] a : Lodingpoints) {
+            valami.add(BG[a[0]][a[1]]);
+        }
+        return valami;
+    }
+    public ArrayList<BGBlock> getMovementpoints() {
+        ArrayList<BGBlock> valami= new ArrayList<>();
+        for (Integer[] a : Movementpoints) {
             valami.add(BG[a[0]][a[1]]);
         }
         return valami;

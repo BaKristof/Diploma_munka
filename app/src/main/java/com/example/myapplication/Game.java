@@ -5,11 +5,14 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public final class Game {
     private static float[] move = new float[16];
@@ -21,7 +24,12 @@ public final class Game {
     public Point playerpoint;
     private final ArrayList<EnemyCharacter> enemys;
     private final ArrayList<BGBlock> hitField = new ArrayList<>();
-    private final ArrayList<Triangle> invisible_pooints =new ArrayList<>();
+    private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
+    private static Graph<Point, DefaultWeightedEdge> graph;
+
+    private ArrayList<Triangle> teszt = new ArrayList<>();
+    private ArrayList<Triangle> teszt2 = new ArrayList<>();
+
 
 
     private Game() {
@@ -31,6 +39,7 @@ public final class Game {
 
         maze = new Maze(7);
         BackGround = new BG(maze);
+        graph = BackGround.getGraph();
         enemys = new ArrayList<>();
         player = new Player();
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,0}));
@@ -53,11 +62,11 @@ public final class Game {
     public void befordraw(){
 
         readininput();
-        enemyCharacter.findPath(BackGround.getGraph(), player);
+        findPath(player,enemyCharacter);
         playerpoint = new Point(player);
 
         FillHitfield();
-        //fillinvis();
+        fillinvis();
         //enemymovment();
 
     }
@@ -97,6 +106,23 @@ public final class Game {
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         BackGround.draw(foo);
         //for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
+        for (Triangle triangle : teszt) {
+            triangle.draw(foo);
+        }
+
+        for (Triangle invisiblePooint : invisible_pooints) {
+            invisiblePooint.draw(foo);
+        }
+        for (BGBlock bgBlock : hitField) {
+            if (new BoundingBox(bgBlock).Lineintersect(new Point(Game.getInstance().getPlayer()), new Point(enemyCharacter))) {
+
+                Log.e("break","break"+new BoundingBox(bgBlock).Lineintersect(new Point(Game.getInstance().getPlayer()), new Point(enemyCharacter)));
+                break;
+            }
+        }
+
+
+       // enemyCharacter.move();
         enemyCharacter.draw(foo);
         player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
@@ -106,7 +132,7 @@ public final class Game {
     public void enemymovment(){
             for (BGBlock bgb : hitField) {
                 for (EnemyCharacter enemy: enemys) {
-                    enemy.move( new BoundingBox(enemy).Lineintersect(new Point(player),new Point(enemy)));
+                    enemy.move();
                 }
             }
     }
@@ -120,16 +146,66 @@ public final class Game {
     public void FillHitfield() { //TODO nem biztos hogy jó (nem hiszem)
             hitField.clear();
             hitField.addAll(Arrays.asList(BackGround.loadablechunks()));
+            if (teszt.size()<hitField.size()){
+                for (int i = 0; i < Math.abs(teszt.size()-hitField.size()); i++) {
+                    teszt.add(new Triangle(hitField.get(teszt.size()+i).getOwnPositionM()).setColor(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }));
+                }
+            }
+            else {
+                int i =0;
+                for (BGBlock bgBlock : hitField) {
+                teszt.get(i++).setMatrix(bgBlock.getOwnPositionM());
+                }
+            }
+
+
+
+
            // Log.e("hitfild size","   "+hitField.size());
     }
     public void fillinvis(){
-        invisible_pooints.clear();
-        for (Specifications a: BackGround.getLodingpoints()) {
-            invisible_pooints.add(new Triangle(a.getOwnPositionM()));
+
+        ArrayList<BGBlock> valami = BackGround.getMovementpoints();
+
+        if (invisible_pooints.size()<valami.size()){
+            for (int i = 0; i < Math.abs(invisible_pooints.size()-valami.size()); i++) {
+                invisible_pooints.add(new Triangle(valami.get(invisible_pooints.size()+i).getOwnPositionM()).setColor(new float[]{ 0.0f, 0.0f, 1.0f, 1.0f }));
+            }
         }
-        Log.e("valami","hitfiledsize "+ hitField.size());
+        else {
+            int i =0;
+            for (BGBlock bgBlock : valami) {
+                invisible_pooints.get(i++).setMatrix(bgBlock.getOwnPositionM());
+            }
+        }
+
+
+
+
 
     }
+    public static List<Point> findPath( Character playerObj, Character enemyObj){
+        Point enemy = new Point(enemyObj);
+        Point player = new Point(playerObj);
+        Point nearestToEnemy = Game.getInstance().getnearpoint(enemyObj);
+        Point nearestToPlayer = Game.getInstance().getnearpoint(playerObj);
+        graph.addVertex(enemy);
+        graph.addVertex(player);
+        graph.addEdge(enemy,nearestToEnemy);
+        graph.setEdgeWeight(enemy,nearestToEnemy,nearestToEnemy.distance(enemy));
+        graph.addEdge(player,nearestToPlayer);
+        graph.setEdgeWeight(player,nearestToPlayer,nearestToPlayer.distance(player));
+
+        DijkstraShortestPath<Point, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
+        ShortestPathAlgorithm.SingleSourcePaths<Point, DefaultWeightedEdge> Paths = dijkstraAlg.getPaths(enemy);
+        //System.out.println(Paths.getPath(player) + "\n");
+        List<Point> utvonal = Paths.getPath(player).getVertexList();
+        graph.removeVertex(enemy);
+        graph.removeVertex(player);
+       // Log.e("valami", Arrays.toString(utvonal.toArray()));
+        return utvonal;
+    }
+
 
     public BG getBackGround() {
         return BackGround;
@@ -153,5 +229,7 @@ public final class Game {
     public Point getnearpoint(Character character){
         return BackGround.NearestMovmentPoint(character);
     }
-    
+    public ArrayList<BGBlock> getHitField() {
+        return hitField;
+    }
 }

@@ -19,18 +19,21 @@ public class Point{
 
     }
     public float[] pointToCordinates(){
+
         float top =y+Specifications.blocksize/2;
         float botom=y-Specifications.blocksize/2;
         float left=x-Specifications.blocksize/2;
         float right=x+Specifications.blocksize/2;
         return new float[]{top,botom,right,left};
     }
-    public int getX() {
-        return Math.round(x);
+    public float[] dxdy (Point other){
+        float angle =(float) Math.atan2(other.y - this.y,(double) other.x - this.x);
+        float dx = (float) Math.cos(angle);
+        float dy = (float) Math.sin(angle);
+        return new float[]{dx,dy};
     }
-
-    public int getY() {
-        return Math.round(y);
+    public boolean near(Point other,float distance){
+        return this.distance(other)<distance;
     }
 
     @Override

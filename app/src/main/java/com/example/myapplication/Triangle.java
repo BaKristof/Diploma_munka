@@ -9,7 +9,7 @@ import java.nio.FloatBuffer;
 
 public class Triangle {
 
-    private final float[] matrix =new float[16];
+    private float[] matrix =new float[16];
     private final float[] foo = new float[16];
     private FloatBuffer vertexBuffer;
     private final String vertexShaderCode =
@@ -108,4 +108,12 @@ public class Triangle {
         this.size = size;
     }
 
+    public void setMatrix(float[] matrix) {
+        this.matrix = matrix;
+    }
+
+    public Triangle setColor(float[] color) {
+        this.color = color;
+        return this;
+    }
 }
