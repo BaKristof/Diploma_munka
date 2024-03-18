@@ -45,11 +45,8 @@ public final class Game {
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,0}));
        // enemyCharacter.findPath(BackGround.getGraph(),player);
       //  addenemy(enemyCharacter);
-        float[] check = BackGround.getboxmidel(maze.getStartingpoint()).clone();
 
-        Matrix.invertM(check,0,check,0);
-        System.arraycopy(check,0,move,0,move.length);
-       // Matrix.translateM(move,0,(Specifications.blocksize/2)*-1*9,0,0);
+
 
 
     }
@@ -116,13 +113,13 @@ public final class Game {
         for (BGBlock bgBlock : hitField) {
             if (new BoundingBox(bgBlock).Lineintersect(new Point(Game.getInstance().getPlayer()), new Point(enemyCharacter))) {
 
-                Log.e("break","break"+new BoundingBox(bgBlock).Lineintersect(new Point(Game.getInstance().getPlayer()), new Point(enemyCharacter)));
+                Log.e("break","break   "+new BoundingBox(bgBlock).doesLineIntersect(new Point(Game.getInstance().getPlayer()), new Point(enemyCharacter)));
                 break;
             }
         }
 
 
-       // enemyCharacter.move();
+        enemyCharacter.move();
         enemyCharacter.draw(foo);
         player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
@@ -178,11 +175,6 @@ public final class Game {
                 invisible_pooints.get(i++).setMatrix(bgBlock.getOwnPositionM());
             }
         }
-
-
-
-
-
     }
     public static List<Point> findPath( Character playerObj, Character enemyObj){
         Point enemy = new Point(enemyObj);
@@ -232,4 +224,13 @@ public final class Game {
     public ArrayList<BGBlock> getHitField() {
         return hitField;
     }
+
+    public static void setMove(float[] move) {
+        float[] local = new float[16];
+        Matrix.invertM(local,0,move,0);
+       System.arraycopy(local,0,Game.move,0,local.length);
+
+
+    }
 }
+

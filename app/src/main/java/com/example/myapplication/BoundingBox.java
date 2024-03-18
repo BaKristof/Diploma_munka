@@ -25,10 +25,8 @@ public class BoundingBox {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("BoundingBox2{");
-        sb.append("xMax=").append(xMax);
-        sb.append(", yMax=").append(yMax);
-        sb.append(", xMin=").append(xMin);
-        sb.append(", yMin=").append(yMin);
+        sb.append("x=").append(xMax-Specifications.blocksize/2);
+        sb.append(", y=").append(yMax-Specifications.blocksize/2);
         sb.append('}');
         return sb.toString();
     }
@@ -93,4 +91,5 @@ public class BoundingBox {
         // The line does not intersect the bounding box
         return false;
     }
+
 }

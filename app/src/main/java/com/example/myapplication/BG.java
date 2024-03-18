@@ -17,7 +17,7 @@ import java.util.List;
 public class BG extends Drawable {
     private final ArrayList<Integer[]> Movementpoints;
     private final ArrayList<Integer[]> Lodingpoints;
-    private ArrayList<Point> points;
+    private ArrayList<BGBlock> points;
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -41,7 +41,7 @@ public class BG extends Drawable {
     public Tiles[][] completback;
     public BGBlock[][]  BG;
     private float loadingDistance;
-    private Graph<Point, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+    private Graph<BGBlock, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private int sizeUp;
     public BG( Maze maze) {
         Log.e("adat","  "+blocksize);
@@ -59,6 +59,7 @@ public class BG extends Drawable {
         this.loadingDistance= maze.getLoadingDistance();
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
+        Game.setMove(getboxmidel(maze.startingpoint));
         LoadUpGraph();
 
     }
@@ -82,7 +83,7 @@ public class BG extends Drawable {
         points = new ArrayList<>();
         int fasz =0;
         for (Integer[] movementpoint : Movementpoints) {
-            points.add(new Point(BG[movementpoint[0]][movementpoint[1]]));
+            points.add(BG[movementpoint[0]][movementpoint[1]]);
             graph.addVertex(points.get(fasz++));
         }
         for (BGBlock[] bgBlocks : BG) {
@@ -96,10 +97,10 @@ public class BG extends Drawable {
         for (int i = 0; i < points.size(); i++) {
             for (int j = i+1; j < points.size(); j++) {
                 for (BoundingBox boundingBox : hitfield) {
-                    if (boundingBox.Lineintersect(points.get(i),points.get(j)))break;
+                    if (boundingBox.doesLineIntersect(new Point(points.get(i)),new Point(points.get(j))))break;
                     else{
                     graph.addEdge(points.get(i),points.get(j));
-                    graph.setEdgeWeight(points.get(i),points.get(j),points.get(i).distance(points.get(j)));
+                    graph.setEdgeWeight(points.get(i),points.get(j),new Point(points.get(i)).distance(new Point(points.get(j))));
                     }
                 }
             }

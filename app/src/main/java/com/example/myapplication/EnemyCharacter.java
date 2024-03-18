@@ -29,12 +29,13 @@ public class EnemyCharacter extends Character{
     public void move() {
         boolean valami = true;
         for (BGBlock bgBlock : Game.getInstance().getHitField()) {
-            if (new BoundingBox(bgBlock).Lineintersect(new Point(Game.getInstance().getPlayer()), new Point(this))) {
+            if (new BoundingBox(bgBlock).doesLineIntersect(new Point(Game.getInstance().getPlayer()), new Point(this))) {
                 valami = false;
                 Log.e("break","break");
                 break;
             }
         }
+        Point enemy = new Point(this);
         if (valami) {
             Log.e("egyensen","egynes lehet itt csuzsik el");
             float[] dxdy = new Point(this).dxdy(new Point(Game.getInstance().getPlayer()));
@@ -44,11 +45,10 @@ public class EnemyCharacter extends Character{
             Log.e("ez itt jó ","vagy ez nem jó");
             if (utvonal.isEmpty()){
             utvonal.addAll( Game.findPath(Game.getInstance().getPlayer(), this));
-            nextpoint = utvonal.element();
+            nextpoint = utvonal.remove();
             }
-            if (nextpoint.near(new Point(this),0.005f)){
-                Log.e("iode belép","????????");
-                nextpoint = utvonal.element();
+            if (nextpoint.near(enemy,0.005f)){
+                nextpoint = utvonal.remove();
             }
             float[] dxdy = new Point(this).dxdy(nextpoint);
             irany = Game.whatisirany(dxdy[0], dxdy[1]);

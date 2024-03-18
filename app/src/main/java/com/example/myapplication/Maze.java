@@ -34,6 +34,43 @@ public class Maze {
 
     Tiles[][] Room;
     Tiles[][] finale;
+    public Maze(int size_up) {
+        this.size_up = size_up;
+        Room = new Tiles[size_up][size_up];
+        int mod =(int) Math.pow(size_up,2);
+        int number =0;
+        for (int k = 0; k <size_up; k++) {
+
+            for (int l = 0; l <size_up ; l++) {
+
+                Room[k][l]=Tiles.Floor;
+
+                if (number%mod==(mod-size_up)-(size_up-1))              Room[k][l]=Tiles.Right_Bottom_Floor_Corner  ;//jobbalsó belső Todo: nem jó meg az alső sem
+                if (number%mod==(mod-(size_up*2)+1))                    Room[k][l]=Tiles.Left_Bottom_Floor_Corner;//balalsó belső
+                if (number%mod==((size_up*2)-1))                        Room[k][l]=Tiles.Right_Top_Floor_Corner;//jobbfelső belső
+                if (number%mod==size_up+1)                              Room[k][l]=Tiles.Left_Top_Floor_Corner;//balfelső belső
+
+                if ((number%mod)>0&&(number%mod)<size_up)               Room[k][l]=Tiles.Top_Wall ;//felsőfal
+                if (number%size_up==0)                                  Room[k][l]=Tiles.Left_Wall;//balfal
+                if (number%size_up==size_up-1)                          Room[k][l]=Tiles.Right_Wall;//jobbfal
+                if ((number%mod)>(mod-size_up)&&(number%mod)<mod-1)     Room[k][l]=Tiles.Bottom_Wall;//alsófal
+
+                //sarok
+                if (number%mod==0)                  Room[k][l] =Tiles.Left_Top_Wall_Corner ;//balfelső
+                if (number%mod==(mod-1))            Room[k][l] =Tiles.Right_Bottom_Wall_Corner ;//jobbalso
+                if (number%mod==size_up-1)          Room[k][l] =Tiles.Right_Top_Wall_Corner;//jobbfelső
+                if (number%mod==(mod-size_up))      Room[k][l] =Tiles.Left_Bottom_Wall_Corner ;//balalsó
+
+                number++;
+            }
+        }
+        for (Tiles[] tiles : Room) {
+            Log.e("valami",Arrays.toString(tiles));
+        }
+    }
+    public Maze() {
+        this.size_up = 5;
+    }
     private void insterHorozontal(int i, int j){
         for (int k = 0; k < size_up-2; k++) {
             int l=0;
@@ -104,46 +141,8 @@ public class Maze {
         }
         LodingPoints.add(new Integer[]{i+(int)Math.floor((float)size_up/2),j+(int)Math.floor((float)size_up/2)});
     }
-    public Maze(int size_up) {
-        this.size_up = size_up;
-        Room = new Tiles[size_up][size_up];
-        int mod =(int) Math.pow(size_up,2);
-        int number =0;
-        for (int k = 0; k <size_up; k++) {
-
-            for (int l = 0; l <size_up ; l++) {
-
-                Room[k][l]=Tiles.Floor;
-
-                if (number%mod==(mod-size_up)-(size_up-1))              Room[k][l]=Tiles.Right_Bottom_Floor_Corner  ;//jobbalsó belső Todo: nem jó meg az alső sem
-                if (number%mod==(mod-(size_up*2)+1))                    Room[k][l]=Tiles.Left_Bottom_Floor_Corner;//balalsó belső
-                if (number%mod==((size_up*2)-1))                        Room[k][l]=Tiles.Right_Top_Floor_Corner;//jobbfelső belső
-                if (number%mod==size_up+1)                              Room[k][l]=Tiles.Left_Top_Floor_Corner;//balfelső belső
-
-                if ((number%mod)>0&&(number%mod)<size_up)               Room[k][l]=Tiles.Top_Wall ;//felsőfal
-                if (number%size_up==0)                                  Room[k][l]=Tiles.Left_Wall;//balfal
-                if (number%size_up==size_up-1)                          Room[k][l]=Tiles.Right_Wall;//jobbfal
-                if ((number%mod)>(mod-size_up)&&(number%mod)<mod-1)     Room[k][l]=Tiles.Bottom_Wall;//alsófal
-
-                //sarok
-                if (number%mod==0)                  Room[k][l] =Tiles.Left_Top_Wall_Corner ;//balfelső
-                if (number%mod==(mod-1))            Room[k][l] =Tiles.Right_Bottom_Wall_Corner ;//jobbalso
-                if (number%mod==size_up-1)          Room[k][l] =Tiles.Right_Top_Wall_Corner;//jobbfelső
-                if (number%mod==(mod-size_up))      Room[k][l] =Tiles.Left_Bottom_Wall_Corner ;//balalsó
-
-                number++;
-            }
-        }
-        for (Tiles[] tiles : Room) {
-            Log.e("valami",Arrays.toString(tiles));
-        }
-    }
-    public Maze() {
-        this.size_up = 5;
-    }
 
     public Tiles[][] generate(int lenght, int hight){
-
         Random r = new Random();
         this.finale = new Tiles[lenght*size_up][hight*size_up];
 
@@ -152,6 +151,10 @@ public class Maze {
         bitmaze = new boolean[lenght][hight];
         startingpoint = new int[]{r.nextInt(lenght),r.nextInt(hight)};
         bitmaze[startingpoint[0]][startingpoint[1]] = true;
+
+
+
+
         for (int i = 0; i < bitmaze.length; i++){
             for (int j = 0; j < bitmaze[0].length; j++){
                 if(!bitmaze[i][j]){
@@ -254,7 +257,7 @@ public class Maze {
         return a[r.nextInt(a.length)];
     }
     public float getLoadingDistance(){
-        return (float)Math.ceil( Math.sqrt(Math.pow(size_up/2,2)*2))*Specifications.blocksize;
+        return (float)Math.ceil( Math.sqrt(Math.pow((double) size_up/2,2)*2))*Specifications.blocksize;
     }
 
     public int getSize_up() {
