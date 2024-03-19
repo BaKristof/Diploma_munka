@@ -41,7 +41,7 @@ public class BG extends Drawable {
     public Tiles[][] completback;
     public BGBlock[][]  BG;
     private float loadingDistance;
-    private Graph<BGBlock, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+    private Graph<Specifications, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private int sizeUp;
     public BG( Maze maze) {
         Log.e("adat","  "+blocksize);
@@ -97,10 +97,10 @@ public class BG extends Drawable {
         for (int i = 0; i < points.size(); i++) {
             for (int j = i+1; j < points.size(); j++) {
                 for (BoundingBox boundingBox : hitfield) {
-                    if (boundingBox.doesLineIntersect(new Point(points.get(i)),new Point(points.get(j))))break;
+                    if (boundingBox.doesLineIntersect(points.get(i),points.get(j)))break;
                     else{
                     graph.addEdge(points.get(i),points.get(j));
-                    graph.setEdgeWeight(points.get(i),points.get(j),new Point(points.get(i)).distance(new Point(points.get(j))));
+                    graph.setEdgeWeight(points.get(i),points.get(j),points.get(i).distance(points.get(j)));
                     }
                 }
             }
@@ -138,7 +138,7 @@ public class BG extends Drawable {
         int valami =(int)Math.ceil((float) sizeUp/2);
         ArrayList<BGBlock> near = new ArrayList<>();
         for (Integer[] a : Lodingpoints) {
-            float b = MyGLRenderer.whereisyourmidle(BG[a[0]][a[1]]).distance(new Point(Game.getInstance().getPlayer()));
+            float b = BG[a[0]][a[1]].distance(Game.getInstance().getPlayer());
             //Log.e("distance","index"+a[0]+","+a[1]+"  distance:  "+b);
             if(b < loadingDistance){
                 for (int i = a[0]-valami; i < a[0]+valami; i++) {
@@ -168,19 +168,20 @@ public class BG extends Drawable {
             //Log.e("movement points "+i++, Arrays.toString(a));
         }
     }
-    public Point NearestMovmentPoint(Character character){
+    public BGBlock NearestMovmentPoint(Character character){
         //todo check if needed the nearest movement point or just go to the player
-        Point charcterPoint = new Point(character);
+
         float min = Float.MAX_VALUE;
-        int i=0,index = 0;
-        for (Point point : points) {
+        int i=0;
+        BGBlock save = new BGBlock() ;
+        for (BGBlock point : points) {
             i++ ;
-            if (point.distance(charcterPoint)<min){
-                index=i;
-                min= point.distance(charcterPoint);
+            if (point.distance(character)<min){
+                save = point;
+                min= point.distance(character);
             }
         }
-        return points.get(index);
+        return save;
     }
 
     @Override
@@ -203,7 +204,7 @@ public class BG extends Drawable {
         return valami;
     }
 
-    public Graph<Point, DefaultWeightedEdge> getGraph() {
+    public Graph<Specifications, DefaultWeightedEdge> getGraph() {
         return graph;
     }
 }

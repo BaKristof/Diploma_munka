@@ -9,9 +9,9 @@ import java.util.Queue;
 
 public class EnemyCharacter extends Character{
 
-    private Point MovementPoint;
-    Queue<Point> utvonal = new LinkedList<>();
-    Point nextpoint ;
+
+    Queue<Specifications> utvonal = new LinkedList<>();
+    Specifications nextpoint ;
 
     public EnemyCharacter(float[] startingmatrix) {
         super();
@@ -29,16 +29,15 @@ public class EnemyCharacter extends Character{
     public void move() {
         boolean valami = true;
         for (BGBlock bgBlock : Game.getInstance().getHitField()) {
-            if (new BoundingBox(bgBlock).doesLineIntersect(new Point(Game.getInstance().getPlayer()), new Point(this))) {
+            if (new BoundingBox(bgBlock).doesLineIntersect(Game.getInstance().getPlayer(), this)){
                 valami = false;
                 Log.e("break","break");
                 break;
             }
         }
-        Point enemy = new Point(this);
         if (valami) {
             Log.e("egyensen","egynes lehet itt csuzsik el");
-            float[] dxdy = new Point(this).dxdy(new Point(Game.getInstance().getPlayer()));
+            float[] dxdy =this.dxdy(Game.getInstance().getPlayer());
             Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0); //Player felé mozdul
         }
         else {
@@ -47,16 +46,16 @@ public class EnemyCharacter extends Character{
             utvonal.addAll( Game.findPath(Game.getInstance().getPlayer(), this));
             nextpoint = utvonal.remove();
             }
-            if (nextpoint.near(enemy,0.005f)){
+            if (nextpoint.near(this,0.005f)){
                 nextpoint = utvonal.remove();
             }
-            float[] dxdy = new Point(this).dxdy(nextpoint);
+            float[] dxdy =this.dxdy(nextpoint);
             irany = Game.whatisirany(dxdy[0], dxdy[1]);
             Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0);
         }
     }
         //TODO enemy characters
-        // enemy movement by Pathfinding (pipa+++++++++)
+        // enemy movement by Pathfinding (pipa+++++++++ -)
         // attacks
         // Damage
    /* public void findPath(Graph<Point, DefaultWeightedEdge> graph, Player playerObj){

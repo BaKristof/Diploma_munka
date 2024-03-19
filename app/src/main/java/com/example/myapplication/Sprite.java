@@ -5,8 +5,8 @@ import android.graphics.Rect;
 
 public class Sprite {
     private Bitmap spriteSheet;
-    private int frameWidth;
-    private int frameHeight;
+    private final int frameWidth;
+    private final int frameHeight;
     private int frameCount;
     private int currentFrame;
 

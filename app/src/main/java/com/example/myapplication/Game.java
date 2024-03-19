@@ -21,11 +21,10 @@ public final class Game {
     private static Game game;
     public EnemyCharacter enemyCharacter;
     public Player player;
-    public Point playerpoint;
     private final ArrayList<EnemyCharacter> enemys;
     private final ArrayList<BGBlock> hitField = new ArrayList<>();
     private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
-    private static Graph<Point, DefaultWeightedEdge> graph;
+    private static Graph<Specifications, DefaultWeightedEdge> graph;
 
     private ArrayList<Triangle> teszt = new ArrayList<>();
     private ArrayList<Triangle> teszt2 = new ArrayList<>();
@@ -60,8 +59,6 @@ public final class Game {
 
         readininput();
         findPath(player,enemyCharacter);
-        playerpoint = new Point(player);
-
         FillHitfield();
         fillinvis();
         //enemymovment();
@@ -77,8 +74,10 @@ public final class Game {
 
             Matrix.translateM(move, 0, (dx * -0.004f), 0, 0);
             for (BGBlock a : hitField) {
-                if (new BoundingBox(player).intersects(new BoundingBox(a))){
-                  //  Log.e("hit","hit Y tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
+                BoundingBox b = new BoundingBox(player);
+                BoundingBox c =new BoundingBox(a);
+                if (b.intersects(c)){
+                 //  Log.e("hit","hit Y tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
                     Matrix.translateM(move, 0, (dx * 0.004f), 0, 0);
                 }
             }
@@ -110,15 +109,6 @@ public final class Game {
         for (Triangle invisiblePooint : invisible_pooints) {
             invisiblePooint.draw(foo);
         }
-        for (BGBlock bgBlock : hitField) {
-            if (new BoundingBox(bgBlock).Lineintersect(new Point(Game.getInstance().getPlayer()), new Point(enemyCharacter))) {
-
-                Log.e("break","break   "+new BoundingBox(bgBlock).doesLineIntersect(new Point(Game.getInstance().getPlayer()), new Point(enemyCharacter)));
-                break;
-            }
-        }
-
-
         enemyCharacter.move();
         enemyCharacter.draw(foo);
         player.draw(mvpMatrix);
@@ -176,11 +166,10 @@ public final class Game {
             }
         }
     }
-    public static List<Point> findPath( Character playerObj, Character enemyObj){
-        Point enemy = new Point(enemyObj);
-        Point player = new Point(playerObj);
-        Point nearestToEnemy = Game.getInstance().getnearpoint(enemyObj);
-        Point nearestToPlayer = Game.getInstance().getnearpoint(playerObj);
+    public static List<Specifications> findPath( Character player, Character enemy){
+
+        BGBlock nearestToEnemy = Game.getInstance().getnearpoint(enemy);
+        BGBlock nearestToPlayer = Game.getInstance().getnearpoint(player);
         graph.addVertex(enemy);
         graph.addVertex(player);
         graph.addEdge(enemy,nearestToEnemy);
@@ -188,10 +177,10 @@ public final class Game {
         graph.addEdge(player,nearestToPlayer);
         graph.setEdgeWeight(player,nearestToPlayer,nearestToPlayer.distance(player));
 
-        DijkstraShortestPath<Point, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
-        ShortestPathAlgorithm.SingleSourcePaths<Point, DefaultWeightedEdge> Paths = dijkstraAlg.getPaths(enemy);
+        DijkstraShortestPath<Specifications, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
+        ShortestPathAlgorithm.SingleSourcePaths<Specifications, DefaultWeightedEdge> Paths = dijkstraAlg.getPaths(enemy);
         //System.out.println(Paths.getPath(player) + "\n");
-        List<Point> utvonal = Paths.getPath(player).getVertexList();
+        List<Specifications> utvonal = Paths.getPath(player).getVertexList();
         graph.removeVertex(enemy);
         graph.removeVertex(player);
        // Log.e("valami", Arrays.toString(utvonal.toArray()));
@@ -212,13 +201,11 @@ public final class Game {
     public static float[] getMove() {
         return move;
     }
-    public Point getPlayerpoint() {
-        return playerpoint;
-    }
+
     public Player getPlayer() {
         return player;
     }
-    public Point getnearpoint(Character character){
+    public BGBlock getnearpoint(Character character){
         return BackGround.NearestMovmentPoint(character);
     }
     public ArrayList<BGBlock> getHitField() {

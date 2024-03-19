@@ -20,6 +20,25 @@ public class Specifications {
             1.0f, 1.0f,
             1.0f, 0.0f
     };
+
+    public float distance(Specifications other2){
+        float[] local= MyGLRenderer.midelCoordinate(this);
+        float[] other = MyGLRenderer.midelCoordinate(other2);
+        return (float) Math.sqrt(Math.pow(other[0]-local[0],2)+Math.pow(other[1]-local[1],2));
+
+    }
+    public float[] dxdy (Specifications other2){
+        float[] local= MyGLRenderer.midelCoordinate(this);
+        float[] other = MyGLRenderer.midelCoordinate(other2);
+        float angle =(float) Math.atan2(other[1] - local[1],(double) other[0] - local[0]);
+        float dx = (float) Math.cos(angle);
+        float dy = (float) Math.sin(angle);
+        return new float[]{dx,dy};
+    }
+    public boolean near(Specifications other,float distance){
+        return this.distance(other)<distance;
+    }
+
     public void setSingleTexture(int a) {
         animation.setSingletextur(a);
     }

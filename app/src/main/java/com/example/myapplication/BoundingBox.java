@@ -7,13 +7,12 @@ public class BoundingBox {
 
 
     public BoundingBox(Specifications specific) {
-        Point p = MyGLRenderer.whereisyourmidle(specific);
-        float[] valami = p.pointToCordinates();
+        float[] valami = MyGLRenderer.allCoordinates(specific);
 
-        xMax=valami[0];
-        xMin=valami[1];
-        yMax=valami[2];
-        yMin=valami[3];
+        xMax=valami[6];
+        xMin=valami[0];
+        yMax=valami[1];
+        yMin=valami[4];
 
         // Log.e("BoundingBox2",specific.getName()+"     xmax: "+xMax+" ymax: "+yMax+" xmin: "+xMin+" ymin: "+yMin);
     }
@@ -31,7 +30,7 @@ public class BoundingBox {
         return sb.toString();
     }
 
-    public boolean Lineintersect(Point start, Point end) {
+    /*public boolean Lineintersect(Point start, Point end) {
         float[] lineStart = new float[]{start.x, start.y};
         float[] lineEnd = new float[]{end.x, end.y};
 
@@ -63,18 +62,21 @@ public class BoundingBox {
             }
         }
         return tMin <= 1.0f && tMax >= 0.0f;
-    }
+    }*/
 
-    public boolean doesLineIntersect(Point p1, Point p2) {
+    public boolean doesLineIntersect(Specifications start ,Specifications end) {
+        float[] stratPoint= MyGLRenderer.allCoordinates(start);
+        float[] endPoint= MyGLRenderer.allCoordinates(end);
+
         // Check if the line is vertical
-        if (p1.x == p2.x) {
+        if (stratPoint[0] == endPoint[0]) {
             // The line is vertical, check if it intersects the bounding box horizontally
-            return p1.x >= xMin && p1.x <= xMax;
+            return stratPoint[0] >= xMin && stratPoint[0] <= xMax;
         }
 
         // Calculate the slope and y-intercept of the line
-        float slope = (p2.y - p1.y) / (p2.x - p1.x);
-        float yIntercept = p1.y - slope * p1.x;
+        float slope = (endPoint[1] - stratPoint[1]) / (endPoint[0] - stratPoint[0]);
+        float yIntercept = stratPoint[1] - slope * stratPoint[0];
 
         // Calculate the intersection points of the line with the bounding box
         float x1 = xMin, x2 = xMax;
@@ -92,4 +94,6 @@ public class BoundingBox {
         return false;
     }
 
-}
+
+
+    }

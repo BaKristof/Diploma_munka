@@ -18,7 +18,7 @@ public class BGBlock extends Specifications {
     @Override
     public String toString() {
         return "BGBlock{" +
-                "position=" + MyGLRenderer.whereisyourmidle(this) +
+                "position=" + MyGLRenderer.allCoordinates(this) +
                 '}';
     }
 

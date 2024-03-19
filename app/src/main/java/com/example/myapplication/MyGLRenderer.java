@@ -93,12 +93,33 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         bitmap.recycle();
         return textureId[0];
     }
-    public static Point whereisyourmidle(Specifications specific ) {
+    public static float[] midelCoordinate(Specifications specific ) {
             float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
             float[] TESZT = specific.getScreenPositionM();
             Matrix.multiplyMV(inputPoint, 0,TESZT , 0, inputPoint, 0);
         //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
-        return new Point( inputPoint[0],inputPoint[1]);
+        return inputPoint;
+    }
+    public static float[] allCoordinates(Specifications specific ) {
+        float[] TESZT = specific.getScreenPositionM();
+        float[]  input = Specifications.getSquareCoords();
+        float[] local = new float[]{0.0f,0.0f,0.0f,1.0f};
+        float[] output = new float[Specifications.getSquareCoords().length];
+        int j = 0;
+        for (int i = 0; i < input.length; i+=3) {
+            System.arraycopy(input,i,local,0,3);
+            Matrix.multiplyMV(local, 0,TESZT , 0,local , 0);
+            System.arraycopy(local,0,output,i,3);
+        }
+        //Log.println(Log.ERROR,specific.getName(), Arrays.toString(output));
+        return output;
+    }
+    public static float[] teszt2(Specifications specific,float[] teszt ) {
+        float[] inputPoint = {0.3f, 0.3f, 0.0f, 1.0f};
+        float[] TESZT = specific.getScreenPositionM();
+        Matrix.multiplyMV(inputPoint, 0,teszt , 0, inputPoint, 0);
+        //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
+        return new float[] {inputPoint[0],inputPoint[1]};
     }
 
     public static void setStoprender() {
