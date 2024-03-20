@@ -14,7 +14,6 @@ public class BoundingBox {
         yMax=valami[1];
         yMin=valami[4];
 
-        // Log.e("BoundingBox2",specific.getName()+"     xmax: "+xMax+" ymax: "+yMax+" xmin: "+xMin+" ymin: "+yMin);
     }
     public boolean intersects(BoundingBox other) {
         return !(other.xMax < this.xMin || other.xMin > this.xMax || other.yMax < this.yMin || other.yMin > this.yMax);
@@ -68,21 +67,16 @@ public class BoundingBox {
         float[] stratPoint= MyGLRenderer.allCoordinates(start);
         float[] endPoint= MyGLRenderer.allCoordinates(end);
 
-        // Check if the line is vertical
         if (stratPoint[0] == endPoint[0]) {
-            // The line is vertical, check if it intersects the bounding box horizontally
             return stratPoint[0] >= xMin && stratPoint[0] <= xMax;
         }
 
-        // Calculate the slope and y-intercept of the line
         float slope = (endPoint[1] - stratPoint[1]) / (endPoint[0] - stratPoint[0]);
         float yIntercept = stratPoint[1] - slope * stratPoint[0];
 
-        // Calculate the intersection points of the line with the bounding box
         float x1 = xMin, x2 = xMax;
         float y1 = slope * x1 + yIntercept, y2 = slope * x2 + yIntercept;
 
-        // Check if the intersection points are within the bounding box
         if (y1 >= yMin && y1 <= yMax) {
             return true;
         }
@@ -90,7 +84,6 @@ public class BoundingBox {
             return true;
         }
 
-        // The line does not intersect the bounding box
         return false;
     }
 

@@ -4,7 +4,7 @@ import android.opengl.Matrix;
 
 public class Specifications {
     protected float[] ownPositionM = new float[16];
-    protected Animation animation= new Animation();
+    protected SpriteSheets spriteSheets;
     protected static final float size =0.25f;
     protected final float[] screenPositionM = new float[16];
     protected static float[] squareCoords = {
@@ -13,7 +13,7 @@ public class Specifications {
             0.15f*size, -0.15f*size, 0.0f,    // right bottom
             0.15f*size,  0.15f*size, 0.0f     // right top
     };
-    public static final float blocksize = squareCoords[1]-squareCoords[7];
+    public static final float blocksize = squareCoords[1]-squareCoords[7]; // Todo: átalakitani hogy dinamikus legyen az értéke mert a scaleel nem fog müködni ez
     protected static float[] texCoords = {
             0.0f, 0.0f,
             0.0f, 1.0f,
@@ -39,14 +39,8 @@ public class Specifications {
         return this.distance(other)<distance;
     }
 
-    public void setSingleTexture(int a) {
-        animation.setSingletextur(a);
-    }
-    public int getAnimation() {
-        return animation.NextFrame(0);
-    }
-    public void setAnimation(int[] backward,int[] left,int[] forward,int[] right) {
-        animation = new Animation(backward,left,forward,right);
+    public void setSpriteSheets(int resourceID,int width,int height) {
+        this.spriteSheets = new SpriteSheets(resourceID,width,height);
     }
     public float[] getOwnPositionM() {
         return ownPositionM;

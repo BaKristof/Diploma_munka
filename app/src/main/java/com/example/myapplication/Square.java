@@ -78,12 +78,6 @@ public class Square {
         drawListBuffer = dlb.asShortBuffer();
         drawListBuffer.put(drawOrder);
         drawListBuffer.position(0);
-
-
-
-/*
-        mTexCoordBuffer = ByteBuffer.allocateDirect(texCoords.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-        mTexCoordBuffer.put(texCoords).position(0);*/
     }
 
     private final int vertexCount = squareCoords.length / COORDS_PER_VERTEX;
@@ -115,11 +109,6 @@ public class Square {
                 GLES20.GL_FLOAT, false,
                 vertexStride, vertexBuffer);
 
-
-        /*colorHandle = GLES20.glGetUniformLocation(Prog, "vColor");
-        GLES20.glUniform4fv(colorHandle, 1, color, 0);*/
-
-        // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
 
         GLES20.glDisableVertexAttribArray(positionHandle);

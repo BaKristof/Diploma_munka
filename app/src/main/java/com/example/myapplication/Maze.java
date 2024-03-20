@@ -236,9 +236,6 @@ public class Maze {
         for (Tiles[] a: finale) {
             Log.println(Log.ERROR,"final maze",Arrays.toString(a)+"\n");
         }
-
-        //Log.println(Log.ERROR,"Bakos vagyok", Arrays.deepToString(finale));
-
         return finale;
     }
 

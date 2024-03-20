@@ -75,8 +75,6 @@ public class Joystick extends View {
             this.newX = event.getX();
             this.newY = event.getY();
 
-            this.displace = (float) Math.sqrt(Math.pow(newX - centerX, 2) + Math.pow(newY - centerY, 2));
-            //Log.e("valami","valami    "+displace+"  base "+ baseRadius+"  new  "+newX+"   newY  "+ newY+" fooo   "+foo);
             this.angle =Math.atan2((double) event.getY() - centerY,(double) event.getX() - centerX);
 
             if (displace > baseRadius/2) {

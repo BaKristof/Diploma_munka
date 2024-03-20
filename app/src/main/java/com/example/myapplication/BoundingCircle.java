@@ -10,4 +10,8 @@ public class BoundingCircle {
         this.y = local[1];
         this.radius = radius;
     }
+    //TODO megkéne ezt csinálni aszem 2 fügvényt
+    // collison with circle
+    // collison with box
+    // ja meg a radiusz automatikus beállitása
 }

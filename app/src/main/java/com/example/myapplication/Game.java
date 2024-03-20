@@ -44,7 +44,7 @@ public final class Game {
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,0}));
        // enemyCharacter.findPath(BackGround.getGraph(),player);
       //  addenemy(enemyCharacter);
-
+        SpriteSheets teszt = new SpriteSheets(R.drawable.spritesheet_main_charater,64,64);
 
 
 
@@ -130,9 +130,10 @@ public final class Game {
         else if(Math.sin(Math.toRadians(315))>dy && Math.cos(Math.toRadians(225))<dx && dx<Math.cos(Math.toRadians(315))) irany=1;
         return irany;
     }
-    public void FillHitfield() { //TODO nem biztos hogy jó (nem hiszem)
+    public void FillHitfield() {
             hitField.clear();
             hitField.addAll(Arrays.asList(BackGround.loadablechunks()));
+
             if (teszt.size()<hitField.size()){
                 for (int i = 0; i < Math.abs(teszt.size()-hitField.size()); i++) {
                     teszt.add(new Triangle(hitField.get(teszt.size()+i).getOwnPositionM()).setColor(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }));
@@ -145,10 +146,6 @@ public final class Game {
                 }
             }
 
-
-
-
-           // Log.e("hitfild size","   "+hitField.size());
     }
     public void fillinvis(){
 
@@ -179,11 +176,10 @@ public final class Game {
 
         DijkstraShortestPath<Specifications, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
         ShortestPathAlgorithm.SingleSourcePaths<Specifications, DefaultWeightedEdge> Paths = dijkstraAlg.getPaths(enemy);
-        //System.out.println(Paths.getPath(player) + "\n");
+
         List<Specifications> utvonal = Paths.getPath(player).getVertexList();
         graph.removeVertex(enemy);
         graph.removeVertex(player);
-       // Log.e("valami", Arrays.toString(utvonal.toArray()));
         return utvonal;
     }
 

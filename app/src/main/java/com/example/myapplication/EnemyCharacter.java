@@ -17,7 +17,8 @@ public class EnemyCharacter extends Character{
         super();
         //Matrix.multiplyMM(ownPositionM,0,check,0, ownPositionM,0);
         System.arraycopy(startingmatrix,0,ownPositionM,0,startingmatrix.length);
-        setSingleTexture(R.drawable.enemy_place_holder);
+
+        setSpriteSheets(R.drawable.enemy_place_holder,64,64);
 
     }
     @Override
@@ -55,9 +56,8 @@ public class EnemyCharacter extends Character{
         }
     }
         //TODO enemy characters
-        // enemy movement by Pathfinding (pipa+++++++++ -)
-        // attacks
-        // Damage
+        // enemy movement by Pathfinding (Bugos)
+
    /* public void findPath(Graph<Point, DefaultWeightedEdge> graph, Player playerObj){
         Point enemy = new Point(this);
         Point player = new Point(playerObj);

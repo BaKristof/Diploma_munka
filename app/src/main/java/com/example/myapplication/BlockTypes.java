@@ -121,10 +121,6 @@ public class BlockTypes {
         Random r = new Random();
         return a[r.nextInt(a.length)];
     }
-    public void walltexture(Tiles tiles){
-        texture = getRandomNumberFromArray(Objects.requireNonNull(walls.get(tiles)));
-    }
-
     public boolean isHitable() {
         return isHitable;
     }

@@ -22,7 +22,6 @@ public class Drawable extends Specifications {
     private int TextCord;
     private FloatBuffer TexCoordBuffer;
     float[] color = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
-
     private int vertexShader;
     private int fragmentShader;
     private final float[] foo = new float[16];

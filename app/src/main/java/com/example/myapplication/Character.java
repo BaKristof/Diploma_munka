@@ -28,33 +28,29 @@ public class Character extends Drawable {
 
     public Character() {
         Matrix.setIdentityM(ownPositionM,0);
-     //   boundingBox = new BoundingBox(this);
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
         setProg();
         setVertexBuffer();
         setDrawListBuffer();
         setTexCoordBuffer();
-        //setTextireID(resourceId);
-       // setColor(new float[]{1.0f, 1.0f, 1.0f, 1.0f});
+        setSpriteSheets(R.drawable.place_holder,64,64);
+
     }
 
     public void draw(float[]mvpMatrix){
         GLES20.glUseProgram(Prog);
         setPositionHandle();
-      //  setColorHandle();
         setvPMatrixHandle(mvpMatrix);
         setTextCord();
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,animation.NextFrame(irany) );
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,spriteSheets.NextFrame(irany) );
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }
     public boolean hit(BoundingBox bb){
        return new BoundingBox(this).intersects(bb);
     }
-    public void setAnimation(int[] a) {
-        animation = new Animation(a);
-    }
+
     public void setIrany(int irany) {
         this.irany = irany;
     }

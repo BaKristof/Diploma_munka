@@ -82,14 +82,12 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
 
         setContentView(frameLayout);
         MainActivity.context = getApplicationContext();
-        //myGLSurfaceView =findViewById(R.id.glSurfaceView); ezt soha a faszomba nem akarom használni szétbasz mindent
 
     }
 
 
     @Override
     public void onJoystickMoved(float xPercent, float yPercent) {
-        // Handle joystick movement events here
 
     }
     public static Context getContext() {

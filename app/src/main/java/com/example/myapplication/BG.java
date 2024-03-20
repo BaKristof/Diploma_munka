@@ -44,18 +44,17 @@ public class BG extends Drawable {
     private Graph<Specifications, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private int sizeUp;
     public BG( Maze maze) {
-        Log.e("adat","  "+blocksize);
-        //  BG = new BGBlock[lenght*5][hight*5];
-        //   completback = MazeGenerater.generate(lenght,hight);
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
         setProg();
         setVertexBuffer();
         setDrawListBuffer();
         setTexCoordBuffer();
+
         setCompletback(maze.generate(2,2));
         Movementpoints = maze.getMovementpoints();
         Lodingpoints = maze.getLodingPoints();
+
         this.loadingDistance= maze.getLoadingDistance();
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
@@ -64,12 +63,12 @@ public class BG extends Drawable {
 
     }
 
-
-
     public void setCompletback(Tiles[][] completback) {
         this.BG = new BGBlock[completback.length][completback[0].length];
         this.completback = completback;
     }
+
+
     private void LoadUpBG() {
         int a = completback.length;
         for (int i=0; i<completback.length;i++){
@@ -79,24 +78,24 @@ public class BG extends Drawable {
         }
     }
     private void LoadUpGraph(){
-        ArrayList<BoundingBox> hitfield = new ArrayList<>();
+        ArrayList<BoundingBox> hitField = new ArrayList<>();
         points = new ArrayList<>();
         int fasz =0;
-        for (Integer[] movementpoint : Movementpoints) {
-            points.add(BG[movementpoint[0]][movementpoint[1]]);
+        for (Integer[] movementPoint : Movementpoints) {
+            points.add(BG[movementPoint[0]][movementPoint[1]]);
             graph.addVertex(points.get(fasz++));
         }
         for (BGBlock[] bgBlocks : BG) {
             for (BGBlock bgBlock : bgBlocks) {
                 if (bgBlock.isHitable()){
-                hitfield.add(new BoundingBox(bgBlock));
+                hitField.add(new BoundingBox(bgBlock));
                 }
             }
         }
-        Log.e("hitfield","hitfield size :"+hitfield.size());
+      //  Log.e("hitfield","hitfield size :"+hitField.size());
         for (int i = 0; i < points.size(); i++) {
             for (int j = i+1; j < points.size(); j++) {
-                for (BoundingBox boundingBox : hitfield) {
+                for (BoundingBox boundingBox : hitField) {
                     if (boundingBox.doesLineIntersect(points.get(i),points.get(j)))break;
                     else{
                     graph.addEdge(points.get(i),points.get(j));
@@ -120,7 +119,6 @@ public class BG extends Drawable {
         GLES20.glUseProgram(Prog);
         setPositionHandle();
         setTextCord();
-        //  setColorHandle();
 
 
         for (BGBlock[] bc : BG) {
@@ -131,7 +129,6 @@ public class BG extends Drawable {
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
             }
         }
-      //  MyGLRenderer.whereareyou(FinalMatrix,squareCoords);
         setoffHandels();
     }
     public BGBlock[] loadablechunks(){
@@ -160,17 +157,7 @@ public class BG extends Drawable {
     public float[] getboxmidel(int[] xy){
         return BG[(xy[0]*sizeUp)+(int)Math.floor((float)sizeUp/2)][(xy[1]*sizeUp)+(int)Math.floor((float)sizeUp/2)].getOwnPositionM();
     }
-    public void drawmovementpoints(float[] matrix){
-        int i = 0;
-        //new Triangle(BG[0][1].getMatrix()).draw(matrix);
-        for (Integer[] a : Movementpoints) {
-            new Triangle( BG[a[0]][a[1]].getScreenPositionM()).draw(matrix);
-            //Log.e("movement points "+i++, Arrays.toString(a));
-        }
-    }
     public BGBlock NearestMovmentPoint(Character character){
-        //todo check if needed the nearest movement point or just go to the player
-
         float min = Float.MAX_VALUE;
         int i=0;
         BGBlock save = new BGBlock() ;
@@ -187,14 +174,6 @@ public class BG extends Drawable {
     @Override
     public String getName() {
         return "BG";
-    }
-
-    public ArrayList<BGBlock> getLodingpoints() {
-        ArrayList<BGBlock> valami= new ArrayList<>();
-        for (Integer[] a : Lodingpoints) {
-            valami.add(BG[a[0]][a[1]]);
-        }
-        return valami;
     }
     public ArrayList<BGBlock> getMovementpoints() {
         ArrayList<BGBlock> valami= new ArrayList<>();

@@ -93,6 +93,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         bitmap.recycle();
         return textureId[0];
     }
+    public static int loadTexture(Bitmap bitmap) {
+        final int[] textureId = new int[1];
+        GLES20.glGenTextures(1, textureId, 0);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId[0]);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
+        bitmap.recycle();
+        return textureId[0];
+    }
     public static float[] midelCoordinate(Specifications specific ) {
             float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
             float[] TESZT = specific.getScreenPositionM();
@@ -114,14 +124,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //Log.println(Log.ERROR,specific.getName(), Arrays.toString(output));
         return output;
     }
-    public static float[] teszt2(Specifications specific,float[] teszt ) {
-        float[] inputPoint = {0.3f, 0.3f, 0.0f, 1.0f};
-        float[] TESZT = specific.getScreenPositionM();
-        Matrix.multiplyMV(inputPoint, 0,teszt , 0, inputPoint, 0);
-        //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
-        return new float[] {inputPoint[0],inputPoint[1]};
-    }
-
     public static void setStoprender() {
         MyGLRenderer.stoprender = false;
     }
