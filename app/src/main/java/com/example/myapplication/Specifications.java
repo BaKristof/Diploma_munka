@@ -20,6 +20,10 @@ public class Specifications {
             1.0f, 1.0f,
             1.0f, 0.0f
     };
+    public float getBlocksize(){
+        float[] a =MyGLRenderer.allCoordinates(this);
+        return a[1]-a[7];
+    }
 
     public float distance(Specifications other2){
         float[] local= MyGLRenderer.midelCoordinate(this);

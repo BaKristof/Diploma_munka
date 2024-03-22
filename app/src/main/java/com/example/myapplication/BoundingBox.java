@@ -20,14 +20,20 @@ public class BoundingBox {
     }
 
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("BoundingBox2{");
-        sb.append("x=").append(xMax-Specifications.blocksize/2);
-        sb.append(", y=").append(yMax-Specifications.blocksize/2);
-        sb.append('}');
-        return sb.toString();
+    public boolean intersects(BoundingCircle circle) {
+        // Find the closest point on the bounding box to the circle's center
+        float closestX = Math.max(xMin, Math.min(xMax, circle.getX()));
+        float closestY = Math.max(yMin, Math.min(yMax, circle.getY()));
+
+        // Calculate the distance between the closest point and the circle's center
+        float distanceSquared = (circle.getX() - closestX) * (circle.getX() - closestX) + (circle.getY() - closestY) * (circle.getY() - closestY);
+
+        // Check if the distance is less than or equal to the circle's radius
+        return distanceSquared <= circle.getRadius() * circle.getRadius();
     }
+
+
+
 
     /*public boolean Lineintersect(Point start, Point end) {
         float[] lineStart = new float[]{start.x, start.y};
