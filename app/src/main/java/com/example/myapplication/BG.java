@@ -109,7 +109,8 @@ public class BG extends Drawable {
 
     private BGBlock setTexture(Tiles tiles, int i, int j ) {
         BGBlock vissza = new BGBlock();
-        vissza.setMatrix( j* getBlocksize(),i* getBlocksize()*-1);
+        //float teszt = getBlocksize(); 0 mátrixal tér vissza mert nem kap setidenttyt az openGLES-től
+        vissza.setMatrix( j*vissza.getBlocksize(),i* vissza.getBlocksize()*-1); //Todo ha scaleled a blokkokat akkor kezd ezzel valamit mert nem lesz jó a blocksize de a getBlocksize() fügvény sem mert nem lesz meg abból a kordináta méret de lehet hogy az egész fügvény szar
         vissza.setTexture(tiles);
         return vissza;
 

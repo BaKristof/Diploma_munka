@@ -22,7 +22,7 @@ public class Specifications {
     };
     public float getBlocksize(){
         float[] a =MyGLRenderer.allCoordinates(this);
-        return a[1]-a[7];
+        return (float)Math.abs( a[1]-a[7]);
     }
 
     public float distance(Specifications other2){

@@ -105,7 +105,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
     public static float[] midelCoordinate(Specifications specific ) {
             float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
-            float[] TESZT = specific.getScreenPositionM();
+            float[] TESZT = specific.getScreenPositionM().clone();
             Matrix.multiplyMV(inputPoint, 0,TESZT , 0, inputPoint, 0);
         //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
         return inputPoint;
