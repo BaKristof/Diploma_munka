@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 
@@ -68,6 +69,11 @@ public class Maze {
             Log.e("valami",Arrays.toString(tiles));
         }
     }
+
+    public void setMovementpoints(Integer[] movementpoints) {
+        this.Movementpoints.add(movementpoints);
+    }
+
     public Maze() {
         this.size_up = 5;
     }
@@ -151,8 +157,6 @@ public class Maze {
         bitmaze = new boolean[lenght][hight];
         startingpoint = new int[]{r.nextInt(lenght),r.nextInt(hight)};
         bitmaze[startingpoint[0]][startingpoint[1]] = true;
-
-
 
 
         for (int i = 0; i < bitmaze.length; i++){

@@ -52,7 +52,7 @@ public class Specifications {
 
     public float[] getScreenPositionM() {
         Matrix.multiplyMM(screenPositionM,0, ownPositionM,0,Game.getMove(), 0);
-        return screenPositionM;
+        return screenPositionM.clone();
     }
 
     public void setMatrix(float x, float y) {

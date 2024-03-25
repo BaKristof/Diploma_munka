@@ -18,5 +18,6 @@ public class Projectile extends Drawable {
     public void move (float constantMoveNumber){
         Matrix.translateM(ownPositionM, 0, dx*projectileSpeed*constantMoveNumber, dy * projectileSpeed*constantMoveNumber, 0);
     }
+
 }
 

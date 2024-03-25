@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 public class BoundingBox {
-    private float[] cordinates = Specifications.getSquareCoords();
     public float xMax=Float.NEGATIVE_INFINITY,yMax=Float.NEGATIVE_INFINITY;
     public float xMin=Float.POSITIVE_INFINITY,yMin=Float.POSITIVE_INFINITY;
 
@@ -15,6 +14,27 @@ public class BoundingBox {
         yMin=valami[4];
 
     }
+
+    public BoundingBox(float xMax, float yMax, float xMin, float yMin) {
+        this.xMax = xMax;
+        this.yMax = yMax;
+        this.xMin = xMin;
+        this.yMin = yMin;
+    }
+    /*public BoundingBox setMatrix(){
+        float[] valami = MyGLRenderer.allCoordinates(specific);
+
+        xMax=valami[6];
+        xMin=valami[0];
+        yMax=valami[1];
+        yMin=valami[4];
+        return this;
+    }*/
+
+    public BoundingBox(Specifications[] specifications) {
+
+    }
+
     public boolean intersects(BoundingBox other) {
         return !(other.xMax < this.xMin || other.xMin > this.xMax || other.yMax < this.yMin || other.yMin > this.yMax);
     }
@@ -92,7 +112,7 @@ public class BoundingBox {
 
         return false;
     }
-
-
-
+    public boolean contains(BoundingBox other) {
+            return xMin <= other.xMin && xMax >= other.xMax && yMin <= other.yMin && yMax >= other.yMax;
     }
+}
