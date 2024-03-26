@@ -26,14 +26,14 @@ public class Specifications {
     }
 
     public float distance(Specifications other2){
-        float[] local= MyGLRenderer.midelCoordinate(this);
-        float[] other = MyGLRenderer.midelCoordinate(other2);
+        float[] local= MyGLRenderer.midleCoordinate(this);
+        float[] other = MyGLRenderer.midleCoordinate(other2);
         return (float) Math.sqrt(Math.pow(other[0]-local[0],2)+Math.pow(other[1]-local[1],2));
 
     }
     public float[] dxdy (Specifications other2){
-        float[] local= MyGLRenderer.midelCoordinate(this);
-        float[] other = MyGLRenderer.midelCoordinate(other2);
+        float[] local= MyGLRenderer.midleCoordinate(this);
+        float[] other = MyGLRenderer.midleCoordinate(other2);
         float angle =(float) Math.atan2(other[1] - local[1],(double) other[0] - local[0]);
         float dx = (float) Math.cos(angle);
         float dy = (float) Math.sin(angle);

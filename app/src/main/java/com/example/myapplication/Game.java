@@ -37,7 +37,7 @@ public final class Game {
         Maze maze = new Maze();
 
         maze = new Maze(7);
-        BackGround = new BG(maze);
+        BackGround = new BG(maze,2,2);
         graph = BackGround.getGraph();
         enemys = new ArrayList<>();
         player = new Player();

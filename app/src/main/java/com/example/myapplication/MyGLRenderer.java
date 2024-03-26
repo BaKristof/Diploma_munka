@@ -9,9 +9,6 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
-import android.util.Log;
-
-import java.util.Arrays;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
@@ -103,10 +100,16 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         bitmap.recycle();
         return textureId[0];
     }
-    public static float[] midelCoordinate(Specifications specific ) {
+    public static float[] midleCoordinate(Specifications specific ) {
             float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
             float[] TESZT = specific.getScreenPositionM().clone();
             Matrix.multiplyMV(inputPoint, 0,TESZT , 0, inputPoint, 0);
+        //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
+        return inputPoint;
+    }
+    public static float[] midleCoordinate(float[] valami, float[] screenPostioinM) {
+        float[] inputPoint = {valami[0],valami[1], 0.0f, 1.0f};
+        Matrix.multiplyMV(inputPoint, 0,screenPostioinM , 0, inputPoint, 0);
         //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
         return inputPoint;
     }

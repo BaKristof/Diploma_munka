@@ -15,30 +15,19 @@ public class BoundingBox {
 
     }
 
-    public BoundingBox(float xMax, float yMax, float xMin, float yMin) {
-        this.xMax = xMax;
-        this.yMax = yMax;
-        this.xMin = xMin;
-        this.yMin = yMin;
-    }
-    /*public BoundingBox setMatrix(){
-        float[] valami = MyGLRenderer.allCoordinates(specific);
-
-        xMax=valami[6];
-        xMin=valami[0];
-        yMax=valami[1];
-        yMin=valami[4];
-        return this;
-    }*/
-
-    public BoundingBox(Specifications[] specifications) {
-
+    public BoundingBox(Room room) {
+        float[]  valami0 = room.getCourners();
+        float[] valami1 = MyGLRenderer.midleCoordinate(new float[]{valami0[0],valami0[1]},room.getMatrix() );
+        float[] valami2 = MyGLRenderer.midleCoordinate(new float[]{valami0[2],valami0[3]},room.getMatrix());
+        xMax=valami1[0];
+        xMin=valami1[1];
+        yMax=valami2[0];
+        yMin=valami2[1];
     }
 
     public boolean intersects(BoundingBox other) {
         return !(other.xMax < this.xMin || other.xMin > this.xMax || other.yMax < this.yMin || other.yMin > this.yMax);
     }
-
 
     public boolean intersects(BoundingCircle circle) {
         // Find the closest point on the bounding box to the circle's center

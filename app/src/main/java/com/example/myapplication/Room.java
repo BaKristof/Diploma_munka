@@ -1,34 +1,37 @@
 package com.example.myapplication;
 
+import android.opengl.Matrix;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Room {
-    ArrayList<BGBlock> falak = new ArrayList<>();
-    ArrayList<Tiles[]> horizontalConnection = new ArrayList<>(Arrays.asList(
+    private ArrayList<BGBlock> falak = new ArrayList<>();
+    private float[] matrix = new float[16];
+    private float[] courners = new float[4];
+    private static final ArrayList<Tiles[]> horizontalConnection = new ArrayList<>(Arrays.asList(
             new Tiles[][]{
                     {Tiles.Right_Top_Floor_Corner,Tiles.Top_Wall,Tiles.Top_Wall,Tiles.Left_Top_Floor_Corner},
                     {Tiles.Floor,Tiles.Floor,Tiles.Floor,Tiles.Floor,},
                     {Tiles.Right_Bottom_Floor_Corner,Tiles.Connection_Left,Tiles.Connection_Right,Tiles.Left_Bottom_Floor_Corner},
             }
     ));
-    ArrayList<Tiles[]> verticalConnection = new ArrayList<>(Arrays.asList(
+    private static final ArrayList<Tiles[]> verticalConnection = new ArrayList<>(Arrays.asList(
             new Tiles[][]{
                     {Tiles.Left_Bottom_Floor_Corner,Tiles.Connection_Right,Tiles.Top_Wall,Tiles.Left_Top_Floor_Corner},
                     {Tiles.Floor,Tiles.Floor,Tiles.Floor,Tiles.Floor,},
                     {Tiles.Right_Bottom_Floor_Corner,Tiles.Connection_Left,Tiles.Top_Wall,Tiles.Right_Top_Floor_Corner},
             }
     ));
-    ArrayList<Tiles[]> room7x7 = new ArrayList<>(Arrays.asList(
+    private static final ArrayList<Tiles[]> room7x7 = new ArrayList<>(Arrays.asList(
             new Tiles[][]{
                     {Tiles.Left_Top_Wall_Corner,    Tiles.Top_Wall,                 Tiles.Top_Wall,     Tiles.Top_Wall,     Tiles.Top_Wall,     Tiles.Top_Wall,                 Tiles.Right_Top_Wall_Corner},
-                    {Tiles.Left_Wall,               Tiles.Left_Top_Floor_Corner,    Tiles.Top_Floor,    Tiles.Top_Floor,    Tiles.Top_Floor,    Tiles.Right_Top_Wall_Corner,    Tiles.Right_Wall,},
+                    {Tiles.Left_Wall,               Tiles.Left_Top_Floor_Corner,    Tiles.Top_Floor,    Tiles.Top_Floor,    Tiles.Top_Floor,    Tiles.Right_Top_Floor_Corner,   Tiles.Right_Wall,},
                     {Tiles.Left_Wall,               Tiles.Left_Floor,               Tiles.Floor,        Tiles.Floor,        Tiles.Floor,        Tiles.Right_Floor,              Tiles.Right_Wall,},
                     {Tiles.Left_Wall,               Tiles.Left_Floor,               Tiles.Floor,        Tiles.Floor,        Tiles.Floor,        Tiles.Right_Floor,              Tiles.Right_Wall,},
                     {Tiles.Left_Wall,               Tiles.Left_Floor,               Tiles.Floor,        Tiles.Floor,        Tiles.Floor,        Tiles.Right_Floor,              Tiles.Right_Wall,},
-                    {Tiles.Left_Wall,               Tiles.Left_Bottom_Floor_Corner, Tiles.Bottom_Floor, Tiles.Bottom_Floor, Tiles.Bottom_Wall,  Tiles.Right_Bottom_Floor_Corner,Tiles.Right_Wall,},
+                    {Tiles.Left_Wall,               Tiles.Left_Bottom_Floor_Corner, Tiles.Bottom_Floor, Tiles.Bottom_Floor, Tiles.Bottom_Floor, Tiles.Right_Bottom_Floor_Corner,Tiles.Right_Wall,},
                     {Tiles.Left_Bottom_Wall_Corner, Tiles.Bottom_Wall,              Tiles.Bottom_Wall,  Tiles.Bottom_Wall,  Tiles.Bottom_Wall,  Tiles.Bottom_Wall,              Tiles.Right_Bottom_Wall_Corner},
             }
     ));
@@ -78,8 +81,8 @@ public class Room {
     public Room() {
         valid = room7x7;
     }
+    public static void insterHorozontal(Tiles[][] finale, int i, int j, Maze maze, int size_up){
 
-    private void insterHorozontal(Tiles[][] finale, int i, int j,Maze maze){
         for (int k = 0; k < size_up-2; k++) {
             int l=0;
             if(k==0){
@@ -109,7 +112,7 @@ public class Room {
             }
         }
     }
-    private void insterVertical(Tiles[][] finale,int i, int j,Maze maze){
+    public static void insterVertical(Tiles[][] finale,int i, int j,Maze maze,int size_up){
         for (int k = 0; k < size_up-2; k++) {
             int l=0;
             if(k==0){
@@ -137,9 +140,10 @@ public class Room {
             }
         }
     }
-    private void roomfill(Tiles[][] finale, int i, int j){
+    public void roomfill(Tiles[][] finale, int i, int j){
+
         int l=0;
-        for (Tiles[] tiles : Room) {
+        for (Tiles[] tiles : valid ) {
             int k =0;
             for (Tiles tile : tiles) {
                 finale[i+l][j+k]= tile;
@@ -148,5 +152,32 @@ public class Room {
             l++;
         }
 
+    }
+    public Room setCourners(int size_up,BGBlock bgBlock){
+        courners[0] =0.0f;
+        courners[1] =0.0f;
+        courners[2] =bgBlock.getBlocksize()*size_up;
+        courners[3] =bgBlock.getBlocksize()*size_up;
+        return this;
+    }
+    public Room setMatrix(float[] matrix) {
+        this.matrix = matrix;
+        return this;
+    }
+    public void setFalak(BGBlock falak) {
+        this.falak.add(falak) ;
+    }
+
+    public ArrayList<BGBlock> getFalak() {
+        return falak;
+    }
+    public float[] getCourners() {
+        return courners;
+    }
+
+    public float[] getMatrix() {
+        float[] local = new float[16];
+        Matrix.multiplyMM(local,0, matrix,0,Game.getMove(), 0);
+        return local.clone();
     }
 }

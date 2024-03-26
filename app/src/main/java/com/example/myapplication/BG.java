@@ -17,6 +17,7 @@ import java.util.List;
 public class BG extends Drawable {
     private final ArrayList<Integer[]> Movementpoints;
     private final ArrayList<Integer[]> Lodingpoints;
+    private final ArrayList<Room> rooms;
     private ArrayList<BGBlock> points;
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
@@ -43,7 +44,7 @@ public class BG extends Drawable {
     private float loadingDistance;
     private Graph<Specifications, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private int sizeUp;
-    public BG( Maze maze) {
+    public BG( Maze maze,int lenght,int hight) {
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
         setProg();
@@ -51,13 +52,28 @@ public class BG extends Drawable {
         setDrawListBuffer();
         setTexCoordBuffer();
 
-        setCompletback(maze.generate(2,2));
+        setCompletback(maze.generate(lenght,hight));
         Movementpoints = maze.getMovementpoints();
         Lodingpoints = maze.getLodingPoints();
+        rooms = maze.getRooms();
 
         this.loadingDistance= maze.getLoadingDistance();
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
+
+
+        for (int i = 0; i < lenght; i++) {
+            for (int j = 0; j < hight; j++) {
+                rooms.get(i+j).setCourners(sizeUp,BG[0][0]).setMatrix(BG[i*sizeUp][j*sizeUp].getOwnPositionM());
+                for (int k = i*sizeUp; k < (i*sizeUp)+sizeUp; k++) {
+                    for (int l = j*sizeUp; l <(j*sizeUp)+sizeUp ; l++) {
+                        if (BG[i][j].isHitable()){
+                        rooms.get(i+j).setFalak(BG[k][l]);
+                        }
+                    }
+                }
+            }
+        }
         Game.setMove(getboxmidel(maze.startingpoint));
         LoadUpGraph();
 
@@ -133,8 +149,15 @@ public class BG extends Drawable {
         setoffHandels();
     }
     public BGBlock[] loadablechunks(){ //TODO BVH alapu betöltés
-        int valami =(int)Math.ceil((float) sizeUp/2);
         ArrayList<BGBlock> near = new ArrayList<>();
+        for (Room room : rooms) {
+            BoundingBox valami = new BoundingBox(room);
+            BoundingBox player = new BoundingBox(Game.getInstance().getPlayer());
+            if (valami.intersects(player) || valami.contains(player)){
+                near.addAll(room.getFalak());
+            }
+        }
+        /*int valami =(int)Math.ceil((float) sizeUp/2);
         for (Integer[] a : Lodingpoints) {
             float b = BG[a[0]][a[1]].distance(Game.getInstance().getPlayer());
             //Log.e("distance","index"+a[0]+","+a[1]+"  distance:  "+b);
@@ -152,7 +175,8 @@ public class BG extends Drawable {
                     }
                 }
             }
-        }
+        }*/
+
         return near.toArray(new BGBlock[0]);
     }
     public float[] getboxmidel(int[] xy){
