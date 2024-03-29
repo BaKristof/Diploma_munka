@@ -5,9 +5,10 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Room {
-    private ArrayList<BGBlock> falak = new ArrayList<>();
+    private ArrayList<BGBlock> blocks = new ArrayList<>();
     private float[] matrix = new float[16];
     private float[] courners = new float[4];
     private static final ArrayList<Tiles[]> horizontalConnection = new ArrayList<>(Arrays.asList(
@@ -156,20 +157,23 @@ public class Room {
     public Room setCourners(int size_up,BGBlock bgBlock){
         courners[0] =0.0f;
         courners[1] =0.0f;
-        courners[2] =bgBlock.getBlocksize()*size_up;
-        courners[3] =bgBlock.getBlocksize()*size_up;
+        courners[2] =bgBlock.getHeight()*size_up;
+        courners[3] =bgBlock.getHeight()*size_up;
         return this;
     }
     public Room setMatrix(float[] matrix) {
         this.matrix = matrix;
         return this;
     }
-    public void setFalak(BGBlock falak) {
-        this.falak.add(falak) ;
+    public void setBlocks(BGBlock blocks) {
+        this.blocks.add(blocks) ;
     }
 
-    public ArrayList<BGBlock> getFalak() {
-        return falak;
+    public ArrayList<BGBlock> getBlocks() {
+        return blocks;
+    }
+    public ArrayList<BGBlock> getWalls(){
+        return blocks.stream().filter(BGBlock::isHitable).collect(Collectors.toCollection(ArrayList::new));
     }
     public float[] getCourners() {
         return courners;

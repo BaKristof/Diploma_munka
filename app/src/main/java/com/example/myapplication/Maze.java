@@ -103,7 +103,6 @@ public class Maze {
             }
 
         }
-        number = 0;
         for (int i = 0; i < lenght; i++) {
             for (int j = 0; j < hight; j++) {
                 switch (maze[i][j]){
@@ -144,10 +143,6 @@ public class Maze {
         Random r = new Random();
         return a[r.nextInt(a.length)];
     }
-    public float getLoadingDistance(){
-        return (float)Math.ceil( Math.sqrt(Math.pow((double) size_up/2,2)*2))*Specifications.blocksize;
-    }
-
     public int getSize_up() {
         return size_up;
     }

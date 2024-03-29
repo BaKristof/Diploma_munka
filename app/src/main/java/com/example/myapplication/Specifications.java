@@ -13,18 +13,16 @@ public class Specifications {
             0.15f*size, -0.15f*size, 0.0f,    // right bottom
             0.15f*size,  0.15f*size, 0.0f     // right top
     };
-    public static final float blocksize = squareCoords[1]-squareCoords[7]; // Todo: átalakitani hogy dinamikus legyen az értéke mert a scaleel nem fog müködni ez
     protected static float[] texCoords = {
             0.0f, 0.0f,
             0.0f, 1.0f,
             1.0f, 1.0f,
             1.0f, 0.0f
     };
-    public float getBlocksize(){
+    public float getHeight(){
         float[] a =MyGLRenderer.allCoordinates(this);
         return (float)Math.abs( a[1]-a[7]);
     }
-
     public float distance(Specifications other2){
         float[] local= MyGLRenderer.midleCoordinate(this);
         float[] other = MyGLRenderer.midleCoordinate(other2);
@@ -58,8 +56,9 @@ public class Specifications {
     public void setMatrix(float x, float y) {
         Matrix.translateM(this.ownPositionM,0,x,y,0);
     }
-    public void setOwnPositionM(float[] ownPositionM){
+    public Specifications setOwnPositionM(float[] ownPositionM){
         System.arraycopy(ownPositionM,0, this.ownPositionM,0, this.ownPositionM.length);
+        return this;
     }
     public static float[] getSquareCoords() {
         return squareCoords;

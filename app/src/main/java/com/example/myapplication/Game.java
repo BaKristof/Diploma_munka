@@ -44,9 +44,7 @@ public final class Game {
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,0}));
        // enemyCharacter.findPath(BackGround.getGraph(),player);
       //  addenemy(enemyCharacter);
-        SpriteSheets teszt = new SpriteSheets(R.drawable.spritesheet_main_charater,64,64);
-
-
+        //MyGLRenderer.addmargin(player);
 
     }
     public static Game getInstance(){
@@ -113,7 +111,7 @@ public final class Game {
         enemyCharacter.draw(foo);
         player.draw(mvpMatrix);
         GLES20.glDisable(GLES20.GL_BLEND);
-        MyGLRenderer.checkGLError("draw van e probléma");
+
        // MyGLRenderer.setStoprender();
     }
     public void enemymovment(){

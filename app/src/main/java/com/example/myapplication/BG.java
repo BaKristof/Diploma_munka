@@ -1,18 +1,13 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
-import android.service.quicksettings.Tile;
 import android.util.Log;
 
 import org.jgrapht.Graph;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
-import org.jgrapht.alg.shortestpath.AStarShortestPath;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BG extends Drawable {
     private final ArrayList<Integer[]> Movementpoints;
@@ -57,21 +52,20 @@ public class BG extends Drawable {
         Lodingpoints = maze.getLodingPoints();
         rooms = maze.getRooms();
 
-        this.loadingDistance= maze.getLoadingDistance();
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
 
-
+        int f = 0;
         for (int i = 0; i < lenght; i++) {
             for (int j = 0; j < hight; j++) {
-                rooms.get(i+j).setCourners(sizeUp,BG[0][0]).setMatrix(BG[i*sizeUp][j*sizeUp].getOwnPositionM());
+                rooms.get(f).setCourners(sizeUp,BG[0][0]).setMatrix(BG[i*sizeUp][j*sizeUp].getOwnPositionM());
                 for (int k = i*sizeUp; k < (i*sizeUp)+sizeUp; k++) {
                     for (int l = j*sizeUp; l <(j*sizeUp)+sizeUp ; l++) {
-                        if (BG[i][j].isHitable()){
-                        rooms.get(i+j).setFalak(BG[k][l]);
-                        }
+                        rooms.get(f).setBlocks(BG[k][l]);
                     }
                 }
+                MyGLRenderer.addmargin(rooms.get(f));
+                f++;
             }
         }
         Game.setMove(getboxmidel(maze.startingpoint));
@@ -126,7 +120,7 @@ public class BG extends Drawable {
     private BGBlock setTexture(Tiles tiles, int i, int j ) {
         BGBlock vissza = new BGBlock();
         //float teszt = getBlocksize(); 0 mátrixal tér vissza mert nem kap setidenttyt az openGLES-től
-        vissza.setMatrix( j*vissza.getBlocksize(),i* vissza.getBlocksize()*-1); //Todo ha scaleled a blokkokat akkor kezd ezzel valamit mert nem lesz jó a blocksize de a getBlocksize() fügvény sem mert nem lesz meg abból a kordináta méret de lehet hogy az egész fügvény szar
+        vissza.setMatrix( j*vissza.getHeight(),i* vissza.getHeight()*-1); //Todo ha scaleled a blokkokat akkor kezd ezzel valamit mert nem lesz jó a blocksize de a getBlocksize() fügvény sem mert nem lesz meg abból a kordináta méret de lehet hogy az egész fügvény szar
         vissza.setTexture(tiles);
         return vissza;
 
@@ -149,12 +143,17 @@ public class BG extends Drawable {
         setoffHandels();
     }
     public BGBlock[] loadablechunks(){ //TODO BVH alapu betöltés
-        ArrayList<BGBlock> near = new ArrayList<>();
         for (Room room : rooms) {
+            Log.e("valami","méret :"+ room.getBlocks().size());
+        }
+        ArrayList<BGBlock> near = new ArrayList<>();
+        int i = 0;
+        for (Room room : rooms) {
+            Log.e("valami","valami "+i++);
             BoundingBox valami = new BoundingBox(room);
             BoundingBox player = new BoundingBox(Game.getInstance().getPlayer());
             if (valami.intersects(player) || valami.contains(player)){
-                near.addAll(room.getFalak());
+                near.addAll(room.getWalls());
             }
         }
         /*int valami =(int)Math.ceil((float) sizeUp/2);

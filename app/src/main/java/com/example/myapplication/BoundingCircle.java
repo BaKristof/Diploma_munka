@@ -15,7 +15,7 @@ public class BoundingCircle {
         float[] local = MyGLRenderer.allCoordinates(specifications);
         this.x = local[0];
         this.y = local[1];
-        this.radius = specifications.getBlocksize()/2;
+        this.radius = specifications.getHeight()/2;
     }
 
     public float getX() {

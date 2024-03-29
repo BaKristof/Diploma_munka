@@ -10,6 +10,8 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
+import java.util.ArrayList;
+
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private long lastFrameTime;
@@ -20,6 +22,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private Game gm;
     MyGLSurfaceView glsw;
     private static boolean stoprender = true;
+    private static ArrayList<SquareMargin2> margins = new ArrayList<>();
 
     public MyGLRenderer(MyGLSurfaceView glSurfaceView) {
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
@@ -43,6 +46,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         gm.befordraw();
         gm.draw(vPMatrix);
+        MyGLRenderer.checkGLError("draw van e problémaalsjmfaj");
+        for (SquareMargin2 margin : margins) {
+            margin.draw(vPMatrix);
+        }
+        MyGLRenderer.checkGLError("draw van e probléma");
+
+
+
+
        /* lastFrameTime = currentTime;
         if (elapsedTime < targetElapsedTime) {
             try {
@@ -127,6 +139,28 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         //Log.println(Log.ERROR,specific.getName(), Arrays.toString(output));
         return output;
     }
+
+
+
+    public static void addmargin(Room room){
+        float[] valami0 = room.getCourners();
+        float[] valami3 = MyGLRenderer.midleCoordinate(new float[]{valami0[0],valami0[1]},room.getMatrix() );
+        float[] valami4 = MyGLRenderer.midleCoordinate(new float[]{valami0[2],valami0[3]},room.getMatrix());
+        float[] valami2 = Specifications.getSquareCoords();
+        float scalingX =(valami3[0]-valami3[1])/(valami2[6]-valami2[0]);
+        float scalingY =(valami4[0]-valami4[1])/(valami2[1]-valami2[4]);
+
+        float[] loccalM = new float[16];
+
+        System.arraycopy(room.getMatrix(),0,loccalM,0,loccalM.length);
+        Matrix.scaleM(loccalM,0,scalingX,scalingY,0);
+        margins.add(new SquareMargin2(new Specifications().setOwnPositionM(loccalM)));
+    }
+    public static void addmargin(Specifications specifications){
+        margins.add(new SquareMargin2(specifications));
+    }
+
+
     public static void setStoprender() {
         MyGLRenderer.stoprender = false;
     }

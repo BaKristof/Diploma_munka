@@ -116,6 +116,12 @@ public class Drawable extends Specifications {
         GLES20.glDisableVertexAttribArray(TextCord);
         GLES20.glUseProgram(0);
     }
+    public void setUniform1Handel(String codeSnippet,float unform){
+        MyGLRenderer.checkGLError("setuni");
+        int local = GLES20.glGetUniformLocation(Prog,codeSnippet);
+        MyGLRenderer.checkGLError("setuni");
+        GLES20.glUniform1f(local,unform);
+    }
     public String getName() {
         return "Gameobj";
     }
