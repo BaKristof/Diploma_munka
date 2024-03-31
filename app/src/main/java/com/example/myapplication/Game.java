@@ -32,7 +32,7 @@ public final class Game {
 
 
     private Game() {
-        Log.e("vajon innen jön a dolog","valami construktor");
+
         Matrix.setIdentityM(move,0);
         Maze maze = new Maze();
 
@@ -41,7 +41,7 @@ public final class Game {
         graph = BackGround.getGraph();
         enemys = new ArrayList<>();
         player = new Player();
-        enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{0,0}));
+        enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{1,1}));
        // enemyCharacter.findPath(BackGround.getGraph(),player);
       //  addenemy(enemyCharacter);
         //MyGLRenderer.addmargin(player);
@@ -147,16 +147,16 @@ public final class Game {
     }
     public void fillinvis(){
 
-        ArrayList<BGBlock> valami = BackGround.getMovementpoints();
+        ArrayList<BGBlock> movementpoints = BackGround.getMovementpoints();
 
-        if (invisible_pooints.size()<valami.size()){
-            for (int i = 0; i < Math.abs(invisible_pooints.size()-valami.size()); i++) {
-                invisible_pooints.add(new Triangle(valami.get(invisible_pooints.size()+i).getOwnPositionM()).setColor(new float[]{ 0.0f, 0.0f, 1.0f, 1.0f }));
+        if (invisible_pooints.size()<movementpoints.size()){
+            for (int i = 0; i < Math.abs(invisible_pooints.size()-movementpoints.size()); i++) {
+                invisible_pooints.add(new Triangle(movementpoints.get(invisible_pooints.size()+i).getOwnPositionM()).setColor(new float[]{ 0.0f, 0.0f, 1.0f, 1.0f }));
             }
         }
         else {
             int i =0;
-            for (BGBlock bgBlock : valami) {
+            for (BGBlock bgBlock : movementpoints) {
                 invisible_pooints.get(i++).setMatrix(bgBlock.getOwnPositionM());
             }
         }
