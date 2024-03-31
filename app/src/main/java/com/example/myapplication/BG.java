@@ -143,16 +143,16 @@ public class BG extends Drawable {
         setoffHandels();
     }
     public BGBlock[] loadablechunks(){ //TODO BVH alapu betöltés
-        for (Room room : rooms) {
-            Log.e("valami","méret :"+ room.getBlocks().size());
-        }
         ArrayList<BGBlock> near = new ArrayList<>();
         int i = 0;
         for (Room room : rooms) {
             Log.e("valami","valami "+i++);
             BoundingBox valami = new BoundingBox(room);
             BoundingBox player = new BoundingBox(Game.getInstance().getPlayer());
-            if (valami.intersects(player) || valami.contains(player)){
+            float[] valami3 = Game.getMove();
+            boolean elso = valami.intersects(player);
+            boolean masodik = valami.contains(player);
+            if ( elso || masodik){
                 near.addAll(room.getWalls());
             }
         }
