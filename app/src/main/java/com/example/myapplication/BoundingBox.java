@@ -19,9 +19,9 @@ public class BoundingBox {
         float[]  valami0 = room.getCourners();
         float[] valami1 = MyGLRenderer.midleCoordinate(new float[]{valami0[0],valami0[1]},room.getMatrix() );
         float[] valami2 = MyGLRenderer.midleCoordinate(new float[]{valami0[2],valami0[3]},room.getMatrix());
-        xMax=valami1[0];
-        xMin=valami1[1];
-        yMax=valami2[0];
+        xMax=valami2[0];
+        xMin=valami1[0];
+        yMax=valami1[1];
         yMin=valami2[1];
     }
 

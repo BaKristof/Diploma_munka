@@ -96,7 +96,13 @@ public class Drawable extends Specifications {
         int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
     }
-
+    public void setvPMatrixHandle(float[] mvpMatrix,float[] rotationM) {
+        Matrix.setIdentityM(foo,0);
+        Matrix.multiplyMM(foo,0,ownPositionM,0,rotationM,0);
+        Matrix.multiplyMM(foo,0,mvpMatrix,0, foo,0);
+        int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
+    }
     public void setTextCord() {
         TextCord = GLES20.glGetAttribLocation(Prog, "vTexCoord");
         GLES20.glEnableVertexAttribArray(TextCord);

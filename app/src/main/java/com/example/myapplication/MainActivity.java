@@ -37,6 +37,7 @@ package com.example.myapplication;
         import android.util.Log;
         import android.util.TypedValue;
         import android.view.Gravity;
+        import android.view.MotionEvent;
         import android.widget.FrameLayout;
 
         import java.lang.reflect.Field;
@@ -66,8 +67,6 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
         left.setBaseRadius(dpToPx(this,150));
         left.setJoystickListener(this);
 
-
-
         FrameLayout frameLayout = new FrameLayout(this);
         frameLayout.addView(myGLSurfaceView);
 
@@ -84,11 +83,12 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
         MainActivity.context = getApplicationContext();
 
     }
-
-
     @Override
-    public void onJoystickMoved(float xPercent, float yPercent) {
-
+    public void onJoystickMoved(float angle, Joystick joystick, MotionEvent event) {
+        if (joystick == right && event.getAction() == MotionEvent.ACTION_UP){
+            Game.addCount();
+            Log.e("valami"," lefut");
+        }
     }
     public static Context getContext() {
         return MainActivity.context;
@@ -105,19 +105,5 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
     public static Joystick getLeft() {
         return left;
     }
-    public static List<Integer> getAllDrawables(Class<?> clazz) {
-        List<Integer> drawables = new ArrayList<>();
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                if (field.getType() == int.class && field.getName().startsWith("drawable")) {
-                    int drawableId = field.getInt(null);
-                    drawables.add(drawableId);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return drawables;
-    }
+
 }

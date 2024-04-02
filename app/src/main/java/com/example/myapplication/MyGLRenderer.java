@@ -46,11 +46,11 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         gm.befordraw();
         gm.draw(vPMatrix);
-        MyGLRenderer.checkGLError("draw van e problémaalsjmfaj");
+       // MyGLRenderer.checkGLError("draw van e problémaalsjmfaj");
         for (SquareMargin2 margin : margins) {
             margin.draw(vPMatrix);
         }
-        MyGLRenderer.checkGLError("draw van e probléma");
+       // MyGLRenderer.checkGLError("draw van e probléma");
 
 
 

@@ -120,7 +120,7 @@ public class BG extends Drawable {
     private BGBlock setTexture(Tiles tiles, int i, int j ) {
         BGBlock vissza = new BGBlock();
         //float teszt = getBlocksize(); 0 mátrixal tér vissza mert nem kap setidenttyt az openGLES-től
-        vissza.setMatrix( j*vissza.getHeight(),i* vissza.getHeight()*-1); //Todo ha scaleled a blokkokat akkor kezd ezzel valamit mert nem lesz jó a blocksize de a getBlocksize() fügvény sem mert nem lesz meg abból a kordináta méret de lehet hogy az egész fügvény szar
+        vissza.setMatrix( j*vissza.getHeight(),i* vissza.getHeight()*-1);
         vissza.setTexture(tiles);
         return vissza;
 
@@ -130,8 +130,6 @@ public class BG extends Drawable {
         GLES20.glUseProgram(Prog);
         setPositionHandle();
         setTextCord();
-
-
         for (BGBlock[] bc : BG) {
             for (BGBlock bgb : bc) {
                 System.arraycopy(bgb.getOwnPositionM(),0, ownPositionM,0, ownPositionM.length);
@@ -146,7 +144,6 @@ public class BG extends Drawable {
         ArrayList<BGBlock> near = new ArrayList<>();
         int i = 0;
         for (Room room : rooms) {
-            Log.e("valami","valami "+i++);
             BoundingBox valami = new BoundingBox(room);
             BoundingBox player = new BoundingBox(Game.getInstance().getPlayer());
             float[] valami3 = Game.getMove();

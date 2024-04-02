@@ -40,5 +40,8 @@ public class SpriteSheets {
             counter ++;
         return a;
     }
+    public int NextFrame(){
+        return spriteSheetArray.get(0)[0];
+    }
 
 }

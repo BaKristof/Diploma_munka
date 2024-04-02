@@ -37,7 +37,7 @@ public class EnemyCharacter extends Character{
             }
         }
         if (valami) {
-            Log.e("egyensen","egynes lehet itt csuzsik el");
+         //   Log.e("egyensen","egynes lehet itt csuzsik el");
             float[] dxdy =this.dxdy(Game.getInstance().getPlayer());
             Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0); //Player felé mozdul
         }

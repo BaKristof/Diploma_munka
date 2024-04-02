@@ -83,14 +83,14 @@ public class Joystick extends View {
 
             }
             invalidate();
-            joystickListener.onJoystickMoved((newX - centerX) / baseRadius, (newY - centerY) / baseRadius);
+            joystickListener.onJoystickMoved((float) angle,this,event);
             working = true;
         } else {
 
             this.newX = centerX;
             this.newY = centerY;
             invalidate();
-            joystickListener.onJoystickMoved(0, 0);
+            joystickListener.onJoystickMoved((float) angle, this,event);
             working= false;
         }
 

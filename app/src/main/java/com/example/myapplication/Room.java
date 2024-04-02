@@ -158,7 +158,7 @@ public class Room {
         courners[0] =0.0f;
         courners[1] =0.0f;
         courners[2] =bgBlock.getHeight()*size_up;
-        courners[3] =bgBlock.getHeight()*size_up;
+        courners[3] =bgBlock.getHeight()*size_up*(-1);
         return this;
     }
     public Room setMatrix(float[] matrix) {

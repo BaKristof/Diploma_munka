@@ -24,12 +24,15 @@ public final class Game {
     private final ArrayList<EnemyCharacter> enemys;
     private final ArrayList<BGBlock> hitField = new ArrayList<>();
     private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
+
+    private  ArrayList<Projectile> projectiles = new ArrayList<>();
+
     private static Graph<Specifications, DefaultWeightedEdge> graph;
 
     private ArrayList<Triangle> teszt = new ArrayList<>();
     private ArrayList<Triangle> teszt2 = new ArrayList<>();
 
-
+    private static int bulettCounter =0;
 
     private Game() {
         Log.e("vajon innen jön a dolog","valami construktor");
@@ -59,6 +62,12 @@ public final class Game {
         findPath(player,enemyCharacter);
         FillHitfield();
         fillinvis();
+        int a = bulettCounter;
+        for (int i = 0; i < a ; i++) {
+            projectiles.add(new Projectile(90f));
+            bulettCounter--;
+        }
+
         //enemymovment();
 
     }
@@ -103,10 +112,14 @@ public final class Game {
         for (Triangle triangle : teszt) {
             triangle.draw(foo);
         }
-
         for (Triangle invisiblePooint : invisible_pooints) {
             invisiblePooint.draw(foo);
         }
+
+        for (Projectile projectile : projectiles) {
+            projectile.draw(mvpMatrix);
+        }
+        MyGLRenderer.checkGLError("valami nem jó");
         enemyCharacter.move();
         enemyCharacter.draw(foo);
         player.draw(mvpMatrix);
@@ -210,8 +223,13 @@ public final class Game {
         float[] local = new float[16];
         Matrix.invertM(local,0,move,0);
        System.arraycopy(local,0,Game.move,0,local.length);
+    }
 
-
+    public  void addProjectiles(Projectile projectile) {
+        projectiles.add( projectile);
+    }
+    public static void addCount(){
+        bulettCounter++;
     }
 }
 
