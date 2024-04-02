@@ -155,8 +155,8 @@ public class Room {
 
     }
     public Room setCourners(int size_up,BGBlock bgBlock){
-        courners[0] =0.0f;
-        courners[1] =0.0f;
+        courners[0] =0.0f; // x
+        courners[1] =0.0f; // y
         courners[2] =bgBlock.getHeight()*size_up;
         courners[3] =bgBlock.getHeight()*size_up*(-1);
         return this;

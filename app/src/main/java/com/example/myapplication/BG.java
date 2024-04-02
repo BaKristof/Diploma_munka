@@ -51,9 +51,9 @@ public class BG extends Drawable {
         Movementpoints = maze.getMovementpoints();
         Lodingpoints = maze.getLodingPoints();
         rooms = maze.getRooms();
-
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
+        Game.setMove(getboxmidel(new int[]{0,0}));
 
         int f = 0;
         for (int i = 0; i < lenght; i++) {
@@ -68,7 +68,8 @@ public class BG extends Drawable {
                 f++;
             }
         }
-        Game.setMove(getboxmidel(maze.startingpoint));
+        //Game.setMove(getboxmidel(maze.startingpoint));
+
         LoadUpGraph();
 
     }
