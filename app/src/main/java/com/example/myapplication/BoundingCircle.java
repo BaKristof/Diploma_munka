@@ -12,10 +12,12 @@ public class BoundingCircle {
     }
 
     public BoundingCircle(Specifications specifications) {
-        float[] local = MyGLRenderer.allCoordinates(specifications);
+        //float[] local = MyGLRenderer.allCoordinates(specifications);
+        float[] local = MyGLRenderer.midleCoordinate(specifications);
         this.x = local[0];
         this.y = local[1];
         this.radius = specifications.getHeight()/2;
+        ;
     }
 
     public float getX() {

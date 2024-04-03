@@ -12,7 +12,9 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public final class Game {
     private static float[] move = new float[16];
@@ -27,10 +29,9 @@ public final class Game {
     private  ArrayList<Projectile> projectiles = new ArrayList<>();
     private static Graph<Specifications, DefaultWeightedEdge> graph;
     private ArrayList<Triangle> teszt = new ArrayList<>();
-    private ArrayList<Runnable> addedFunctions = new ArrayList<>();
+    private Queue<Runnable> taskQueue = new LinkedList<>();
 
-    private static int bulettCounter =0;
-    Handler handler;
+
 
     private Game() {
 
@@ -46,7 +47,7 @@ public final class Game {
        // enemyCharacter.findPath(BackGround.getGraph(),player);
       //  addenemy(enemyCharacter);
         //MyGLRenderer.addmargin(player);
-        handler = new Handler(Looper.getMainLooper());
+
     }
     public static Game getInstance(){
         if (game== null){
@@ -54,21 +55,22 @@ public final class Game {
         }
         return game;
     }
+
     public void befordraw(){
 
         readininput();
         findPath(player,enemyCharacter);
         FillHitfield();
         fillinvis();
-        int a = bulettCounter;
-        for (int i = 0; i < a ; i++) {
-            projectiles.add(new Projectile(90f));
-            bulettCounter--;
+
+        while (!taskQueue.isEmpty()) {
+            Runnable task = taskQueue.poll();
+            if (task != null) {
+                task.run();
+            }
         }
 
-        for (Runnable function : addedFunctions) {
-            handler.post(function);
-        }
+
         //enemymovment();
 
     }
@@ -118,7 +120,7 @@ public final class Game {
         }
 
         for (Projectile projectile : projectiles) {
-            projectile.draw(mvpMatrix);
+            projectile.draw(foo);
         }
         MyGLRenderer.checkGLError("valami nem jó");
         enemyCharacter.move();
@@ -225,13 +227,27 @@ public final class Game {
         Matrix.invertM(local,0,move,0);
        System.arraycopy(local,0,Game.move,0,local.length);
     }
+    public void removeProjectile( Projectile projectile){
+        projectiles.remove(projectile);
+    }
 
-    public  void addProjectiles(Projectile projectile) {
-        projectiles.add( projectile);
+    public void addProjectile(float angle,Character character) {
+        taskQueue.add(new Runnable() {
+            @Override
+            public void run() {
+                projectiles.add(new Projectile(angle,character));
+            }
+        });
     }
-    public static void addCount(){
-        bulettCounter++;
+    public void addBullet(float angle,Character character) {
+        taskQueue.add(new Runnable() {
+            @Override
+            public void run() {
+                projectiles.add(new Bullett(angle,character));
+            }
+        });
     }
+
 
 }
 

@@ -40,11 +40,6 @@ package com.example.myapplication;
         import android.view.MotionEvent;
         import android.widget.FrameLayout;
 
-        import java.lang.reflect.Field;
-        import java.time.Instant;
-        import java.util.ArrayList;
-        import java.util.List;
-
 public class MainActivity extends AppCompatActivity implements JoystickListener {
 
     private static Context context ;
@@ -86,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
     @Override
     public void onJoystickMoved(float angle, Joystick joystick, MotionEvent event) {
         if (joystick == right && event.getAction() == MotionEvent.ACTION_UP){
-            Game.addCount();
+            Game.getInstance().addBullet(angle,Game.getInstance().getPlayer());
             Log.e("valami"," lefut");
         }
     }
