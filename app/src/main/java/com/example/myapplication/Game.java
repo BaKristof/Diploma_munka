@@ -2,13 +2,13 @@ package com.example.myapplication;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,15 +24,13 @@ public final class Game {
     private final ArrayList<EnemyCharacter> enemys;
     private final ArrayList<BGBlock> hitField = new ArrayList<>();
     private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
-
     private  ArrayList<Projectile> projectiles = new ArrayList<>();
-
     private static Graph<Specifications, DefaultWeightedEdge> graph;
-
     private ArrayList<Triangle> teszt = new ArrayList<>();
-    private ArrayList<Triangle> teszt2 = new ArrayList<>();
+    private ArrayList<Runnable> addedFunctions = new ArrayList<>();
 
     private static int bulettCounter =0;
+    Handler handler;
 
     private Game() {
 
@@ -48,7 +46,7 @@ public final class Game {
        // enemyCharacter.findPath(BackGround.getGraph(),player);
       //  addenemy(enemyCharacter);
         //MyGLRenderer.addmargin(player);
-
+        handler = new Handler(Looper.getMainLooper());
     }
     public static Game getInstance(){
         if (game== null){
@@ -68,6 +66,9 @@ public final class Game {
             bulettCounter--;
         }
 
+        for (Runnable function : addedFunctions) {
+            handler.post(function);
+        }
         //enemymovment();
 
     }
@@ -231,5 +232,6 @@ public final class Game {
     public static void addCount(){
         bulettCounter++;
     }
+
 }
 

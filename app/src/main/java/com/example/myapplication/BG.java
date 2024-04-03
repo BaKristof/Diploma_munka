@@ -141,7 +141,7 @@ public class BG extends Drawable {
         }
         setoffHandels();
     }
-    public BGBlock[] loadablechunks(){ //TODO BVH alapu betöltés
+    public BGBlock[] loadablechunks(){
         ArrayList<BGBlock> near = new ArrayList<>();
         int i = 0;
         for (Room room : rooms) {
@@ -158,7 +158,7 @@ public class BG extends Drawable {
         for (Integer[] a : Lodingpoints) {
             float b = BG[a[0]][a[1]].distance(Game.getInstance().getPlayer());
             //Log.e("distance","index"+a[0]+","+a[1]+"  distance:  "+b);
-            if(b < loadingDistance){ //TODO BHV-val cserélni a loadingDistnacet
+            if(b < loadingDistance){
                 for (int i = a[0]-valami; i < a[0]+valami; i++) {
                     for (int j = a[1]-valami; j < a[1]+valami; j++) {
                         if (i<=BG.length-1 && i>=0){
