@@ -42,7 +42,7 @@ public class Specifications {
     }
 
     public void setSpriteSheets(int resourceID,int width,int height) {
-        this.spriteSheets = new SpriteSheets(resourceID,width,height);
+        this.spriteSheets = new SpriteSheets(resourceID,width,height,4);
     }
     public float[] getOwnPositionM() {
         return ownPositionM;

@@ -25,6 +25,14 @@ public class Drawable extends Specifications {
     private int vertexShader;
     private int fragmentShader;
     private final float[] foo = new float[16];
+    protected float[] rotateM = new  float[16];
+    protected float[] scaleM = new float[16];
+
+    public Drawable() {
+        Matrix.setIdentityM(ownPositionM,0);
+        Matrix.setIdentityM(rotateM,0);
+        Matrix.setIdentityM(scaleM,0);
+    }
 
     public void setVertexShader() {
         String vertexShaderCode = "attribute vec4 vPosition;" +
@@ -92,14 +100,9 @@ public class Drawable extends Specifications {
 
     public void setvPMatrixHandle(float[] mvpMatrix) {
         Matrix.setIdentityM(foo,0);
+        Matrix.multiplyMM(foo,0,foo,0,scaleM,0);
         Matrix.multiplyMM(foo,0,mvpMatrix,0, ownPositionM,0);
-        int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
-        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
-    }
-    public void setvPMatrixHandle(float[] mvpMatrix,float[] rotationM) {
-        Matrix.setIdentityM(foo,0);
-        Matrix.multiplyMM(foo,0,ownPositionM,0,rotationM,0);
-        Matrix.multiplyMM(foo,0,mvpMatrix,0, foo,0);
+        Matrix.multiplyMM(foo,0,foo,0,rotateM,0);
         int vPMatrixHandle = GLES20.glGetUniformLocation(Prog, "uMVPMatrix");
         GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, foo, 0);
     }
@@ -131,4 +134,5 @@ public class Drawable extends Specifications {
     public String getName() {
         return "Gameobj";
     }
+
 }

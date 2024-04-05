@@ -9,6 +9,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -55,8 +56,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 
 
-       /* lastFrameTime = currentTime;
-        if (elapsedTime < targetElapsedTime) {
+        lastFrameTime = currentTime;
+       /* if (elapsedTime < targetElapsedTime) {
             try {
                 Thread.sleep((targetElapsedTime - elapsedTime) / 1000000); // Convert nanoseconds to milliseconds
             } catch (InterruptedException e) {
@@ -65,7 +66,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
         else Log.e("frametimer","tulfotottunk");*/
         if (stoprender) glsw.requestRender();
-        //Log.e("time","time: "+ elapsedTime);
+        Log.e("time","time: "+ elapsedTime);
 
     }
 

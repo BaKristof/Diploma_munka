@@ -4,18 +4,24 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.util.Log;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class SpriteSheets {
     int width;
     int height;
     ArrayList<Integer[]> spriteSheetArray = new ArrayList<>();
+    private long currentTime = System.nanoTime();
+    private static final long elapseConst = 1000000000/60;
+    int FPS;
 
     int counter =0;
-    public SpriteSheets(int resourceId,int width,int height) {
+    public SpriteSheets(int resourceId,int width,int height,int FPS) {
         this.height = height;
         this.width = width;
+        this.FPS =FPS;
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         final Bitmap bitmap = BitmapFactory.decodeResource(MainActivity.getContext().getResources(), resourceId, options);
@@ -31,13 +37,22 @@ public class SpriteSheets {
         bitmap.recycle();
     }
     public int NextFrame(int irany){
+
         int a =spriteSheetArray.get(0)[0];
-            if (irany<= spriteSheetArray.size()-1){
-                if (spriteSheetArray.get(irany).length<=counter) counter=0;
+            if (irany <= spriteSheetArray.size()-1){
+                if (spriteSheetArray.get(irany).length<=counter) {
+                    counter = 0;
+                }
                 a = spriteSheetArray.get(irany)[counter];
             }
+        long local = System.nanoTime()-currentTime;
 
+        if (local >= elapseConst * FPS){
             counter ++;
+            currentTime =System.nanoTime();
+        }
+
+        Log.e("valami ","time: "+ local+"   time courrent :"+ currentTime);
         return a;
     }
     public int NextFrame(){

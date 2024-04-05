@@ -8,8 +8,8 @@ public class BoundingBox {
     public BoundingBox(Specifications specific) {
         float[] valami = MyGLRenderer.allCoordinates(specific);
 
-        xMax=valami[0]; //rihght
-        xMin=valami[6]; //left
+        xMax=valami[6]; //rihght
+        xMin=valami[0]; //left
         yMax=valami[1]; //top
         yMin=valami[4]; //bottom
 

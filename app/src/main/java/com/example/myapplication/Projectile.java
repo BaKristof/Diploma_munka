@@ -21,12 +21,12 @@ public class Projectile extends Drawable {
                     "void main() {" +
                     "  gl_FragColor = texture2D(uTexture, fTexCoord);" +
                     "}";
-    float projectileSpeed;
-    float dx;
-    float dy;
-    float[] rotationM = new float[16];
-    float[] foo = new float[16];
-    Character owner ;
+    protected float projectileSpeed;
+    private final float dx;
+    private final float dy;
+
+    private final float[] foo = new float[16];
+    protected Character owner ;
 
     public Projectile(float angle,Character character) {
         System.arraycopy(character.getScreenPositionM().clone(),0,ownPositionM,0,ownPositionM.length);
@@ -43,8 +43,6 @@ public class Projectile extends Drawable {
         //Matrix.rotateM(rotationM,0,0,0,0,-90f);
     }
     private void init(){
-        Matrix.setIdentityM(ownPositionM,0);
-        Matrix.setIdentityM(rotationM,0);
         setVertexShader(vertexShaderCode);
         setFragmentShader(fragmentShaderCode);
         setProg();
@@ -61,8 +59,7 @@ public class Projectile extends Drawable {
     public void draw(float[] mvp){
         move();
         GLES20.glUseProgram(Prog);
-        Matrix.multiplyMM(foo,0,rotationM,0,mvp,0);
-        setvPMatrixHandle(foo);
+        setvPMatrixHandle(mvp);
         setTextCord();
         setPositionHandle();
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,spriteSheets.NextFrame());
@@ -78,8 +75,7 @@ public class Projectile extends Drawable {
         BGBlock[] valami =  Game.getInstance().getHitField().toArray(new BGBlock[0]);
         for (BGBlock bgBlock : valami) {
            ++i;
-           boolean faszom = new BoundingBox(bgBlock).intersects(new BoundingBox(this));
-            if(faszom){
+           if(new BoundingBox(bgBlock).intersects(new BoundingCircle(this))){
                return true;
            }
         }

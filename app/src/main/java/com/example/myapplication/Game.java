@@ -118,9 +118,8 @@ public final class Game {
         for (Triangle invisiblePooint : invisible_pooints) {
             invisiblePooint.draw(foo);
         }
-
-        for (Projectile projectile : projectiles) {
-            projectile.draw(foo);
+        for (int i = 0; i < projectiles.size(); i++) {
+            projectiles.get(i).draw(mvpMatrix);
         }
         MyGLRenderer.checkGLError("valami nem jó");
         enemyCharacter.move();

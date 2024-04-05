@@ -32,7 +32,7 @@ public class EnemyCharacter extends Character{
         for (BGBlock bgBlock : Game.getInstance().getHitField()) {
             if (new BoundingBox(bgBlock).doesLineIntersect(Game.getInstance().getPlayer(), this)){
                 valami = false;
-                Log.e("break","break");
+                //Log.e("break","break");
                 break;
             }
         }
@@ -42,7 +42,7 @@ public class EnemyCharacter extends Character{
             Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0); //Player felé mozdul
         }
         else {
-            Log.e("ez itt jó ","vagy ez nem jó");
+           // Log.e("ez itt jó ","vagy ez nem jó");
             if (utvonal.isEmpty()){
             utvonal.addAll( Game.findPath(Game.getInstance().getPlayer(), this));
             nextpoint = utvonal.remove();
