@@ -28,8 +28,9 @@ public final class Game {
     private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
     private  ArrayList<Projectile> projectiles = new ArrayList<>();
     private static Graph<Specifications, DefaultWeightedEdge> graph;
-    private ArrayList<Triangle> teszt = new ArrayList<>();
+    //private ArrayList<Triangle> teszt = new ArrayList<>();
     private Queue<Runnable> taskQueue = new LinkedList<>();
+    private ArrayList<Line> lines = new ArrayList<>();
 
 
 
@@ -112,9 +113,7 @@ public final class Game {
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         BackGround.draw(foo);
         //for (EnemyCharacter enemy : enemys) {enemy.draw(foo);}
-        for (Triangle triangle : teszt) {
-            triangle.draw(foo);
-        }
+
         for (Triangle invisiblePooint : invisible_pooints) {
             invisiblePooint.draw(foo);
         }
@@ -125,6 +124,9 @@ public final class Game {
         enemyCharacter.move();
         enemyCharacter.draw(foo);
         player.draw(mvpMatrix);
+        for (Line line : lines) {
+            line.draw(foo);
+        }
         GLES20.glDisable(GLES20.GL_BLEND);
 
        // MyGLRenderer.setStoprender();
@@ -147,7 +149,7 @@ public final class Game {
             hitField.clear();
             hitField.addAll(Arrays.asList(BackGround.loadablechunks()));
 
-            if (teszt.size()<hitField.size()){
+          /*  if (teszt.size()<hitField.size()){
                 for (int i = 0; i < Math.abs(teszt.size()-hitField.size()); i++) {
                     teszt.add(new Triangle(hitField.get(teszt.size()+i).getOwnPositionM()).setColor(new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }));
                 }
@@ -157,7 +159,7 @@ public final class Game {
                 for (BGBlock bgBlock : hitField) {
                 teszt.get(i++).setMatrix(bgBlock.getOwnPositionM());
                 }
-            }
+            }*/
 
     }
     public void fillinvis(){
@@ -243,6 +245,14 @@ public final class Game {
             @Override
             public void run() {
                 projectiles.add(new Bullett(angle,character));
+            }
+        });
+    }
+    public void addLine(Line line) {
+        taskQueue.add(new Runnable() {
+            @Override
+            public void run() {
+                lines.add(line);
             }
         });
     }
