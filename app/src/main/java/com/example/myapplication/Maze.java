@@ -15,10 +15,8 @@ public class Maze {
    public int[] startingpoint;
    public int size_up;
    public ArrayList<Integer[]> Movementpoints = new ArrayList<>();
-   public ArrayList<Integer[]> LodingPoints = new ArrayList<>();
    public ArrayList<Room> rooms = new ArrayList<>();
     Room room= new Room();;
-    Tiles[][] Room2;
     Tiles[][] finale;
     public Maze(int size_up) {
         this.size_up = size_up;
@@ -134,10 +132,6 @@ public class Maze {
     }
     public int[] getStartingpoint() {
         return startingpoint;
-    }
-
-    public ArrayList<Integer[]> getLodingPoints() {
-        return LodingPoints;
     }
     private int getRandomNumberFromArray(int[] a){
         Random r = new Random();

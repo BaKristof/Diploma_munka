@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
-import android.util.Log;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 
 public class BG extends Drawable {
     private final ArrayList<Integer[]> Movementpoints;
-    private final ArrayList<Integer[]> Lodingpoints;
     private final ArrayList<Room> rooms;
     private ArrayList<BGBlock> points;
     protected final String vertexShaderCode =
@@ -49,7 +47,7 @@ public class BG extends Drawable {
 
         setCompletback(maze.generate(lenght,hight));
         Movementpoints = maze.getMovementpoints();
-        Lodingpoints = maze.getLodingPoints();
+
         rooms = maze.getRooms();
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
@@ -141,7 +139,7 @@ public class BG extends Drawable {
         }
         setoffHandels();
     }
-    public BGBlock[] loadablechunks(){
+    public BGBlock[] loadChunks(){
         ArrayList<BGBlock> near = new ArrayList<>();
         int i = 0;
         for (Room room : rooms) {
@@ -179,7 +177,7 @@ public class BG extends Drawable {
     public float[] getboxmidel(int[] xy){
         return BG[(xy[0]*sizeUp)+(int)Math.floor((float)sizeUp/2)][(xy[1]*sizeUp)+(int)Math.floor((float)sizeUp/2)].getOwnPositionM();
     }
-    public BGBlock NearestMovmentPoint(Character character){
+    public BGBlock nearestMovmentPoint(Character character){
         float min = Float.MAX_VALUE;
         int i=0;
         BGBlock save = new BGBlock() ;

@@ -45,7 +45,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
 
-        gm.befordraw();
+        gm.beforDraw();
         gm.draw(vPMatrix);
        // MyGLRenderer.checkGLError("draw van e problémaalsjmfaj");
         for (SquareMargin2 margin : margins) {

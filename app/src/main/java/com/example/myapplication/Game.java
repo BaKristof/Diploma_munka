@@ -2,8 +2,6 @@ package com.example.myapplication;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.os.Handler;
-import android.os.Looper;
 
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
@@ -57,9 +55,9 @@ public final class Game {
         return game;
     }
 
-    public void befordraw(){
+    public void beforDraw(){
 
-        readininput();
+        readInput();
         findPath(player,enemyCharacter);
         FillHitfield();
         fillinvis();
@@ -75,7 +73,7 @@ public final class Game {
         //enemymovment();
 
     }
-    public void readininput(){
+    public void readInput(){
         if(MainActivity.getLeft().isWorking()) {
             float joystick = (float) MainActivity.getLeft().getAngle();
             float dx = (float) Math.cos(joystick);
@@ -147,7 +145,7 @@ public final class Game {
     }
     public void FillHitfield() {
             hitField.clear();
-            hitField.addAll(Arrays.asList(BackGround.loadablechunks()));
+            hitField.addAll(Arrays.asList(BackGround.loadChunks()));
 
           /*  if (teszt.size()<hitField.size()){
                 for (int i = 0; i < Math.abs(teszt.size()-hitField.size()); i++) {
@@ -217,7 +215,7 @@ public final class Game {
         return player;
     }
     public BGBlock getnearpoint(Character character){
-        return BackGround.NearestMovmentPoint(character);
+        return BackGround.nearestMovmentPoint(character);
     }
     public ArrayList<BGBlock> getHitField() {
         return hitField;

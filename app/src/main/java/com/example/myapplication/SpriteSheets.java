@@ -15,8 +15,8 @@ public class SpriteSheets {
     ArrayList<Integer[]> spriteSheetArray = new ArrayList<>();
     private long currentTime = System.nanoTime();
     private static final long elapseConst = 1000000000/60;
+    private static final int placeholder= MyGLRenderer.loadTexture(R.drawable.place_holder);
     int FPS;
-
     int counter =0;
     public SpriteSheets(int resourceId,int width,int height,int FPS) {
         this.height = height;
@@ -38,12 +38,12 @@ public class SpriteSheets {
     }
     public int NextFrame(int irany){
 
-        int a =spriteSheetArray.get(0)[0];
+        int texture =spriteSheetArray.get(0)[0];
             if (irany <= spriteSheetArray.size()-1){
                 if (spriteSheetArray.get(irany).length<=counter) {
                     counter = 0;
                 }
-                a = spriteSheetArray.get(irany)[counter];
+                texture = spriteSheetArray.get(irany)[counter];
             }
         long local = System.nanoTime()-currentTime;
 
@@ -53,7 +53,7 @@ public class SpriteSheets {
         }
 
         Log.e("valami ","time: "+ local+"   time courrent :"+ currentTime);
-        return a;
+        return texture;
     }
     public int NextFrame(){
         return spriteSheetArray.get(0)[0];
