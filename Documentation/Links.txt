@@ -6,3 +6,4 @@ https://www.academia.edu/1578545/Procedural_content_generation_in_games
 https://umm-csci.github.io/senior-seminar/seminars/fall2014/Mcgathey.pdf
 https://www.cse.unr.edu/~adamsc/Papers%20Referenced/Search-Based_Procedural_Generation_of_Maze-Like_Le.pdf
 https://www.gameopedia.com/cloud-gaming/
+https://kentpawson123.medium.com/procedural-generation-an-overview-1b054a0f8d41
