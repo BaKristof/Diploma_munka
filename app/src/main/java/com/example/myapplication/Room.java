@@ -53,9 +53,14 @@ public class Room {
 
                 local[l]=Tiles.Floor;
 
-                if (number%mod==(mod-size_up)-(size_up-1))              local[l]=Tiles.Right_Bottom_Floor_Corner  ;//jobbalsó belső Todo: nem jó meg az alső sem
+                if ((number%mod)>7&&(number%mod)<(size_up*2)-1)                     local[l]=Tiles.Top_Floor ;//felső padló
+                if (number%size_up==1)                                              local[l]=Tiles.Left_Floor;//bal padló
+                if (number%size_up==size_up-2)                                      local[l]=Tiles.Right_Floor;//jobb padló
+                if ((number%mod)>(mod-size_up*2)&&(number%mod)<mod-size_up-2)       local[l]=Tiles.Bottom_Floor;//alsó padló
+
+                if (number%mod==(mod-(size_up+2)))              local[l]=Tiles.Right_Bottom_Floor_Corner  ;//jobbalsó belső
                 if (number%mod==(mod-(size_up*2)+1))                    local[l]=Tiles.Left_Bottom_Floor_Corner;//balalsó belső
-                if (number%mod==((size_up*2)-1))                        local[l]=Tiles.Right_Top_Floor_Corner;//jobbfelső belső
+                if (number%mod==size_up+(size_up-2))                        local[l]=Tiles.Right_Top_Floor_Corner;//jobbfelső belső
                 if (number%mod==size_up+1)                              local[l]=Tiles.Left_Top_Floor_Corner;//balfelső belső
 
                 if ((number%mod)>0&&(number%mod)<size_up)               local[l]=Tiles.Top_Wall ;//felsőfal
@@ -71,7 +76,7 @@ public class Room {
 
                 number++;
             }
-            roomNxN.add(local);
+            roomNxN.add(local.clone());
         }
         for (Tiles[] tiles : roomNxN) {
             Log.e("valami",Arrays.toString(tiles));

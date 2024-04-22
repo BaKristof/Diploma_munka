@@ -43,8 +43,8 @@ public final class Game {
         enemys = new ArrayList<>();
         player = new Player();
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{1,1}));
-       // enemyCharacter.findPath(BackGround.getGraph(),player);
-      //  addenemy(enemyCharacter);
+        //enemyCharacter.findPath(BackGround.getGraph(),player);
+        //addenemy(enemyCharacter);
         //MyGLRenderer.addmargin(player);
 
     }
@@ -58,7 +58,7 @@ public final class Game {
     public void beforDraw(){
 
         readInput();
-        findPath(player,enemyCharacter);
+//        findPath(player,enemyCharacter);
         FillHitfield();
         fillinvis();
 
@@ -119,7 +119,7 @@ public final class Game {
             projectiles.get(i).draw(mvpMatrix);
         }
         MyGLRenderer.checkGLError("valami nem jó");
-        enemyCharacter.move();
+        //enemyCharacter.move();
         enemyCharacter.draw(foo);
         player.draw(mvpMatrix);
         for (Line line : lines) {
@@ -127,7 +127,7 @@ public final class Game {
         }
         GLES20.glDisable(GLES20.GL_BLEND);
 
-       // MyGLRenderer.setStoprender();
+        MyGLRenderer.setStoprender();
     }
     public void enemymovment(){
             for (BGBlock bgb : hitField) {

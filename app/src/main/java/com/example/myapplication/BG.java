@@ -62,11 +62,10 @@ public class BG extends Drawable {
                         rooms.get(f).setBlocks(BG[k][l]);
                     }
                 }
-                MyGLRenderer.addmargin(rooms.get(f));
                 f++;
             }
         }
-        //Game.setMove(getboxmidel(maze.startingpoint));
+        Game.setMove(getboxmidel(maze.startingpoint));
 
         LoadUpGraph();
 
@@ -86,39 +85,8 @@ public class BG extends Drawable {
             }
         }
     }
-    private void LoadUpGraph(){
-        ArrayList<BoundingBox> hitField = new ArrayList<>();
-        points = new ArrayList<>();
-        int fasz =0;
-        for (Integer[] movementPoint : Movementpoints) {
-            points.add(BG[movementPoint[0]][movementPoint[1]]);
-            graph.addVertex(points.get(fasz++));
-        }
-        for (BGBlock[] bgBlocks : BG) {
-            for (BGBlock bgBlock : bgBlocks) {
-                if (bgBlock.isHitable()){
-                hitField.add(new BoundingBox(bgBlock));
-                }
-            }
-        }
-      //  Log.e("hitfield","hitfield size :"+hitField.size());
-        for (int i = 0; i < points.size(); i++) {
-            for (int j = i+1; j < points.size(); j++) {
-                for (BoundingBox boundingBox : hitField) {
-                    if (boundingBox.doesLineIntersect(points.get(i),points.get(j)))break;
-                    else{
-                    graph.addEdge(points.get(i),points.get(j));
-                    graph.setEdgeWeight(points.get(i),points.get(j),points.get(i).distance(points.get(j)));
-                    }
-                }
-            }
-        }
-    }
-
-
     private BGBlock setTexture(Tiles tiles, int i, int j ) {
         BGBlock vissza = new BGBlock();
-        //float teszt = getBlocksize(); 0 mátrixal tér vissza mert nem kap setidenttyt az openGLES-től
         vissza.setMatrix( j*vissza.getHeight(),i* vissza.getHeight()*-1);
         vissza.setTexture(tiles);
         return vissza;
@@ -141,11 +109,10 @@ public class BG extends Drawable {
     }
     public BGBlock[] loadChunks(){
         ArrayList<BGBlock> near = new ArrayList<>();
-        int i = 0;
+
         for (Room room : rooms) {
             BoundingBox valami = new BoundingBox(room);
             BoundingBox player = new BoundingBox(Game.getInstance().getPlayer());
-            float[] valami3 = Game.getMove();
             boolean elso = valami.intersects(player);
             boolean masodik = valami.contains(player);
             if ( elso || masodik){
@@ -173,6 +140,34 @@ public class BG extends Drawable {
         }*/
 
         return near.toArray(new BGBlock[0]);
+    }
+    private void LoadUpGraph(){
+        ArrayList<BoundingBox> hitField = new ArrayList<>();
+        points = new ArrayList<>();
+        int local =0;
+        for (Integer[] movementPoint : Movementpoints) {
+            points.add(BG[movementPoint[0]][movementPoint[1]]);
+            graph.addVertex(points.get(local++));
+        }
+        for (BGBlock[] bgBlocks : BG) {
+            for (BGBlock bgBlock : bgBlocks) {
+                if (bgBlock.isHitable()){
+                    hitField.add(new BoundingBox(bgBlock));
+                }
+            }
+        }
+        //  Log.e("hitfield","hitfield size :"+hitField.size());
+        for (int i = 0; i < points.size(); i++) {
+            for (int j = i+1; j < points.size(); j++) {
+                for (BoundingBox boundingBox : hitField) {
+                    if (boundingBox.doesLineIntersect(points.get(i),points.get(j)))break;
+                    else{
+                        graph.addEdge(points.get(i),points.get(j));
+                        graph.setEdgeWeight(points.get(i),points.get(j),points.get(i).distance(points.get(j)));
+                    }
+                }
+            }
+        }
     }
     public float[] getboxmidel(int[] xy){
         return BG[(xy[0]*sizeUp)+(int)Math.floor((float)sizeUp/2)][(xy[1]*sizeUp)+(int)Math.floor((float)sizeUp/2)].getOwnPositionM();

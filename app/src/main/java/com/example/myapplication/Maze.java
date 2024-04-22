@@ -16,7 +16,7 @@ public class Maze {
    public int size_up;
    public ArrayList<Integer[]> Movementpoints = new ArrayList<>();
    public ArrayList<Room> rooms = new ArrayList<>();
-    Room room= new Room();;
+
     Tiles[][] finale;
     public Maze(int size_up) {
         this.size_up = size_up;
@@ -92,12 +92,14 @@ public class Maze {
         int mod =(int) Math.pow(size_up,2);
         int number =0;
 
+        Room room = new Room(size_up);
 
         for (int i = 0; i < finale.length; i+=size_up) {
             for (int j = 0; j < finale[0].length; j+=size_up) {
                 //roomfill(i,j);
+
                 room.roomfill(finale,i,j);
-                rooms.add(new Room());
+                rooms.add(new Room(7));
             }
 
         }
