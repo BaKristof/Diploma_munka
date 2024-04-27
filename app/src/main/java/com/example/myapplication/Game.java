@@ -127,7 +127,7 @@ public final class Game {
         }
         GLES20.glDisable(GLES20.GL_BLEND);
 
-        MyGLRenderer.setStoprender();
+        //MyGLRenderer.setStoprender();
     }
     public void enemymovment(){
             for (BGBlock bgb : hitField) {

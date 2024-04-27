@@ -3,26 +3,14 @@ package com.example.myapplication;
 public class BoundingBox {
     public float xMax=Float.NEGATIVE_INFINITY,yMax=Float.NEGATIVE_INFINITY;
     public float xMin=Float.POSITIVE_INFINITY,yMin=Float.POSITIVE_INFINITY;
-
-
     public BoundingBox(Specifications specific) {
         float[] valami = MyGLRenderer.allCoordinates(specific);
-
-        xMax=valami[6]; //rihght
-        xMin=valami[0]; //left
-        yMax=valami[1]; //top
-        yMin=valami[4]; //bottom
-
-        /*for (int i = 0; i < valami.length; i+=3) {
+        for (int i = 0; i < valami.length; i+=3) {
             if(valami[i]>xMax)      xMax=valami[i];
             if(valami[i]<xMin)      xMin=valami[i];
             if(valami[i+1]<yMin)    yMin=valami[i+1];
             if(valami[i+1]>yMax)    yMax=valami[i+1];
-        }*/
-
-
-
-
+        }
     }
 
     public BoundingBox(Room room) {
