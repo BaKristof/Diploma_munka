@@ -68,8 +68,6 @@ public final class Game {
                 task.run();
             }
         }
-
-
         //enemymovment();
 
     }

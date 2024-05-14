@@ -39,6 +39,7 @@ package com.example.myapplication;
         import android.view.Gravity;
         import android.view.MotionEvent;
         import android.widget.FrameLayout;
+        import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity implements JoystickListener {
 
@@ -46,12 +47,14 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
     private MyGLSurfaceView myGLSurfaceView;
     private static Joystick right;
     private static Joystick left;
+    private static  ImageView image ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         myGLSurfaceView = new MyGLSurfaceView(this);
-
+        image = new ImageView(this);
+        image.setImageResource(R.drawable.place_holder);
         right = new Joystick(this);
         right.setCenter(dpToPx(this,75), dpToPx(this,75));
         right.setBaseRadius(dpToPx(this,150));
@@ -65,14 +68,19 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
         FrameLayout frameLayout = new FrameLayout(this);
         frameLayout.addView(myGLSurfaceView);
 
-
         int sizeInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, getResources().getDisplayMetrics());
 
         FrameLayout.LayoutParams rightjoystickParams = new FrameLayout.LayoutParams(sizeInDp, sizeInDp, Gravity.BOTTOM | Gravity.END);
         frameLayout.addView(right, rightjoystickParams);
 
+
         FrameLayout.LayoutParams leftjoystickParams = new FrameLayout.LayoutParams(sizeInDp, sizeInDp, Gravity.BOTTOM | Gravity.START);
         frameLayout.addView(left, leftjoystickParams);
+
+        sizeInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics());
+
+        FrameLayout.LayoutParams imageViewParam = new FrameLayout.LayoutParams(sizeInDp, sizeInDp, Gravity.CENTER_HORIZONTAL | Gravity.END);
+        frameLayout.addView(image,imageViewParam);
 
         setContentView(frameLayout);
         MainActivity.context = getApplicationContext();
