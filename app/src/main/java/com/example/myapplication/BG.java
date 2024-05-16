@@ -47,7 +47,6 @@ public class BG extends Drawable {
 
         setCompletback(maze.generate(lenght,hight));
         Movementpoints = maze.getMovementpoints();
-
         rooms = maze.getRooms();
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
@@ -66,16 +65,13 @@ public class BG extends Drawable {
             }
         }
         Game.setMove(getboxmidel(maze.startingpoint));
-
         LoadUpGraph();
-
+        rooms.forEach(i-> i.setSpawners(new Spawner(R.drawable.spawing_fire_animation,64,64).setPosition(i.getRandomFloorBlock())));
     }
-
     public void setCompletback(Tiles[][] completback) {
         this.BG = new BGBlock[completback.length][completback[0].length];
         this.completback = completback;
     }
-
 
     private void LoadUpBG() {
         int a = completback.length;

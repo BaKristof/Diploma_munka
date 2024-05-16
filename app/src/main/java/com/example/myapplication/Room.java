@@ -5,12 +5,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Room {
     private ArrayList<BGBlock> blocks = new ArrayList<>();
     private float[] matrix = new float[16];
     private float[] courners = new float[4];
+    private  ArrayList<Spawner> spawners = new ArrayList<>();
+    private Random random = new Random();
     private static final ArrayList<Tiles[]> horizontalConnection = new ArrayList<>(Arrays.asList(
             new Tiles[][]{
                     {Tiles.Right_Top_Floor_Corner,Tiles.Top_Wall,Tiles.Top_Wall,Tiles.Left_Top_Floor_Corner},
@@ -180,6 +183,10 @@ public class Room {
     public ArrayList<BGBlock> getWalls(){
         return blocks.stream().filter(BGBlock::isHitable).collect(Collectors.toCollection(ArrayList::new));
     }
+    public ArrayList<BGBlock> getFloors(){
+        return blocks.stream().filter(i -> !i.isHitable()).collect(Collectors.toCollection(ArrayList::new));
+
+    }
     public float[] getCourners() {
         return courners;
     }
@@ -188,5 +195,11 @@ public class Room {
         float[] local = new float[16];
         Matrix.multiplyMM(local,0, matrix,0,Game.getMove(), 0);
         return local.clone();
+    }
+    public float[] getRandomFloorBlock(){
+        return getFloors().get(random.nextInt(getFloors().size())).getOwnPositionM();
+    }
+    public void setSpawners(Spawner spawner) {
+        this.spawners.add(spawner);
     }
 }

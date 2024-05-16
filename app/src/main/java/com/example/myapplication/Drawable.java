@@ -11,6 +11,22 @@ import java.nio.ShortBuffer;
 
 
 public class Drawable extends Specifications {
+    protected final String vertexShaderCode =
+            "uniform mat4 uMVPMatrix;" +
+                    "attribute vec4 vPosition;" +
+                    "attribute vec2 vTexCoord;" +
+                    "varying vec2 fTexCoord;" +
+                    "void main() {" +
+                    "  gl_Position = uMVPMatrix * vPosition;" +
+                    "  fTexCoord = vTexCoord;" +
+                    "}";
+    protected final String fragmentShaderCode =
+            "precision mediump float;" +
+                    "uniform sampler2D uTexture;" +
+                    "varying vec2 fTexCoord;" +
+                    "void main() {" +
+                    "  gl_FragColor = texture2D(uTexture, fTexCoord);" +
+                    "}";
     protected final int vertexStride = 3 * 4;
     protected final int vertexCount = squareCoords.length / 3;
     protected int positionHandle;
@@ -32,6 +48,13 @@ public class Drawable extends Specifications {
         Matrix.setIdentityM(ownPositionM,0);
         Matrix.setIdentityM(rotateM,0);
         Matrix.setIdentityM(scaleM,0);
+        setVertexShader(vertexShaderCode);
+        setFragmentShader(fragmentShaderCode);
+        setProg();
+        setVertexBuffer();
+        setDrawListBuffer();
+        setTexCoordBuffer();
+        setSpriteSheets(R.drawable.place_holder,64,64);
     }
 
     public void setVertexShader() {

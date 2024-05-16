@@ -25,9 +25,9 @@ public class SpriteSheets {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         final Bitmap bitmap = BitmapFactory.decodeResource(MainActivity.getContext().getResources(), resourceId, options);
-        for (int i = 0; i < bitmap.getWidth(); i+=width) {
+        for (int i = 0; i < bitmap.getHeight(); i+=width) {
             ArrayList<Integer> textureline = new ArrayList<>();
-            for (int j = 0; j < bitmap.getHeight(); j+=height) {
+            for (int j = 0; j < bitmap.getWidth(); j+=height) {
 
                 Bitmap map = Bitmap.createBitmap(bitmap,j,i,width,height);
                 textureline.add(MyGLRenderer.loadTexture(map));

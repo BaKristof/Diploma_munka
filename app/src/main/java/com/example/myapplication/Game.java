@@ -43,6 +43,7 @@ public final class Game {
         enemys = new ArrayList<>();
         player = new Player();
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new  int[]{1,1}));
+
         //enemyCharacter.findPath(BackGround.getGraph(),player);
         //addenemy(enemyCharacter);
         //MyGLRenderer.addmargin(player);
@@ -202,8 +203,8 @@ public final class Game {
         Matrix.multiplyMM(foo,0,MyGLRenderer.getvPMatrix(),0,move,0);
         return foo;
     }
-    public void addEnemy(EnemyCharacter enemyCharacter,float[] xy){
-        enemys.add(new EnemyCharacter(xy));
+    public void addEnemy(EnemyCharacter enemyCharacter){
+        enemys.add(enemyCharacter);
     }
     public static float[] getMove() {
         return move;
