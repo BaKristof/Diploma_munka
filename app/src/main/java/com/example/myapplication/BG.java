@@ -102,6 +102,10 @@ public class BG extends Drawable {
             }
         }
         setoffHandels();
+        for (Room room : rooms) {
+        room.drawSpawner(moveMatrix);
+        }
+
     }
     public BGBlock[] loadChunks(){
         ArrayList<BGBlock> near = new ArrayList<>();

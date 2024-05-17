@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+
 import java.util.Objects;
 import java.util.Random;
 
@@ -21,4 +22,5 @@ public class Spawner extends StaticObject{
         int x = random.nextInt(Objects.requireNonNull(clazz.getEnumConstants()).length);
         return clazz.getEnumConstants()[x];
     }
+
 }

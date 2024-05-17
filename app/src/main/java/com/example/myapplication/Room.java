@@ -202,4 +202,9 @@ public class Room {
     public void setSpawners(Spawner spawner) {
         this.spawners.add(spawner);
     }
+    public void drawSpawner(float[] mvpMatrix){
+        for (Spawner spawner : spawners) {
+            spawner.draw(mvpMatrix);
+        }
+    }
 }

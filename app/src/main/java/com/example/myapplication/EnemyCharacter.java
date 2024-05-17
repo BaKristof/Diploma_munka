@@ -5,7 +5,9 @@ import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Queue;
+import java.util.Random;
 
 public class EnemyCharacter extends Character{
 
@@ -27,7 +29,7 @@ public class EnemyCharacter extends Character{
     }
 
 
-    public void move() {
+    public  void move() {
         boolean valami = true;
         for (BGBlock bgBlock : Game.getInstance().getHitField()) {
             if (new BoundingBox(bgBlock).doesLineIntersect(Game.getInstance().getPlayer(), this)){
@@ -79,7 +81,11 @@ public class EnemyCharacter extends Character{
         Log.e("valami", Arrays.toString(utvonal.toArray()));
 
     }*/
-
+   public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
+       Random random = new Random();
+       int x = random.nextInt(Objects.requireNonNull(clazz.getEnumConstants()).length);
+       return clazz.getEnumConstants()[x];
+   }
 
 
 }
