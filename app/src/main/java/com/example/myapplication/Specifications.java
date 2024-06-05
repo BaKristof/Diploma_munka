@@ -69,6 +69,10 @@ public class Specifications {
     public String getName(){
         return "Specific";
     }
+    public static float degree(float degree){
+        if(degree>0) return degree;
+        else return (float) 180+(180-Math.abs(degree));
+    }
 
 
 }

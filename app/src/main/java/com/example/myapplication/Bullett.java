@@ -8,9 +8,9 @@ public class Bullett extends Projectile{
 
     public Bullett(float angle,Character character) {
         super(angle,character);
+        Matrix.rotateM(rotateM,0,-180,0,0,1); //negatyv érték a balra forgatás+
         setSpriteSheets(R.drawable.bulett_32x32,32,32);
 
-        Matrix.rotateM(rotateM,0,-180,0,0,1);
         Matrix.rotateM(rotateM,0,rotateM,0,degree((float) Math.toDegrees(angle)*-1),0,0,1);
     }
 
@@ -23,9 +23,6 @@ public class Bullett extends Projectile{
     public float[] getScreenPositionM() {
         return ownPositionM;
     }
-    public static float degree(float degree){
-        if(degree>0) return degree;
-        else return (float) 180+(180-Math.abs(degree));
-    }
+
 }
 
