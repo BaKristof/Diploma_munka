@@ -11,6 +11,11 @@ public class StaticObject extends Drawable{
     public StaticObject(SpriteSheets spriteSheets) {
     setSpriteSheets(spriteSheets);
     }
+
+    public StaticObject() {
+        setSpriteSheets(new SpriteSheets());
+    }
+
     public void draw(float[] mvpMatrix){
         GLES20.glUseProgram(Prog);
         setPositionHandle();

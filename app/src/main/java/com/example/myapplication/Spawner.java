@@ -10,6 +10,11 @@ public class Spawner extends StaticObject{
         super(new SpriteSheets(resourceID,width,height,4));
         type = randomEnum(SpawnerTypes.class);
     }
+
+    public Spawner() {
+        super();
+    }
+
     public void spawn(){
         Game.getInstance().addEnemy(new FlyingFire(this.ownPositionM));
     }

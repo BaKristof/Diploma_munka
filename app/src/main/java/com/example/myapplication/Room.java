@@ -104,12 +104,12 @@ public class Room {
             }
             else if (k==(size_up-3)){
 
-                maze.setMovementpoints(new Integer[]{k+i-1,l+j+1});//itt van elsős az alagutban
+                maze.setMovementpoints(new Integer[]{k+i-1,l+j+1});//itt van első az alagőtban
                 for (Tiles tiles : horizontalConnection.get(2)) {
                     finale[k+i][l+j]= tiles;
                     l++;
                 }
-                maze.setMovementpoints(new Integer[]{k+i-1,l+j-2});//ez pedig az alagut vége mintösszekötési pontok
+                maze.setMovementpoints(new Integer[]{k+i-1,l+j-2});//ez pedig az alagút vége mint összekötési pontok
 
 
             }
@@ -196,10 +196,10 @@ public class Room {
         Matrix.multiplyMM(local,0, matrix,0,Game.getMove(), 0);
         return local.clone();
     }
-    public float[] getRandomFloorBlock(){
-        return getFloors().get(random.nextInt(getFloors().size())).getOwnPositionM();
+    public BGBlock getRandomFloorBlock(){
+        return getFloors().get(random.nextInt(getFloors().size()));
     }
-    public void setSpawners(Spawner spawner) {
+    public void addSpawners(Spawner spawner) {
         this.spawners.add(spawner);
     }
     public void drawSpawner(float[] mvpMatrix){

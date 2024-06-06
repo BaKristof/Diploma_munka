@@ -1,12 +1,14 @@
 package com.example.myapplication;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BG extends Drawable {
     private final ArrayList<Integer[]> Movementpoints;
@@ -66,7 +68,11 @@ public class BG extends Drawable {
         }
         Game.setMove(getboxmidel(maze.startingpoint));
         LoadUpGraph();
-        rooms.forEach(i-> i.setSpawners(new Spawner(R.drawable.spawing_fire_animation,64,64).setPosition(i.getRandomFloorBlock())));
+        float[] atmeneti= rooms.get(0).getRandomFloorBlock().getOwnPositionM();
+        Log.e("BG",  Arrays.toString(atmeneti)+" "+rooms.get(0).getRandomFloorBlock().getHeight());
+        //Game.addInvisible_pooints(new Triangle(atmeneti).setColor(new float[]{0.0f,1.0f,0.0f,1.0f}));
+        rooms.get(0).addSpawners(new Spawner().setPosition(atmeneti));
+        //rooms.forEach(i-> i.setSpawners(new Spawner(R.drawable.spawing_fire_animation,64,64).setPosition(i.getRandomFloorBlock())));
     }
     public void setCompletback(Tiles[][] completback) {
         this.BG = new BGBlock[completback.length][completback[0].length];

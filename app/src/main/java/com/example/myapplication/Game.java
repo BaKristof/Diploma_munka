@@ -23,7 +23,7 @@ public final class Game {
     public Player player;
     private final ArrayList<EnemyCharacter> enemys;
     private final ArrayList<BGBlock> hitField = new ArrayList<>();
-    private ArrayList<Triangle> invisible_pooints =new ArrayList<>();
+    private static ArrayList<Triangle> invisible_pooints =new ArrayList<>();
     private  ArrayList<Projectile> projectiles = new ArrayList<>();
     private static Graph<Specifications, DefaultWeightedEdge> graph;
     //private ArrayList<Triangle> teszt = new ArrayList<>();
@@ -126,7 +126,8 @@ public final class Game {
         }
         GLES20.glDisable(GLES20.GL_BLEND);
 
-        //MyGLRenderer.setStoprender();
+        //
+        // MyGLRenderer.setStoprender();
     }
     public void enemymovment(){
             for (BGBlock bgb : hitField) {
@@ -254,6 +255,8 @@ public final class Game {
         });
     }
 
-
+    public static void addInvisible_pooints(Triangle triangle) {
+        invisible_pooints.add(triangle);
+    }
 }
 

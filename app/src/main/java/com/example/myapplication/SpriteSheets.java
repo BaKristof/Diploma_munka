@@ -36,6 +36,10 @@ public class SpriteSheets {
         }
         bitmap.recycle();
     }
+    public SpriteSheets() {
+        spriteSheetArray.add(new Integer[]{placeholder});
+    }
+
     public int NextFrame(int irany){
 
         int texture =spriteSheetArray.get(0)[0];
