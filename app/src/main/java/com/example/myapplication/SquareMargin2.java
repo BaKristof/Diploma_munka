@@ -1,12 +1,14 @@
 package com.example.myapplication;
 
-import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
-import java.util.Arrays;
+import com.example.myapplication.BackGround.Room;
+import com.example.myapplication.MainClasses.MyGLRenderer;
+import com.example.myapplication.SuperClasses.Drawable;
+import com.example.myapplication.SuperClasses.Line;
+import com.example.myapplication.SuperClasses.Specifications;
 
-public class SquareMargin2 extends Drawable{
+public class SquareMargin2 extends Drawable {
     Line[] valami = new Line[4];
     Specifications parent ;
     public SquareMargin2(Specifications specifications ) {
