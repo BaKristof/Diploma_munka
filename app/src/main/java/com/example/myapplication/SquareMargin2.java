@@ -15,7 +15,7 @@ public class SquareMargin2 extends Drawable {
     parent = specifications;
     }
 
-    public SquareMargin2(Room room) {
+   /* public SquareMargin2(Room room) {
         float[] valami0 = room.getCourners();
         float[] valami3 = MyGLRenderer.midleCoordinate(new float[]{valami0[0],valami0[1]},room.getMatrix() );
         float[] valami4 = MyGLRenderer.midleCoordinate(new float[]{valami0[2],valami0[3]},room.getMatrix());
@@ -32,7 +32,7 @@ public class SquareMargin2 extends Drawable {
             Matrix.rotateM(loccalM,0,0,0,0,0.25f);
         }
 
-    }
+    }*/
 
     public void draw(float[]mvpMatrix){
 

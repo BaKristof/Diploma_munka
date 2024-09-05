@@ -21,10 +21,5 @@ public class Bullett extends Projectile {
         setSpriteSheets(R.drawable.bulett_32x32,32,32);
     }
 
-    @Override
-    public float[] getScreenPositionM() {
-        return ownPositionM;
-    }
-
 }
 

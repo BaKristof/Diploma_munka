@@ -2,13 +2,11 @@ package com.example.myapplication.SuperClasses;
 
 import android.opengl.GLES20;
 
+import com.example.myapplication.Enemys.Spawners.Spawner;
 import com.example.myapplication.MainClasses.SpriteSheets;
 
 public class StaticObject extends Drawable {
 
-    public StaticObject(int resourceID,int width,int height) {
-        setSpriteSheets(resourceID,width,height);
-    }
 
     public StaticObject(SpriteSheets spriteSheets) {
     setSpriteSheets(spriteSheets);
@@ -17,7 +15,10 @@ public class StaticObject extends Drawable {
     public StaticObject() {
         setSpriteSheets(new SpriteSheets());
     }
-
+    public StaticObject setPosition (float[] position){
+        this.setOwnPositionM(position);
+        return this;
+    }
     public void draw(float[] mvpMatrix){
         GLES20.glUseProgram(Prog);
         setPositionHandle();

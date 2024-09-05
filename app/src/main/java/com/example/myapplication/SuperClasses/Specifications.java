@@ -2,6 +2,7 @@ package com.example.myapplication.SuperClasses;
 
 import android.opengl.Matrix;
 
+import com.example.myapplication.HitBoxes.BoundingBox;
 import com.example.myapplication.MainClasses.Game;
 import com.example.myapplication.MainClasses.MyGLRenderer;
 import com.example.myapplication.MainClasses.SpriteSheets;
@@ -53,11 +54,6 @@ public class Specifications {
     }
     public float[] getOwnPositionM() {
         return ownPositionM;
-    }
-
-    public float[] getScreenPositionM() {
-        Matrix.multiplyMM(screenPositionM,0, ownPositionM,0, Game.getMove(), 0);
-        return screenPositionM.clone();
     }
 
     public void setMatrix(float x, float y) {

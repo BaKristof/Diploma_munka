@@ -35,7 +35,7 @@ public class Projectile extends Drawable {
     protected Character owner ;
     //todo valami nem stimmel mert nem fügetlen a mozgás a valami mástól és nem áll most össze a fejembe ezt fel kéne rajzolni ugy egyszerübb lenne
     public Projectile(float angle,Character character) {
-        System.arraycopy(character.getScreenPositionM().clone(),0,ownPositionM,0,ownPositionM.length);
+        System.arraycopy(character.getOwnPositionM().clone(),0,ownPositionM,0,ownPositionM.length);
         this.owner = character;
         this.dx = (float) Math.cos(angle);
         this.dy = (float) Math.sin(angle);

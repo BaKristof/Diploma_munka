@@ -1,6 +1,7 @@
 package com.example.myapplication.SuperClasses;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.example.myapplication.BackGround.BGBlock;
 import com.example.myapplication.HitBoxes.BoundingBox;
@@ -8,6 +9,7 @@ import com.example.myapplication.MainClasses.Game;
 import com.example.myapplication.R;
 import com.example.myapplication.Enemys.Spawners.Spawner;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
@@ -40,31 +42,34 @@ public class EnemyCharacter extends Character {
         for (BGBlock bgBlock : Game.getInstance().getHitField()) {
             if (new BoundingBox(bgBlock).doesLineIntersect(Game.getInstance().getPlayer(), this)){
                 valami = false;
-                //Log.e("break","break");
+                Log.e("enemy", "player nem látható ");
+                //Game.invisible_pooints.add(0,new Triangle(bgBlock.getOwnPositionM()).setColor(new float[]{1.0f, 0.0f, 0.0f, 1.0f}));
                 break;
             }
         }
-        if (valami) {
-         //   Log.e("egyensen","egynes lehet itt csuzsik el");
-            float[] dxdy =this.dxdy(Game.getInstance().getPlayer());
-            Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0); //Player felé mozdul
-        }
-        else {
-           // Log.e("ez itt jó ","vagy ez nem jó");
-            if (utvonal.isEmpty()){
-            utvonal.addAll( Game.findPath(Game.getInstance().getPlayer(), this));
-            nextpoint = utvonal.remove();
+        if (!Game.getInstance().getPlayer().hit(new BoundingBox(this))){
+
+            if (valami) {
+                //   Log.e("egyensen","egynes lehet itt csuzsik el");
+                float[] dxdy =this.dxdy(Game.getInstance().getPlayer());
+                Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0); //Player felé mozdul
+                utvonal.clear();
             }
-            if (nextpoint.near(this,0.005f)){
-                nextpoint = utvonal.remove();
+            else {
+                // Log.e("ez itt jó ","vagy ez nem jó");
+                if (utvonal.isEmpty()){
+                    utvonal.addAll( Game.findPath(Game.getInstance().getPlayer(), this));
+                    nextpoint = utvonal.remove();
+                }
+                if (nextpoint.near(this,0.005f)){
+                    nextpoint = utvonal.remove();
+                }
+                float[] dxdy =this.dxdy(nextpoint);
+                irany = Game.whatisirany(dxdy[0], dxdy[1]);
+                Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0);
             }
-            float[] dxdy =this.dxdy(nextpoint);
-            irany = Game.whatisirany(dxdy[0], dxdy[1]);
-            Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0);
         }
     }
-        //TODO enemy characters
-        // enemy movement by Pathfinding (Bugos)
 
    /* public void findPath(Graph<Point, DefaultWeightedEdge> graph, Player playerObj){
         Point enemy = new Point(this);

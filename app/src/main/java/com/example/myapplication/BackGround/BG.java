@@ -1,5 +1,7 @@
 package com.example.myapplication.BackGround;
 
+import static java.util.Arrays.stream;
+
 import android.opengl.GLES20;
 import android.util.Log;
 
@@ -17,6 +19,9 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class BG extends Drawable {
     private final ArrayList<Integer[]> Movementpoints;
@@ -60,7 +65,7 @@ public class BG extends Drawable {
         rooms = maze.getRooms();
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
-        Game.setMove(getboxmidel(new int[]{0,0}));
+        //Game.setMove(getboxmidel(new int[]{0,0}));
 
         int f = 0;
         for (int i = 0; i < lenght; i++) {
@@ -74,14 +79,11 @@ public class BG extends Drawable {
                 f++;
             }
         }
-        Game.setMove(getboxmidel(maze.startingpoint));
+
         LoadUpGraph();
-        float[] atmeneti= rooms.get(0).getRandomFloorBlock().getOwnPositionM();
-        Log.e("BG",  Arrays.toString(atmeneti)+" "+rooms.get(0).getRandomFloorBlock().getHeight());
-        //Game.addInvisible_pooints(new Triangle(atmeneti).setColor(new float[]{0.0f,1.0f,0.0f,1.0f}));
-        rooms.get(0).addSpawners(new Spawner(R.drawable.spawing_fire_animation,64,64).setPosition(atmeneti));
-        //rooms.forEach(i-> i.setSpawners(new Spawner(R.drawable.spawing_fire_animation,64,64).setPosition(i.getRandomFloorBlock())));
-        //Spawner valmai = new Spawner(R.drawable.spawing_fire_animation,64,64);
+
+
+
     }
     public void setCompletback(Tiles[][] completback) {
         this.BG = new BGBlock[completback.length][completback[0].length];
@@ -155,20 +157,16 @@ public class BG extends Drawable {
         }*/
         return near.toArray(new BGBlock[0]);
     }
+
     private void LoadUpGraph(){
         ArrayList<BoundingBox> hitField = new ArrayList<>();
+        rooms.forEach(i-> i.getWalls().forEach(j-> hitField.add(new BoundingBox(j))));
+
         points = new ArrayList<>();
         int local =0;
         for (Integer[] movementPoint : Movementpoints) {
             points.add(BG[movementPoint[0]][movementPoint[1]]);
             graph.addVertex(points.get(local++));
-        }
-        for (BGBlock[] bgBlocks : BG) {
-            for (BGBlock bgBlock : bgBlocks) {
-                if (bgBlock.isHitable()){
-                    hitField.add(new BoundingBox(bgBlock));
-                }
-            }
         }
         //  Log.e("hitfield","hitfield size :"+hitField.size());
         for (int i = 0; i < points.size(); i++) {
@@ -218,5 +216,13 @@ public class BG extends Drawable {
     }
     public Graph<Specifications, DefaultWeightedEdge> getGraph() {
         return graph;
+    }
+
+    public ArrayList<Room> getRooms() {
+        return rooms;
+    }
+    public float[] randomFloorElement(){
+        Random rnd = new Random();
+        return rooms.get(rnd.nextInt(rooms.size())).getRandomFloorBlock().getOwnPositionM();
     }
 }

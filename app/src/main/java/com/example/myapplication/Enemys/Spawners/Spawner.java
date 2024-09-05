@@ -26,10 +26,7 @@ public class Spawner extends StaticObject {
         Game.getInstance().addEnemy(new EnemyCharacterWithOwner(new FlyingFire(this.ownPositionM),this));
         }
     }
-    public Spawner setPosition (float[] position){
-        this.setOwnPositionM(position);
-        return this;
-    }
+
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
         Random random = new Random();
         int x = random.nextInt(Objects.requireNonNull(clazz.getEnumConstants()).length);

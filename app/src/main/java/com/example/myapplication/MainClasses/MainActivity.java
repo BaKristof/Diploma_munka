@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
     @Override
     public void onJoystickMoved(float angle, Joystick joystick, MotionEvent event) {
         if (joystick == right && event.getAction() == MotionEvent.ACTION_UP){
-            Game.getInstance().addProjectile(angle,Game.getInstance().getPlayer());
+            Game.getInstance().addBullet(angle,Game.getInstance().getPlayer());
             Log.e("valami"," lefut");
         }
     }

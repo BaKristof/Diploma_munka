@@ -27,12 +27,18 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private Game gm;
     MyGLSurfaceView glsw;
     private static boolean stoprender = true;
+    public static float eyeZ =3.0f;
+    public static float upY =3.0f;
     private static ArrayList<SquareMargin2> margins = new ArrayList<>();
 
     public MyGLRenderer(MyGLSurfaceView glSurfaceView) {
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(vPMatrix, 0, projectionMatrix, 0, viewMatrix, 0);
         this.glsw =glSurfaceView;
+    }
+    public void setCameraToObject(Specifications specifications){
+        float[] ownPositionMidle = MyGLRenderer.midleCoordinate(specifications);
+        Matrix.setLookAtM(viewMatrix,0, ownPositionMidle[0], ownPositionMidle[1], ownPositionMidle[2]+MyGLRenderer.eyeZ, ownPositionMidle[0], ownPositionMidle[1], ownPositionMidle[2], 0f, 1.0f, 0.0f);
     }
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
@@ -42,6 +48,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onDrawFrame(GL10 unused) {
+        setCameraToObject(Game.getInstance().getPlayer());
         long currentTime = System.nanoTime();
         long elapsedTime = currentTime - lastFrameTime;
 
@@ -118,7 +125,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
     public static float[] midleCoordinate(Specifications specific ) {
             float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
-            float[] TESZT = specific.getScreenPositionM().clone();
+            float[] TESZT = specific.getOwnPositionM().clone();
             Matrix.multiplyMV(inputPoint, 0,TESZT , 0, inputPoint, 0);
         //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
         return inputPoint;
@@ -130,7 +137,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         return inputPoint;
     }
     public static float[] allCoordinates(Specifications specific ) {
-        float[] TESZT = specific.getScreenPositionM();
+        float[] TESZT = specific.getOwnPositionM();
         float[]  input = Specifications.getSquareCoords();
         float[] local = new float[]{0.0f,0.0f,0.0f,1.0f};
         float[] output = new float[Specifications.getSquareCoords().length];
@@ -146,7 +153,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
 
 
-    public static void addmargin(Room room){
+  /*public static void addmargin(Room room){
         float[] valami0 = room.getCourners();
         float[] valami3 = MyGLRenderer.midleCoordinate(new float[]{valami0[0],valami0[1]},room.getMatrix() );
         float[] valami4 = MyGLRenderer.midleCoordinate(new float[]{valami0[2],valami0[3]},room.getMatrix());
@@ -159,7 +166,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         System.arraycopy(room.getMatrix(),0,loccalM,0,loccalM.length);
         Matrix.scaleM(loccalM,0,scalingX,scalingY,0);
         margins.add(new SquareMargin2(new Specifications().setOwnPositionM(loccalM)));
-    }
+    }*/
     public static void addmargin(Specifications specifications){
         margins.add(new SquareMargin2(specifications));
     }

@@ -195,17 +195,15 @@ public class Room {
         return courners;
     }
 
-    public float[] getMatrix() {
+   /* public float[] getMatrix() {
         float[] local = new float[16];
         Matrix.multiplyMM(local,0, matrix,0, Game.getMove(), 0);
         return local.clone();
-    }
+    }*/
     public BGBlock getRandomFloorBlock(){
         return getFloors().get(random.nextInt(getFloors().size()));
     }
-    public void addSpawners(Spawner spawner) {
-        this.spawners.add(spawner);
-    }
+
     public void drawSpawner(float[] mvpMatrix){
         for (Spawner spawner : spawners) {
             spawner.draw(mvpMatrix);
