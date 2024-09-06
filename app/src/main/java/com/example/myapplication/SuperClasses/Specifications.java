@@ -7,6 +7,8 @@ import com.example.myapplication.MainClasses.Game;
 import com.example.myapplication.MainClasses.MyGLRenderer;
 import com.example.myapplication.MainClasses.SpriteSheets;
 
+import java.util.Arrays;
+
 public class Specifications {
     protected float[] ownPositionM = new float[16];
     protected SpriteSheets spriteSheets;
@@ -74,5 +76,11 @@ public class Specifications {
         else return (float) 180+(180-Math.abs(degree));
     }
 
-
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Specifications cordinat : {");
+        sb.append(Arrays.toString(ownPositionM));
+        sb.append('}');
+        return sb.toString();
+    }
 }

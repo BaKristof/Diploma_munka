@@ -57,7 +57,7 @@ public class SpriteSheets {
             currentTime =System.nanoTime();
         }
 
-        Log.e("valami ","time: "+ local+"   time courrent :"+ currentTime);
+        //Log.e("valami ","time: "+ local+"   time courrent :"+ currentTime);
         return texture;
     }
     public int NextFrame(){

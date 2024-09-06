@@ -17,14 +17,6 @@ public class BGBlock extends Specifications {
         Matrix.scaleM(ownPositionM,0,valami,valami,0);
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "BGBlock{" +
-                "position=" + MyGLRenderer.allCoordinates(this) +
-                '}';
-    }
-
     @Override
     public String getName() {
         return "BGBlock";

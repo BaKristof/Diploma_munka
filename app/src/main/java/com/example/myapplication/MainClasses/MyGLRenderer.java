@@ -76,7 +76,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
         else Log.e("frametimer","tulfotottunk");*/
         if (stoprender) glsw.requestRender();
-        Log.e("time","time: "+ elapsedTime);
+       // Log.e("time","time: "+ elapsedTime);
 
     }
 

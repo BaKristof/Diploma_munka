@@ -98,9 +98,6 @@ public class BoundingBox {
         float[] stratPoint = MyGLRenderer.midleCoordinate(start);
         float[] endPoint = MyGLRenderer.midleCoordinate(end);
 
-        Log.e("start", Arrays.toString(stratPoint));
-        Log.e("end", Arrays.toString(endPoint));
-
         // If the line segment is vertical
         if (stratPoint[0] == endPoint[0]) {
             return stratPoint[0] >= xMin && stratPoint[0] <= xMax &&
@@ -136,5 +133,16 @@ public class BoundingBox {
     }
     public boolean contains(BoundingBox other) {
             return xMin <= other.xMin && xMax >= other.xMax && yMin <= other.yMin && yMax >= other.yMax;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("BoundingBox{");
+        sb.append("xMax=").append(xMax);
+        sb.append(", yMax=").append(yMax);
+        sb.append(", xMin=").append(xMin);
+        sb.append(", yMin=").append(yMin);
+        sb.append('}');
+        return sb.toString();
     }
 }

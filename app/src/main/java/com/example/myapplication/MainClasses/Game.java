@@ -85,9 +85,10 @@ public final class Game {
 //        findPath(player,enemyCharacter);
        // fillinvis();
         BackGround.spawn();
-        //enemymovment();
+        enemymovment();
         enemyCharacter.move();
-        Log.e("menyiseg", "spawner: " + enemys.size());
+
+        //Log.e("menyiseg", "spawner: " + enemys.size());
         while (!taskQueue.isEmpty()) {
             Runnable task = taskQueue.poll();
             if (task != null) {
@@ -103,7 +104,7 @@ public final class Game {
             float joystick = (float) MainActivity.getLeft().getAngle();
             float dx = (float) Math.cos(joystick);
             float dy = (float) Math.sin(joystick);
-            float[] playerinertia = new float[]{dx * -0.004f, dy * 0.004f};
+            float[] playerInertia = new float[]{dx * -0.004f, dy * 0.004f};
 
 
             //x tengelyen való hit
@@ -112,7 +113,7 @@ public final class Game {
                 if (new BoundingBox(player).intersects(new BoundingBox(a))) {
                     //  Log.e("hit","hit Y tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
                     Matrix.translateM(player.getOwnPositionM(), 0, (dx * -0.004f), 0, 0);
-                    playerinertia[0] = 0;
+                    playerInertia[0] = 0;
                 }
             }
 
@@ -122,14 +123,14 @@ public final class Game {
                 if (new BoundingBox(player).intersects(new BoundingBox(a))) {
                     //  Log.e("hit","hit x tengelyen"+new BoundingBox(a).toString()+"   "+new BoundingBox(player));
                     Matrix.translateM(player.getOwnPositionM(), 0, 0, (dy * 0.004f), 0);
-                    playerinertia[1] = 0;
+                    playerInertia[1] = 0;
                 }
                 ;
             }
 
             float percent = MainActivity.getLeft().getDisplace();
             player.setIrany(whatisirany(dx, dy));
-            player.setMovingangle(playerinertia);
+            player.setMovingangle(playerInertia);
         }
     }
 

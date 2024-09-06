@@ -17,6 +17,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -160,19 +161,30 @@ public class BG extends Drawable {
 
     private void LoadUpGraph(){
         ArrayList<BoundingBox> hitField = new ArrayList<>();
-        rooms.forEach(i-> i.getWalls().forEach(j-> hitField.add(new BoundingBox(j))));
+       // rooms.forEach(i-> i.getWalls().forEach(j-> hitField.add(new BoundingBox(j))));
 
+        for (Room room : rooms) {
+            for (BGBlock block : room.getWalls()) {
+                hitField.add(new BoundingBox(block));
+            }
+        }
         points = new ArrayList<>();
+        //Todo valami nem j a ponts okkal
+
         int local =0;
         for (Integer[] movementPoint : Movementpoints) {
             points.add(BG[movementPoint[0]][movementPoint[1]]);
             graph.addVertex(points.get(local++));
         }
+       // Log.e("falak","falak meenyisége: "+points.stream().map(BGBlock::toString).collect(Collectors.toList()));
         //  Log.e("hitfield","hitfield size :"+hitField.size());
         for (int i = 0; i < points.size(); i++) {
             for (int j = i+1; j < points.size(); j++) {
                 for (BoundingBox boundingBox : hitField) {
-                    if (boundingBox.doesLineIntersect(points.get(i),points.get(j)))break;
+                    if (boundingBox.doesLineIntersect(points.get(i),points.get(j))) {
+                        Log.e("vertexpoints","pont1: "+points.get(i).toString()+" "+points.get(j).toString()+" "+boundingBox.toString());
+                        break;
+                    }
                     else{
                         graph.addEdge(points.get(i),points.get(j));
                         graph.setEdgeWeight(points.get(i),points.get(j),points.get(i).distance(points.get(j)));

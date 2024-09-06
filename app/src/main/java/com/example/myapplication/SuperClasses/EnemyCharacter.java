@@ -42,7 +42,7 @@ public class EnemyCharacter extends Character {
         for (BGBlock bgBlock : Game.getInstance().getHitField()) {
             if (new BoundingBox(bgBlock).doesLineIntersect(Game.getInstance().getPlayer(), this)){
                 valami = false;
-                Log.e("enemy", "player nem látható ");
+                //Log.e("enemy", "player nem látható ");
                 //Game.invisible_pooints.add(0,new Triangle(bgBlock.getOwnPositionM()).setColor(new float[]{1.0f, 0.0f, 0.0f, 1.0f}));
                 break;
             }
@@ -52,7 +52,7 @@ public class EnemyCharacter extends Character {
             if (valami) {
                 //   Log.e("egyensen","egynes lehet itt csuzsik el");
                 float[] dxdy =this.dxdy(Game.getInstance().getPlayer());
-                Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0); //Player felé mozdul
+                Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.002f, dxdy[1] * 0.002f, 0); //Player felé mozdul
                 utvonal.clear();
             }
             else {
@@ -66,7 +66,7 @@ public class EnemyCharacter extends Character {
                 }
                 float[] dxdy =this.dxdy(nextpoint);
                 irany = Game.whatisirany(dxdy[0], dxdy[1]);
-                Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.004f, dxdy[1] * 0.004f, 0);
+                Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.002f, dxdy[1] * 0.002f, 0);
             }
         }
     }

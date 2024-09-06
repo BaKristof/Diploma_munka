@@ -86,7 +86,7 @@ public class Room {
             roomNxN.add(local.clone());
         }
         for (Tiles[] tiles : roomNxN) {
-            Log.e("valami",Arrays.toString(tiles));
+            //Log.e("valami",Arrays.toString(tiles));
         }
         valid = roomNxN;
     }
