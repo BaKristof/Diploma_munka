@@ -1,29 +1,16 @@
 package com.example.myapplication.BackGround;
-
-import static java.util.Arrays.stream;
-
 import android.opengl.GLES20;
-import android.util.Log;
-
 import com.example.myapplication.SuperClasses.Character;
 import com.example.myapplication.HitBoxes.BoundingBox;
 import com.example.myapplication.SuperClasses.Drawable;
 import com.example.myapplication.MainClasses.Game;
-import com.example.myapplication.R;
 import com.example.myapplication.Enemys.Spawners.Spawner;
 import com.example.myapplication.SuperClasses.Specifications;
-
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-
 public class BG extends Drawable {
     private final ArrayList<Integer[]> Movementpoints;
     private final ArrayList<Room> rooms;
@@ -50,8 +37,7 @@ public class BG extends Drawable {
 
     public Tiles[][] completback;
     public BGBlock[][]  BG;
-    private float loadingDistance;
-    private Graph<Specifications, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+    private final Graph<Specifications, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private int sizeUp;
     public BG(Maze maze, int lenght, int hight) {
         setVertexShader(vertexShaderCode);
@@ -92,7 +78,6 @@ public class BG extends Drawable {
     }
 
     private void LoadUpBG() {
-        int a = completback.length;
         for (int i=0; i<completback.length;i++){
             for(int j=0;j< completback[0].length; j++){
                 BG[i][j] = setTexture(completback[i][j],i,j);
@@ -176,20 +161,19 @@ public class BG extends Drawable {
             points.add(BG[movementPoint[0]][movementPoint[1]]);
             graph.addVertex(points.get(local++));
         }
-       // Log.e("falak","falak meenyisége: "+points.stream().map(BGBlock::toString).collect(Collectors.toList()));
-        //  Log.e("hitfield","hitfield size :"+hitField.size());
         for (int i = 0; i < points.size(); i++) {
             for (int j = i+1; j < points.size(); j++) {
+                boolean internal = true;
                 for (BoundingBox boundingBox : hitField) {
                     if (boundingBox.doesLineIntersect(points.get(i),points.get(j))) {
-                        Log.e("vertexpoints","pont1: "+points.get(i).toString()+" "+points.get(j).toString()+" "+boundingBox.toString());
+                        internal= false;
                         break;
                     }
-                    else{
+                }
+                    if(internal){
                         graph.addEdge(points.get(i),points.get(j));
                         graph.setEdgeWeight(points.get(i),points.get(j),points.get(i).distance(points.get(j)));
                     }
-                }
             }
         }
     }
@@ -198,10 +182,8 @@ public class BG extends Drawable {
     }
     public BGBlock nearestMovmentPoint(Character character){
         float min = Float.MAX_VALUE;
-        int i=0;
         BGBlock save = new BGBlock() ;
         for (BGBlock point : points) {
-            i++ ;
             if (point.distance(character)<min){
                 save = point;
                 min= point.distance(character);
@@ -221,11 +203,7 @@ public class BG extends Drawable {
         }
         return valami;
     }
-    public void spawn(){
-        for (Room room : rooms) {
-            room.spawners.forEach(Spawner::spawn);
-        }
-    }
+
     public Graph<Specifications, DefaultWeightedEdge> getGraph() {
         return graph;
     }

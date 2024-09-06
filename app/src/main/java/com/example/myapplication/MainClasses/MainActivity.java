@@ -31,6 +31,10 @@ package com.example.myapplication.MainClasses;
 
         import androidx.appcompat.app.AppCompatActivity;
 
+        import android.graphics.Color;
+        import android.graphics.drawable.ClipDrawable;
+        import android.graphics.drawable.GradientDrawable;
+        import android.graphics.drawable.LayerDrawable;
         import android.os.Bundle;
         import android.content.Context;
         import android.util.DisplayMetrics;
@@ -40,17 +44,24 @@ package com.example.myapplication.MainClasses;
         import android.view.MotionEvent;
         import android.widget.FrameLayout;
         import android.widget.ImageView;
+        import android.widget.ProgressBar;
 
         import com.example.myapplication.GUI.Joystick;
         import com.example.myapplication.GUI.JoystickListener;
+        import com.example.myapplication.GUI.PlayerInformationGUI;
+        import com.example.myapplication.Player.PlayerActions;
+        import com.example.myapplication.Player.PlayerListener;
         import com.example.myapplication.R;
 
-public class MainActivity extends AppCompatActivity implements JoystickListener {
+public class MainActivity extends AppCompatActivity implements JoystickListener,GUIListener {
 
     private static Context context ;
     private MyGLSurfaceView myGLSurfaceView;
     private static Joystick right;
     private static Joystick left;
+    private static ProgressBar progressBar;
+    private static int progress = 100;
+
     private static  ImageView image ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +97,38 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
         FrameLayout.LayoutParams imageViewParam = new FrameLayout.LayoutParams(sizeInDp, sizeInDp, Gravity.CENTER_HORIZONTAL | Gravity.END);
         frameLayout.addView(image,imageViewParam);
 
+        progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        FrameLayout.LayoutParams healthBarParams = new FrameLayout.LayoutParams(150,50 ,Gravity.TOP |Gravity.LEFT);
+        // Set maximum progress and initial progress
+
+        progressBar.setMax(100);
+        progressBar.setProgress(progress);
+
+        // Create a background drawable for the progress bar
+        GradientDrawable backgroundDrawable = new GradientDrawable();
+        backgroundDrawable.setColor(Color.LTGRAY); // Set the background color
+        backgroundDrawable.setCornerRadius(20); // Set rounded corners
+
+        // Create a progress drawable with a gradient
+        GradientDrawable progressDrawable = new GradientDrawable();
+        progressDrawable.setColor(Color.RED); // Progress color
+        progressDrawable.setCornerRadius(20); // Rounded corners
+
+        // Wrap the progress drawable in a ClipDrawable to control the width
+        ClipDrawable clipDrawable = new ClipDrawable(progressDrawable, Gravity.LEFT, ClipDrawable.HORIZONTAL);
+
+        // Create a LayerDrawable to combine the background and progress drawable
+        LayerDrawable layerDrawable = new LayerDrawable(new android.graphics.drawable.Drawable[]{backgroundDrawable, clipDrawable});
+        layerDrawable.setId(0, android.R.id.background); // ID for background
+        layerDrawable.setId(1, android.R.id.progress); // ID for progress
+
+        // Set the custom drawable to the ProgressBar
+        progressBar.setProgressDrawable(layerDrawable);
+        frameLayout.addView(progressBar,healthBarParams);
+
         setContentView(frameLayout);
         MainActivity.context = getApplicationContext();
+        Game.setGuiListener(this);
 
     }
     @Override
@@ -100,10 +141,12 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
     public static Context getContext() {
         return MainActivity.context;
     }
+
     public static float dpToPx(Context context, float dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return dp * (displayMetrics.densityDpi / 160f);
     }
+
 
     public static Joystick getRight() {
         return right;
@@ -113,4 +156,9 @@ public class MainActivity extends AppCompatActivity implements JoystickListener 
         return left;
     }
 
+
+    @Override
+    public void setHealthBar(int health) {
+        progressBar.setProgress(health);
+    }
 }

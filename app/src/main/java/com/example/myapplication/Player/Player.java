@@ -1,16 +1,15 @@
 package com.example.myapplication.Player;
 
-import android.opengl.Matrix;
-
 import com.example.myapplication.BackGround.BG;
 import com.example.myapplication.BackGround.Maze;
-import com.example.myapplication.MainClasses.MyGLRenderer;
+import com.example.myapplication.MainClasses.Game;
 import com.example.myapplication.R;
 import com.example.myapplication.SuperClasses.Character;
 
-public class Player extends Character {
+public class Player extends Character implements PlayerListener {
 
     public float[] movingangle;
+    public int health =100;
     public Player(BG bg, Maze maze) {
         super();
         setSpriteSheets(R.drawable.spritesheet_main_charater,64,64);
@@ -26,6 +25,19 @@ public class Player extends Character {
     public void setMovingangle(float[] movingangle) {
         this.movingangle = movingangle;
     }
+
+        @Override
+        public void playerAction(PlayerActions playerAction) {
+            switch (playerAction){
+                case Hit: Hit(); break;
+                case Teleport: break;
+            }
+        }
+        private void Hit(){
+            health=-10;
+            Game.useGuiListener(health);
+        }
+
     /*public float[] movemntprediction(FlyingFire enemy){
         float distance = this.distance(enemy);
         float[] dxdy = this.dxdy(enemy);
@@ -35,4 +47,5 @@ public class Player extends Character {
         //todo implementálni kéne a dolgot de lehet kicsit bonyi
         return new float[]{0.0f,0.0f};
     }*/
+
 }

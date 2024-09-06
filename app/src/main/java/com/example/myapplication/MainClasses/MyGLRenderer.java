@@ -16,6 +16,7 @@ import com.example.myapplication.SquareMargin2;
 import com.example.myapplication.SuperClasses.Specifications;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
@@ -127,7 +128,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             float[] inputPoint = {0.0f, 0.0f, 0.0f, 1.0f};
             float[] TESZT = specific.getOwnPositionM().clone();
             Matrix.multiplyMV(inputPoint, 0,TESZT , 0, inputPoint, 0);
-        //Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
+        Log.println(Log.ERROR,specific.getName(), Arrays.toString(inputPoint));
         return inputPoint;
     }
     public static float[] midleCoordinate(float[] valami, float[] screenPostioinM) {

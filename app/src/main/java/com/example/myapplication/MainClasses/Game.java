@@ -4,12 +4,15 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import androidx.constraintlayout.widget.Guideline;
+
 import com.example.myapplication.BackGround.BG;
 import com.example.myapplication.BackGround.BGBlock;
 import com.example.myapplication.BackGround.Maze;
 import com.example.myapplication.Enemys.Spawners.Spawner;
 import com.example.myapplication.Player.Bullett;
 import com.example.myapplication.Player.Player;
+import com.example.myapplication.Player.PlayerListener;
 import com.example.myapplication.R;
 import com.example.myapplication.SuperClasses.Character;
 import com.example.myapplication.HitBoxes.BoundingBox;
@@ -46,8 +49,8 @@ public final class Game {
     private static Graph<Specifications, DefaultWeightedEdge> graph;
     //private ArrayList<Triangle> teszt = new ArrayList<>();
     private Queue<Runnable> taskQueue = new LinkedList<>();
-    private ArrayList<Line> lines = new ArrayList<>();
-
+    private static GUIListener guiListener;
+    private final PlayerListener playerListener;
 
     private Game() {
 
@@ -58,6 +61,7 @@ public final class Game {
         graph = BackGround.getGraph();
         enemys = new ArrayList<>();
         player = new Player(BackGround,maze);
+        playerListener = player;
         enemyCharacter = new EnemyCharacter(BackGround.getboxmidel(new int[]{1, 1}));
         BackGround.getRooms().forEach(i -> hitField.addAll(i.getWalls()));
 
@@ -67,7 +71,7 @@ public final class Game {
         //addenemy(enemyCharacter);
         //MyGLRenderer.addmargin(player);
 
-        staticObjects.add(new StaticObject(new SpriteSheets(R.drawable.key,16,16,4)).setPosition(BackGround.randomFloorElement()));
+        staticObjects.add(new StaticObject(new SpriteSheets(R.drawable.key,32,32,4)).setPosition(BackGround.randomFloorElement()));
         staticObjects.add(new Spawner(R.drawable.spawing_fire_animation,64,64).setPosition(BackGround.randomFloorElement()));
 
     }
@@ -84,7 +88,7 @@ public final class Game {
         readInput();
 //        findPath(player,enemyCharacter);
        // fillinvis();
-        BackGround.spawn();
+        staticObjects.stream().filter(i-> i instanceof Spawner).map(i-> (Spawner)i).forEach(Spawner::spawn);
         enemymovment();
         enemyCharacter.move();
 
@@ -138,27 +142,26 @@ public final class Game {
 
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        BackGround.draw(mvpMatrix);
-        for (EnemyCharacterWithOwner enemy : enemys) {
-            enemy.asEnemyCharcater().draw(mvpMatrix);
-        }
 
-        for (Triangle invisiblePooint : invisible_pooints) {
-            invisiblePooint.draw(mvpMatrix);
-        }
-        for (int i = 0; i < projectiles.size(); i++) {
-            projectiles.get(i).draw(mvpMatrix);
-        }
-        MyGLRenderer.checkGLError("valami nem jó");
-        //enemyCharacter.move();
+        BackGround.draw(mvpMatrix);
+
+        enemys.forEach(i-> i.asEnemyCharcater().draw(mvpMatrix));
+
+        staticObjects.stream().filter(i-> i instanceof Spawner).forEach(i->i.draw(mvpMatrix));
+
+        invisible_pooints.forEach(i->i.draw(mvpMatrix));
+
+        projectiles.forEach(i-> i.draw(mvpMatrix));
+
         enemyCharacter.draw(mvpMatrix);
+
         player.draw(mvpMatrix);
-        for (Line line : lines) {
-            line.draw(mvpMatrix);
-        }
+
+        MyGLRenderer.checkGLError("valami nem jó");
+
         GLES20.glDisable(GLES20.GL_BLEND);
 
-        //
+
         //MyGLRenderer.setStoprender();
     }
 
@@ -258,13 +261,11 @@ public final class Game {
         });
     }
 
-    public void addLine(Line line) {
-        taskQueue.add(new Runnable() {
-            @Override
-            public void run() {
-                lines.add(line);
-            }
-        });
+    public static void setGuiListener(GUIListener guiListener) {
+        Game.guiListener = guiListener;
+    }
+    public static void useGuiListener(int health){
+        guiListener.setHealthBar(health);
     }
 
     public static void addInvisible_pooints(Triangle triangle) {
