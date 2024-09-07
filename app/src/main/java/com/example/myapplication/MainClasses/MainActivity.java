@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
     private static int progress = 100;
 
     private static  ImageView image ;
+
+    private int keyCount =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,5 +162,9 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
     @Override
     public void setHealthBar(int health) {
         progressBar.setProgress(health);
+    }
+    @Override
+    public void keyCollect() {
+        keyCount++;
     }
 }

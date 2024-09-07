@@ -19,8 +19,8 @@ public class Character extends Drawable {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }
-    public boolean hit(BoundingBox bb){
-       return new BoundingBox(this).intersects(bb);
+    public void hit(Specifications specifications){
+
     }
 
     public void setIrany(int irany) {

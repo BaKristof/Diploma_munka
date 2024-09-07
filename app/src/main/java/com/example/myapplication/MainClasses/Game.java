@@ -8,8 +8,10 @@ import androidx.constraintlayout.widget.Guideline;
 
 import com.example.myapplication.BackGround.BG;
 import com.example.myapplication.BackGround.BGBlock;
+import com.example.myapplication.BackGround.Key;
 import com.example.myapplication.BackGround.Maze;
 import com.example.myapplication.Enemys.Spawners.Spawner;
+import com.example.myapplication.HitBoxes.BoundingCircle;
 import com.example.myapplication.Player.Bullett;
 import com.example.myapplication.Player.Player;
 import com.example.myapplication.Player.PlayerListener;
@@ -71,7 +73,7 @@ public final class Game {
         //addenemy(enemyCharacter);
         //MyGLRenderer.addmargin(player);
 
-        staticObjects.add(new StaticObject(new SpriteSheets(R.drawable.key,32,32,4)).setPosition(BackGround.randomFloorElement()));
+        staticObjects.add(new Key(new SpriteSheets(R.drawable.key,32,32,4)).setPosition(BackGround.randomFloorElement()));
         staticObjects.add(new Spawner(R.drawable.spawing_fire_animation,64,64).setPosition(BackGround.randomFloorElement()));
 
     }
@@ -138,6 +140,23 @@ public final class Game {
         }
     }
 
+    public void collisonDetection(){
+        //static object hitting player
+        staticObjects.stream().filter(i->i.getBoundingBox().intersects(new BoundingBox(player))).forEach(i->player.hit(i));
+        //enemy hitting player
+        enemys.stream().filter(i-> new BoundingBox(i.asEnemyCharcater()).intersects(new BoundingBox(player))).forEach(i->player.hit(i.asEnemyCharcater()));
+
+        //projectile hit static object
+        for (Projectile projectile : projectiles) {
+            for (StaticObject staticObj : staticObjects) {
+                if (new BoundingBox(staticObj).intersects(new BoundingCircle(projectile))){
+                    staticObj.hit(projectile);
+                    projectile.hit();
+                }
+            }
+        }
+    }
+
     public void draw(float[] mvpMatrix) {
 
         GLES20.glEnable(GLES20.GL_BLEND);
@@ -147,7 +166,7 @@ public final class Game {
 
         enemys.forEach(i-> i.asEnemyCharcater().draw(mvpMatrix));
 
-        staticObjects.stream().filter(i-> i instanceof Spawner).forEach(i->i.draw(mvpMatrix));
+        staticObjects.stream().filter(i-> i instanceof Key).forEach(i->i.draw(mvpMatrix));
 
         invisible_pooints.forEach(i->i.draw(mvpMatrix));
 
@@ -264,8 +283,9 @@ public final class Game {
     public static void setGuiListener(GUIListener guiListener) {
         Game.guiListener = guiListener;
     }
-    public static void useGuiListener(int health){
-        guiListener.setHealthBar(health);
+
+    public static GUIListener getGuiListener() {
+        return guiListener;
     }
 
     public static void addInvisible_pooints(Triangle triangle) {

@@ -35,7 +35,7 @@ public class Player extends Character implements PlayerListener {
         }
         private void Hit(){
             health=-10;
-            Game.useGuiListener(health);
+            Game.getGuiListener().setHealthBar(health);
         }
 
     /*public float[] movemntprediction(FlyingFire enemy){
