@@ -42,16 +42,19 @@ package com.example.myapplication.MainClasses;
         import android.util.TypedValue;
         import android.view.Gravity;
         import android.view.MotionEvent;
+        import android.view.ViewGroup;
         import android.widget.FrameLayout;
         import android.widget.ImageView;
+        import android.widget.LinearLayout;
         import android.widget.ProgressBar;
 
         import com.example.myapplication.GUI.Joystick;
         import com.example.myapplication.GUI.JoystickListener;
-        import com.example.myapplication.GUI.PlayerInformationGUI;
-        import com.example.myapplication.Player.PlayerActions;
-        import com.example.myapplication.Player.PlayerListener;
+        import com.example.myapplication.Objects.Exit;
         import com.example.myapplication.R;
+
+        import java.util.Optional;
+        import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity implements JoystickListener,GUIListener {
 
@@ -62,7 +65,8 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
     private static ProgressBar progressBar;
     private static int progress = 100;
 
-    private static  ImageView image ;
+    //private static  ImageView image ;
+    public static ImageView[] emptyKeyImages = new ImageView[3];
 
     private int keyCount =0;
     @Override
@@ -70,8 +74,10 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
         super.onCreate(savedInstanceState);
 
         myGLSurfaceView = new MyGLSurfaceView(this);
-        image = new ImageView(this);
-        image.setImageResource(R.drawable.place_holder);
+
+       /* image = new ImageView(this);
+        image.setImageResource(R.drawable.place_holder);*/
+
         right = new Joystick(this);
         right.setCenter(dpToPx(this,75), dpToPx(this,75));
         right.setBaseRadius(dpToPx(this,150));
@@ -96,8 +102,8 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
 
         sizeInDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getResources().getDisplayMetrics());
 
-        FrameLayout.LayoutParams imageViewParam = new FrameLayout.LayoutParams(sizeInDp, sizeInDp, Gravity.CENTER_HORIZONTAL | Gravity.END);
-        frameLayout.addView(image,imageViewParam);
+        /*FrameLayout.LayoutParams imageViewParam = new FrameLayout.LayoutParams(sizeInDp, sizeInDp, Gravity.CENTER_HORIZONTAL | Gravity.END);
+        frameLayout.addView(image,imageViewParam);*/
 
         progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         FrameLayout.LayoutParams healthBarParams = new FrameLayout.LayoutParams(150,50 ,Gravity.TOP |Gravity.LEFT);
@@ -127,6 +133,44 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
         // Set the custom drawable to the ProgressBar
         progressBar.setProgressDrawable(layerDrawable);
         frameLayout.addView(progressBar,healthBarParams);
+
+
+        LinearLayout imageLayout = new LinearLayout(this);
+        imageLayout.setOrientation(LinearLayout.HORIZONTAL);
+        imageLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+
+        ImageView imageView1 = new ImageView(this);
+        imageView1.setLayoutParams(new LinearLayout.LayoutParams(100, 100)); // Width and height of each image
+        imageView1.setBackgroundColor(Color.parseColor("#FFFFFF")); // Placeholder color (replace with your image)
+        imageView1.setImageResource(R.drawable.emptykey); // Replace with actual drawable resource
+        ImageView imageView2 = new ImageView(this);
+        imageView2.setLayoutParams(new LinearLayout.LayoutParams(100, 100)); // Width and height of each image
+        imageView2.setBackgroundColor(Color.parseColor("#FFFFFF")); // Placeholder color (replace with your image)
+        imageView2.setImageResource(R.drawable.emptykey); // Replace with actual drawable resource
+        ImageView imageView3 = new ImageView(this);
+        imageView3.setLayoutParams(new LinearLayout.LayoutParams(100, 100)); // Width and height of each image
+        imageView3.setBackgroundColor(Color.parseColor("#FFFFFF")); // Placeholder color (replace with your image)
+        imageView3.setImageResource(R.drawable.emptykey); // Replace with actual drawable resource
+        emptyKeyImages[0]= imageView1;
+        emptyKeyImages[1]= imageView2;
+        emptyKeyImages[2]= imageView3;
+        imageLayout.addView(imageView1);
+        imageLayout.addView(imageView2);
+        imageLayout.addView(imageView3);
+
+
+        FrameLayout.LayoutParams keyViewParam = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.TOP);
+        keyViewParam.setMargins(20,20,20,20);
+
+        frameLayout.addView(imageLayout,keyViewParam);
+
+
+
+
+
 
         setContentView(frameLayout);
         MainActivity.context = getApplicationContext();
@@ -165,6 +209,22 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
     }
     @Override
     public void keyCollect() {
-        keyCount++;
+        emptyKeyImages[keyCount++].setImageResource(R.drawable.key);
+        if(keyCount==emptyKeyImages.length) {
+            Optional<Exit> exit = Game.getInstance().getStaticObjects().stream().filter(i -> i instanceof Exit).map(i -> (Exit) i).findFirst();
+            if (exit.isPresent()) {
+                exit.get().setIsunlocked();
+                exit.get().setSpriteSheets(new SpriteSheets(R.drawable.enemy_place_holder,64,64,4));
+                keyCount=0;
+
+            }
+        }
+    }
+
+    @Override
+    public void resetGUI() {
+        for (ImageView im : emptyKeyImages) {
+            im.setImageResource(R.drawable.emptykey);
+        }
     }
 }

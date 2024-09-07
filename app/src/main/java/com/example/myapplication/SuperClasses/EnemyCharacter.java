@@ -47,15 +47,15 @@ public class EnemyCharacter extends Character {
                 break;
             }
         }
-        if (!Game.getInstance().getPlayer().hit(new BoundingBox(this))){
-
+        if (!new BoundingBox(this).intersects(new BoundingBox(Game.getInstance().getPlayer()))){
             if (valami) {
                 //   Log.e("egyensen","egynes lehet itt csuzsik el");
                 float[] dxdy =this.dxdy(Game.getInstance().getPlayer());
                 Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.002f, dxdy[1] * 0.002f, 0); //Player felé mozdul
                 utvonal.clear();
             }
-            else {
+            //utvonal keresés
+            /*else {
                 // Log.e("ez itt jó ","vagy ez nem jó");
                 if (utvonal.isEmpty()){
                     utvonal.addAll( Game.findPath(Game.getInstance().getPlayer(), this));
@@ -67,7 +67,7 @@ public class EnemyCharacter extends Character {
                 float[] dxdy =this.dxdy(nextpoint);
                 irany = Game.whatisirany(dxdy[0], dxdy[1]);
                 Matrix.translateM(ownPositionM, 0, dxdy[0] * 0.002f, dxdy[1] * 0.002f, 0);
-            }
+            }*/
         }
     }
 

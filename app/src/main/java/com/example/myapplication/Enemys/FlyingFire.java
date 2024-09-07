@@ -31,7 +31,7 @@ public class FlyingFire extends EnemyCharacter {
         velocityY += dxdy[1] * 0.000015f;
         if (velocityX> velocityCap) velocityX=velocityCap;
         if (velocityY> velocityCap) velocityY=velocityCap;
-        Log.e("percent ", " x: " + dxdy[0] + " y:" + dxdy[1]);
+       // Log.e("percent ", " x: " + dxdy[0] + " y:" + dxdy[1]);
         Matrix.translateM(ownPositionM, 0, velocityX, velocityY, 0);
     }
 }

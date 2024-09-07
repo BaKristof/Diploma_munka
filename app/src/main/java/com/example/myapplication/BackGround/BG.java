@@ -11,10 +11,14 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.stream.Collectors;
+
 public class BG extends Drawable {
     private final ArrayList<Integer[]> Movementpoints;
     private final ArrayList<Room> rooms;
     private ArrayList<BGBlock> points;
+
+    private ArrayList<BGBlock>unOccupiedFloor ;
     protected final String vertexShaderCode =
             "uniform mat4 uMVPMatrix;" +
                     "attribute vec4 vPosition;" +
@@ -37,7 +41,7 @@ public class BG extends Drawable {
 
     public Tiles[][] completback;
     public BGBlock[][]  BG;
-    private final Graph<Specifications, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+    private Graph<Specifications, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     private int sizeUp;
     public BG(Maze maze, int lenght, int hight) {
         setVertexShader(vertexShaderCode);
@@ -53,7 +57,7 @@ public class BG extends Drawable {
         this.sizeUp = maze.getSize_up();
         LoadUpBG();
         //Game.setMove(getboxmidel(new int[]{0,0}));
-
+        graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
         int f = 0;
         for (int i = 0; i < lenght; i++) {
             for (int j = 0; j < hight; j++) {
@@ -66,7 +70,10 @@ public class BG extends Drawable {
                 f++;
             }
         }
-
+        unOccupiedFloor = new ArrayList<>();
+        for (Room room : rooms) {
+            unOccupiedFloor.addAll(room.getFloors());
+        }
         LoadUpGraph();
 
 
@@ -145,6 +152,7 @@ public class BG extends Drawable {
     }
 
     private void LoadUpGraph(){
+
         ArrayList<BoundingBox> hitField = new ArrayList<>();
        // rooms.forEach(i-> i.getWalls().forEach(j-> hitField.add(new BoundingBox(j))));
 
@@ -213,6 +221,8 @@ public class BG extends Drawable {
     }
     public float[] randomFloorElement(){
         Random rnd = new Random();
-        return rooms.get(rnd.nextInt(rooms.size())).getRandomFloorBlock().getOwnPositionM();
+        BGBlock local = unOccupiedFloor.get(rnd.nextInt(unOccupiedFloor.size()));
+        unOccupiedFloor.remove(local);
+        return local.getOwnPositionM();
     }
 }

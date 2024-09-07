@@ -8,6 +8,7 @@ import com.example.myapplication.MainClasses.MyGLRenderer;
 import com.example.myapplication.MainClasses.SpriteSheets;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Specifications {
     protected float[] ownPositionM = new float[16];
@@ -82,5 +83,18 @@ public class Specifications {
         sb.append(Arrays.toString(ownPositionM));
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Specifications that = (Specifications) o;
+        return Arrays.equals(ownPositionM, that.ownPositionM);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(ownPositionM);
     }
 }

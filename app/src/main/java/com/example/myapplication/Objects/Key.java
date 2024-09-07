@@ -1,4 +1,6 @@
-package com.example.myapplication.BackGround;
+package com.example.myapplication.Objects;
+
+import android.util.Log;
 
 import com.example.myapplication.GUI.PlayerInformationGUI;
 import com.example.myapplication.MainClasses.Game;
@@ -14,7 +16,8 @@ public class Key extends StaticObject {
 
     @Override
     public void hit(Specifications specifications) {
-        if (specifications instanceof Player) Game.getInstance().removeStaticObject(this);
+        Log.e("Bakoskey","key is hit");
+        if (specifications instanceof Player) Game.getInstance().removeObejct(this);
         Game.getGuiListener().keyCollect();
     }
 }

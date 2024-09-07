@@ -11,7 +11,7 @@ public class StaticObject extends Drawable {
 
     public StaticObject(SpriteSheets spriteSheets) {
     setSpriteSheets(spriteSheets);
-    boundingBox = new BoundingBox(this);
+    //boundingBox = new BoundingBox(this);
     }
 
     public StaticObject() {
@@ -20,6 +20,7 @@ public class StaticObject extends Drawable {
     }
     public StaticObject setPosition (float[] position){
         this.setOwnPositionM(position);
+        boundingBox = new BoundingBox(this);
         return this;
     }
     public void draw(float[] mvpMatrix){
@@ -38,4 +39,5 @@ public class StaticObject extends Drawable {
     public BoundingBox getBoundingBox() {
         return boundingBox;
     }
+
 }

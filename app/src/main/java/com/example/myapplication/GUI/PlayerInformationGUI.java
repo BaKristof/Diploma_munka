@@ -6,17 +6,11 @@ import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.example.myapplication.BackGround.Key;
-import com.example.myapplication.MainClasses.Game;
 import com.example.myapplication.MainClasses.MyGLSurfaceView;
-import com.example.myapplication.SuperClasses.Drawable;
 
 public class PlayerInformationGUI {
     private static int keycount= 1;
