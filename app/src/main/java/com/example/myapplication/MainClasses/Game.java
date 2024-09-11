@@ -58,6 +58,10 @@ public final class Game {
         newLevel();
     }
     public void newLevel(){
+        staticObjects.clear();
+        projectiles.clear();
+        hitField.clear();
+
         Random rnd = new Random();
         Maze maze = new Maze();
         maze = new Maze(7);
@@ -94,8 +98,8 @@ public final class Game {
     public void beforDraw() {
 
         readInput();
-//        findPath(player,enemyCharacter);
-       // fillinvis();
+        // findPath(player,enemyCharacter);
+        // fillinvis();
         staticObjects.stream().filter(i-> i instanceof Spawner).map(i-> (Spawner)i).forEach(Spawner::spawn);
         enemymovment();
         enemyCharacter.move();
