@@ -29,46 +29,47 @@ public class MainActivity extends AppCompatActivity {
 }*/
 package com.example.myapplication.MainClasses;
 
-        import androidx.appcompat.app.AppCompatActivity;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
-        import android.graphics.Color;
-        import android.graphics.drawable.ClipDrawable;
-        import android.graphics.drawable.GradientDrawable;
-        import android.graphics.drawable.LayerDrawable;
-        import android.os.Bundle;
-        import android.content.Context;
-        import android.util.DisplayMetrics;
-        import android.util.Log;
-        import android.util.TypedValue;
-        import android.view.Gravity;
-        import android.view.MotionEvent;
-        import android.view.ViewGroup;
-        import android.widget.FrameLayout;
-        import android.widget.ImageView;
-        import android.widget.LinearLayout;
-        import android.widget.ProgressBar;
+import androidx.appcompat.app.AppCompatActivity;
 
-        import com.example.myapplication.GUI.Joystick;
-        import com.example.myapplication.GUI.JoystickListener;
-        import com.example.myapplication.Objects.Exit;
-        import com.example.myapplication.R;
+import com.example.myapplication.GUI.Joystick;
+import com.example.myapplication.GUI.JoystickListener;
+import com.example.myapplication.Objects.Exit;
+import com.example.myapplication.R;
 
-        import java.util.Optional;
-        import java.util.stream.Collectors;
+import java.util.Optional;
 
-public class MainActivity extends AppCompatActivity implements JoystickListener,GUIListener {
+public class MainActivity extends AppCompatActivity implements JoystickListener, GUIListener {
 
-    private static Context context ;
+    private static Context context;
     private MyGLSurfaceView myGLSurfaceView;
     private static Joystick right;
     private static Joystick left;
     private static ProgressBar progressBar;
     private static int progress = 100;
+    private static SpriteSheets revolverBaySpriteSheet;
+    private ImageView imageViewRevolverBay;
 
     //private static  ImageView image ;
     public static ImageView[] emptyKeyImages = new ImageView[3];
 
-    private int keyCount =0;
+    private int keyCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
 
        /* image = new ImageView(this);
         image.setImageResource(R.drawable.place_holder);*/
-
+        revolverBaySpriteSheet = new SpriteSheets(R.drawable.revolver_bay, 64, 64, 1);
         right = new Joystick(this);
         right.setCenter(dpToPx(this,75), dpToPx(this,75));
         right.setBaseRadius(dpToPx(this,150));
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
 
         // Set the custom drawable to the ProgressBar
         progressBar.setProgressDrawable(layerDrawable);
-        frameLayout.addView(progressBar,healthBarParams);
+        frameLayout.addView(progressBar, healthBarParams);
 
 
         LinearLayout imageLayout = new LinearLayout(this);
@@ -142,10 +143,18 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
 
+      /*  LinearLayout keyAndRevolverBayLayout = new LinearLayout(this);
+        imageLayout.setOrientation(LinearLayout.VERTICAL);
+        imageLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        */
+        // Replace with actual drawable resource
         ImageView imageView1 = new ImageView(this);
         imageView1.setLayoutParams(new LinearLayout.LayoutParams(100, 100)); // Width and height of each image
         imageView1.setBackgroundColor(Color.parseColor("#FFFFFF")); // Placeholder color (replace with your image)
-        imageView1.setImageResource(R.drawable.emptykey); // Replace with actual drawable resource
+        imageView1.setImageResource(R.drawable.emptykey);
         ImageView imageView2 = new ImageView(this);
         imageView2.setLayoutParams(new LinearLayout.LayoutParams(100, 100)); // Width and height of each image
         imageView2.setBackgroundColor(Color.parseColor("#FFFFFF")); // Placeholder color (replace with your image)
@@ -163,16 +172,22 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
 
 
         FrameLayout.LayoutParams keyViewParam = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.TOP);
-        keyViewParam.setMargins(20,20,20,20);
+        keyViewParam.setMargins(20, 20, 20, 20);
 
-        frameLayout.addView(imageLayout,keyViewParam);
-
-
+        frameLayout.addView(imageLayout, keyViewParam);
 
 
+        imageViewRevolverBay = new ImageView(this);
+        imageViewRevolverBay.setLayoutParams(new LinearLayout.LayoutParams(100, 100)); // Width and height of each image
+        imageViewRevolverBay.setBackgroundColor(Color.parseColor("#FFFFFF")); // Placeholder color (replace with your image)
+        imageViewRevolverBay.setImageBitmap(revolverBaySpriteSheet.nextBitmapFrame());
+
+        FrameLayout.LayoutParams revolverViewParam = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.CENTER);
+        frameLayout.addView(imageViewRevolverBay, revolverViewParam);
 
 
         setContentView(frameLayout);
+
         MainActivity.context = getApplicationContext();
         Game.setGuiListener(this);
 
@@ -181,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
     public void onJoystickMoved(float angle, Joystick joystick, MotionEvent event) {
         if (joystick == right && event.getAction() == MotionEvent.ACTION_UP){
             Game.getInstance().addBullet(angle,Game.getInstance().getPlayer());
-            Log.e("valami"," lefut");
+            //  Log.e("valami"," lefut");
         }
     }
     public static Context getContext() {
@@ -226,5 +241,10 @@ public class MainActivity extends AppCompatActivity implements JoystickListener,
         for (ImageView im : emptyKeyImages) {
             im.setImageResource(R.drawable.emptykey);
         }
+    }
+
+    @Override
+    public void shoot() {
+        imageViewRevolverBay.setImageBitmap(revolverBaySpriteSheet.nextBitmapFrame());
     }
 }

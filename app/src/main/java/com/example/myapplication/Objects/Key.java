@@ -2,7 +2,6 @@ package com.example.myapplication.Objects;
 
 import android.util.Log;
 
-import com.example.myapplication.GUI.PlayerInformationGUI;
 import com.example.myapplication.MainClasses.Game;
 import com.example.myapplication.MainClasses.SpriteSheets;
 import com.example.myapplication.Player.Player;

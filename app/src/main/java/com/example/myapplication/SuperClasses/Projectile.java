@@ -4,10 +4,10 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.example.myapplication.BackGround.BGBlock;
-import com.example.myapplication.MainClasses.Game;
-import com.example.myapplication.R;
 import com.example.myapplication.HitBoxes.BoundingBox;
 import com.example.myapplication.HitBoxes.BoundingCircle;
+import com.example.myapplication.MainClasses.Game;
+import com.example.myapplication.R;
 
 public class Projectile extends Drawable {
     //Todo meg kéne ezt csinálni
@@ -68,7 +68,7 @@ public class Projectile extends Drawable {
         setvPMatrixHandle(mvp);
         setTextCord();
         setPositionHandle();
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,spriteSheets.NextFrame());
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, spriteSheets.NextOpenGLSFrame());
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }

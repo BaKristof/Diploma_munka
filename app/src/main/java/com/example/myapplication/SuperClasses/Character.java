@@ -2,8 +2,6 @@ package com.example.myapplication.SuperClasses;
 
 import android.opengl.GLES20;
 
-import com.example.myapplication.HitBoxes.BoundingBox;
-
 public class Character extends Drawable {
     int irany =0;
     public Character() {
@@ -15,7 +13,7 @@ public class Character extends Drawable {
         setPositionHandle();
         setvPMatrixHandle(mvpMatrix);
         setTextCord();
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,spriteSheets.NextFrame(irany) );
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, spriteSheets.NextOpenGLSFrame(irany));
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }

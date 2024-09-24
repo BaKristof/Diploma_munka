@@ -28,7 +28,7 @@ public class StaticObject extends Drawable {
         setPositionHandle();
         setvPMatrixHandle(mvpMatrix);
         setTextCord();
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,spriteSheets.NextFrame(0) );
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, spriteSheets.NextOpenGLSFrame(0));
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         setoffHandels();
     }
