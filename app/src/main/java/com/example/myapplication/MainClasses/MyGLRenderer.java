@@ -9,14 +9,9 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
-import android.util.Log;
-
-import com.example.myapplication.BackGround.Room;
-import com.example.myapplication.SquareMargin2;
 import com.example.myapplication.SuperClasses.Specifications;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
 
@@ -24,13 +19,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private static final long targetElapsedTime = 1000000000 / 60;
     private final static float[]  vPMatrix = new float[16];
     private final float[] projectionMatrix = new float[16];
-    private final float[] viewMatrix = new float[16];;
+    private final float[] viewMatrix = new float[16];
     private Game gm;
     MyGLSurfaceView glsw;
     private static boolean stoprender = true;
     public static float eyeZ =3.0f;
     public static float upY =3.0f;
-    private static ArrayList<SquareMargin2> margins = new ArrayList<>();
 
     public MyGLRenderer(MyGLSurfaceView glSurfaceView) {
         Matrix.setLookAtM(viewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
@@ -59,9 +53,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         gm.beforDraw();
         gm.draw(vPMatrix);
        // MyGLRenderer.checkGLError("draw van e problémaalsjmfaj");
-        for (SquareMargin2 margin : margins) {
-            margin.draw(vPMatrix);
-        }
        // MyGLRenderer.checkGLError("draw van e probléma");
 
 
@@ -142,7 +133,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         float[]  input = Specifications.getSquareCoords();
         float[] local = new float[]{0.0f,0.0f,0.0f,1.0f};
         float[] output = new float[Specifications.getSquareCoords().length];
-        int j = 0;
         for (int i = 0; i < input.length; i+=3) {
             System.arraycopy(input,i,local,0,3);
             Matrix.multiplyMV(local, 0,TESZT , 0,local , 0);
@@ -168,13 +158,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Matrix.scaleM(loccalM,0,scalingX,scalingY,0);
         margins.add(new SquareMargin2(new Specifications().setOwnPositionM(loccalM)));
     }*/
-    public static void addmargin(Specifications specifications){
-        margins.add(new SquareMargin2(specifications));
-    }
-
-
     public static void setStoprender() {
         MyGLRenderer.stoprender = false;
     }
-    public static float[] getvPMatrix() {return vPMatrix;}
 }

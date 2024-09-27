@@ -1,0 +1,239 @@
+@startuml
+class Game {
+}
+interface GUIListener {
+}
+
+
+class Character extends EnemyCharacter,Player {
+~ int irany
++ void draw(float[])
++ void hit(Specifications)
++ void setIrany(int)
++ String getName()
+}
+
+class Bullett {
+}
+class BG {
+# String vertexShaderCode
+# String fragmentShaderCode
++ Tiles[][] completback
++ BGBlock[][] BG
++ void setCompletback(Tiles[][])
++ void draw(float[])
++ BGBlock[] loadChunks()
++ float[] getboxmidel(int[])
++ BGBlock nearestMovmentPoint(Character)
++ String getName()
++ ArrayList<BGBlock> getMovementpoints()
++ Graph<Specifications,DefaultWeightedEdge> getGraph()
++ ArrayList<Room> getRooms()
++ float[] randomFloorElement()
+}
+class StaticObject extends Spawner,Key,Exit {
++ StaticObject setPosition(float[])
++ void draw(float[])
++ void hit(Specifications)
++ BoundingBox getBoundingBox()
+}
+
+class SpriteSheets {
+~ int width
+~ int height
+~ ArrayList<Integer[]> spriteSheetArray
+~ ArrayList<Bitmap> spriteSheetBitmapArray
+~ int FPS
+~ int counter
++ int NextOpenGLSFrame(int)
++ int NextOpenGLSFrame()
++ Bitmap nextBitmapFrame()
+}
+
+class BlockTypes {
++ void setTexture(Tiles)
++ int getTexture()
++ boolean isHitable()
+}
+
+
+
+
+
+class Player {
++ float[] movingangle
++ int health
++ String getName()
++ float[] getMovingangle()
++ void setMovingangle(float[])
++ void playerAction(PlayerActions)
+}
+
+
+class Projectile extends Bullett {
+# String vertexShaderCode
+# String fragmentShaderCode
+# float projectileSpeed
+# Character owner
++ void move(float)
++ void draw(float[])
++ boolean hit()
++ Character getOwner()
+}
+
+
+
+
+
+class Exit {
+~ boolean isunlocked
++ void hit(Specifications)
++ void setIsunlocked()
+}
+
+
+class EnemyCharacter {
+~ Queue<Specifications> utvonal
+~ Specifications nextpoint
+~ Spawner owner
++ String getName()
++ void move()
++ {static} T randomEnum(Class<T>)
++ void setOwner(Spawner)
++ Spawner getOwner()
++ {static} float percent(float,float)
+}
+
+
+class BGBlock {
+~ BlockTypes texture
++ void sizechnage(float)
++ String getName()
++ void setTexture(Tiles)
++ int getTexture()
++ boolean isHitable()
+}
+
+
+
+
+
+
+class Maze {
+~ {static} int[][] maze
+~ {static} boolean[][] bitmaze
+~ {static} List<int[]> unvisitedcell
++ int[] startingpoint
++ int size_up
++ ArrayList<Integer[]> Movementpoints
++ ArrayList<Room> rooms
+~ Tiles[][] finale
++ void setMovementpoints(Integer[])
++ Tiles[][] generate(int,int)
++ ArrayList<Integer[]> getMovementpoints()
++ int[] getStartingpoint()
++ int getSize_up()
++ ArrayList<Room> getRooms()
+}
+
+
+class Spawner {
+~ SpawnerTypes type
++ void spawn()
++ {static} T randomEnum(Class<T>)
+}
+
+class Key {
++ void hit(Specifications)
+}
+
+class Drawable extends Projectile,Character,BG,StaticObject{
+# String vertexShaderCode
+# String fragmentShaderCode
+# int vertexStride
+# int vertexCount
+# int positionHandle
+# int colorHandle
+# FloatBuffer vertexBuffer
+# ShortBuffer drawListBuffer
+# int Prog
+~ float[] color
+# float[] rotateM
+# float[] scaleM
++ void setVertexShader()
++ void setVertexShader(String)
++ void setFragmentShader(String)
++ void setFragmentShader()
++ void setPositionHandle()
++ void setColorHandle()
++ void setVertexBuffer()
++ void setDrawListBuffer()
++ void setProg()
++ void setColor(float[])
++ void setvPMatrixHandle(float[])
++ void setTextCord()
++ void setTexCoordBuffer(float[])
++ void setTexCoordBuffer()
++ void setoffHandels()
++ void setUniform1Handel(String,float)
++ String getName()
+}
+
+class Specifications extends Drawable, BGBlock {
+# float[] ownPositionM
+# SpriteSheets spriteSheets
+# {static} float size
+# float[] screenPositionM
+# {static} float[] squareCoords
+# {static} float[] texCoords
++ float getHeight()
++ float distance(Specifications)
++ float[] dxdy(Specifications)
++ boolean near(Specifications,float)
++ void setSpriteSheets(int,int,int)
++ void setSpriteSheets(SpriteSheets)
++ float[] getOwnPositionM()
++ void setMatrix(float,float)
++ Specifications setOwnPositionM(float[])
++ {static} float[] getSquareCoords()
++ String getName()
++ {static} float degree(float)
++ String toString()
++ boolean equals(Object)
++ int hashCode()
+}
+
+class Room {
++ ArrayList<Spawner> spawners
+~ ArrayList<Tiles[]> valid
+~ ArrayList<StaticObject> containdObjects
+~ Tiles[][] Room
+~ int size_up
++ {static} void insterHorozontal(Tiles[][],int,int,Maze,int)
++ {static} void insterVertical(Tiles[][],int,int,Maze,int)
++ void roomfill(Tiles[][],int,int)
++ Room setCourners(int,BGBlock)
++ Room setMatrix(float[])
++ void setBlocks(BGBlock)
++ ArrayList<BGBlock> getBlocks()
++ ArrayList<BGBlock> getWalls()
++ ArrayList<BGBlock> getFloors()
++ float[] getCourners()
++ BGBlock getRandomFloorBlock()
++ void drawSpawner(float[])
+}
+
+Maze .right.>BG :Use
+SpriteSheets .right.> Specifications :Use
+SpriteSheets .up.> BlockTypes :Use
+BlockTypes .left.> BGBlock :Use
+BGBlock .up.> BG
+Room .left.> BG
+EnemyCharacter -up-o Game
+Player -up-o Game
+BG -up-o Game
+Exit -up-o Game
+Key -up-o Game
+Key .up.> GUIListener :Use
+
+@enduml

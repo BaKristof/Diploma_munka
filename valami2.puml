@@ -1,0 +1,133 @@
+@startuml
+
+class Player{
+}
+class EnemyCharacter{
+}
+class Key{
+}
+
+
+interface GUIListener {
++ void setHealthBar(int)
++ void keyCollect()
++ void resetGUI()
++ void shoot()
+}
+
+class MainActivity implements GUIListener  {
++ {static} ImageView[] emptyKeyImages
+# void onCreate(Bundle)
++ void onJoystickMoved(float,Joystick,MotionEvent)
++ {static} Context getContext()
++ {static} float dpToPx(Context,float)
++ {static} Joystick getRight()
++ {static} Joystick getLeft()
++ void setHealthBar(int)
++ void keyCollect()
++ void resetGUI()
++ void shoot()
+}
+
+
+class Joystick {
+# void onDraw(Canvas)
++ void setCenter(float,float)
++ void setJoystickListener(JoystickListener)
++ boolean onTouchEvent(MotionEvent)
++ void setBaseRadius(float)
++ double getAngle()
++ float getDisplace()
++ boolean isWorking()
+}
+
+class BoundingCircle {
+# float x
+# float radius
++ float getX()
++ float getY()
++ float getRadius()
++ boolean intersects(BoundingCircle)
+}
+
+
+class Game {
++ BG BackGround
++ EnemyCharacter enemyCharacter
++ Player player
++ ArrayList<EnemyCharacterWithOwner> enemys
++ {static} ArrayList<Triangle> invisible_pooints
++ ArrayList<StaticObject> getStaticObjects()
++ void newLevel()
++ {static} Game getInstance()
++ void beforDraw()
++ void readInput()
++ void collisonDetection()
++ void draw(float[])
++ void enemymovment()
++ {static} int whatisirany(float,float)
++ void fillinvis()
++ {static} List<Specifications> findPath(Character,Character)
++ BG getBackGround()
++ void addEnemy(EnemyCharacterWithOwner)
++ Player getPlayer()
++ BGBlock getnearpoint(Character)
++ ArrayList<BGBlock> getHitField()
++ void removeProjectile(Projectile)
++ void addProjectile(float,Character)
++ void addBullet(float,Character)
++ void removeObejct(Specifications)
++ void nextLevel()
++ {static} void setGuiListener(GUIListener)
++ {static} GUIListener getGuiListener()
++ {static} void addInvisible_pooints(Triangle)
++ void removeStaticObject(StaticObject)
+}
+
+
+class MyGLSurfaceView {
+}
+class BoundingBox {
++ float xMax
++ float xMin
++ boolean intersects(BoundingBox)
++ boolean intersects(BoundingCircle)
++ boolean doesLineIntersect(Specifications,Specifications)
++ boolean contains(BoundingBox)
++ String toString()
+}
+
+
+class MyGLRenderer {
+~ MyGLSurfaceView glsw
++ {static} float eyeZ
++ {static} float upY
++ void setCameraToObject(Specifications)
++ void onSurfaceCreated(GL10,EGLConfig)
++ void onDrawFrame(GL10)
++ void onSurfaceChanged(GL10,int,int)
++ {static} int loadShader(int,String)
++ {static} void checkGLError(String)
++ {static} int loadTexture(int)
++ {static} int loadTexture(Bitmap)
++ {static} float[] midleCoordinate(Specifications)
++ {static} float[] midleCoordinate(float[],float[])
++ {static} float[] allCoordinates(Specifications)
++ {static} void addmargin(Specifications)
++ {static} void setStoprender()
++ {static} float[] getvPMatrix()
+}
+
+
+BoundingBox ..> Game
+BoundingCircle ..> Game
+Player -up-* Game
+EnemyCharacter -up-* Game
+Key -up-* Game
+Game .right.> MyGLRenderer
+MyGLRenderer -right-o MyGLSurfaceView
+MyGLSurfaceView -right-* MainActivity
+Joystick .right.> MainActivity
+Key ..> GUIListener :Use
+Game ..> GUIListener :Use
+@enduml
